@@ -145,17 +145,19 @@ def build_reference_artifacts(
             items_list,
         )
 
-        # درج در جدول coefficients
+        # درج در جدول coefficients (اسکیمای ۱٫۱)
         cur.executemany(
             """
             INSERT INTO coefficients (
                 coeff_key, category, title_fa, reference_value, default_in_template,
                 is_enabled_default, formula_description, source_file,
-                source_page_bulletin, source_clause
+                source_page_bulletin, source_clause,
+                verification_status, verified_by, verified_at, evidence_path
             ) VALUES (
                 :coeff_key, :category, :title_fa, :reference_value, :default_in_template,
                 :is_enabled_default, :formula_description, :source_file,
-                :source_page_bulletin, :source_clause
+                :source_page_bulletin, :source_clause,
+                :verification_status, :verified_by, :verified_at, :evidence_path
             );
             """,
             coeffs_list,

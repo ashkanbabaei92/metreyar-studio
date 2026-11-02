@@ -6,6 +6,7 @@
 از حافظه یا حدس نوشته نمی‌شود.
 """
 
+import json
 import re
 import sqlite3
 from pathlib import Path
@@ -13,7 +14,7 @@ from typing import Dict, List, Optional, Tuple, Any
 import pandas as pd
 import pymupdf as fitz
 
-from src.config import DISCIPLINES, DEFAULT_YEAR
+from src.config import DISCIPLINES, DEFAULT_YEAR, USER_APPROVALS_PATH
 from src.pdf_fix import open_patched_pdf, extract_rtl_page_lines
 from src.normalize import (
     normalize_text,
@@ -371,14 +372,18 @@ def extract_items_from_excel_and_pdf(
 
 
 def extract_coefficients_from_pdf(
-    doc: fitz.Document, pdf_filename: str = "11-Abnieh1404.pdf"
+    doc: fitz.Document,
+    pdf_filename: str = "11-Abnieh1404.pdf",
+    approvals_path: Path = USER_APPROVALS_PATH,
 ) -> List[Dict[str, Any]]:
     """
-    استخراج و ثبت ۱۸ ردیف جدول coefficients از متن دستورالعمل کاربرد، کلیات و پیوست‌ها:
+    استخراج و ثبت ۱۸ ردیف جدول coefficients از متن دستورالعمل کاربرد، کلیات و پیوست‌ها
+    به همراه اعمال تأییدهای کاربر از فایل docs/user_approvals.json (اسکیمای ۱٫۱):
     - طبق تصمیم ۴ کارفرما: ضرایب پیمان (بالاسری، منطقه‌ای، طبقات، ضریب پیمان) و کسورات روکش
       در ستون default_in_template دارای مقدار NULL هستند (بدون مقدار پیش‌فرض).
     - مقادیر مرجع بولتن (مانند ضرایب جدول الف صفحه ۲ بولتن / صفحه ۵ PDF) مستقیماً از متن صفحه ۵
       استخراج و صرفاً در ستون reference_value ثبت می‌شوند (و برای ضرایب قراردادی/کسورات، هر دو NULL هستند).
+    - ستون‌های اسکیمای ۱٫۱: verification_status، verified_by، verified_at، evidence_path.
     """
     # خواندن متن اصلاح‌شده صفحه ۵ PDF (صفحه ۲ بولتن - بند ۲-۶، بند ۲-۷-۲ و جدول الف)
     p5_text = "\n".join(extract_rtl_page_lines(doc[4]))
@@ -409,6 +414,12 @@ def extract_coefficients_from_pdf(
     val_eq4 = 4.0 if m_eq4 else None
     val_07 = float(m_07.group(0)) if m_07 else None
     val_mos70 = 0.70 if m_mos70 else None
+
+    # بارگذاری فایل تأییدهای کاربر (docs/user_approvals.json)
+    user_approvals: Dict[str, Any] = {}
+    if approvals_path and approvals_path.exists():
+        data = json.loads(approvals_path.read_text(encoding="utf-8"))
+        user_approvals = data.get("coefficients", {})
 
     # ۱۸ ردیف استاندارد جدول coefficients (شامل ضرایب پیمان، ضرایب مرجع جدول الف، سقف‌های کنترلی و کسورات روکش)
     # طبق تصمیم ۴ کارفرما، default_in_template برای تمام ۱۸ ردیف NULL (None) است.
@@ -634,6 +645,32 @@ def extract_coefficients_from_pdf(
             "source_clause": "شرایط عمومی و خصوصی پیمان نشریه 4311",
         },
     ]
+
+    for c in coeffs:
+        ckey = c["coeff_key"]
+        ref_val = c["reference_value"]
+        if ckey in user_approvals:
+            app_entry = user_approvals[ckey]
+            expected_val = app_entry.get("approved_reference_value")
+            if ref_val is None or expected_val is None or abs(float(ref_val) - float(expected_val)) > 1e-6:
+                raise ValueError(
+                    f"عدم تطابق مقدار مرجع استخراج‌شده برای {ckey}: استخراج={ref_val} != تأیید کاربر={expected_val}"
+                )
+            c["verification_status"] = app_entry["verification_status"]
+            c["verified_by"] = app_entry["verified_by"]
+            c["verified_at"] = app_entry["verified_at"]
+            c["evidence_path"] = app_entry["evidence_path"]
+        elif ref_val is not None:
+            c["verification_status"] = "تأییدنشده"
+            c["verified_by"] = None
+            c["verified_at"] = None
+            c["evidence_path"] = None
+        else:
+            c["verification_status"] = "بدون مقدار (انتخاب پروژه)"
+            c["verified_by"] = None
+            c["verified_at"] = None
+            c["evidence_path"] = None
+
     return coeffs
 
 

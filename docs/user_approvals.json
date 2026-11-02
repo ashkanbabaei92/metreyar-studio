@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.1",
+  "coefficients": {
+    "OVERHEAD_CIVIL_TENDER": {
+      "approved_reference_value": 1.30,
+      "verification_status": "تأییدشده توسط کاربر",
+      "verified_by": "کاربر (ashkanbabaei92)",
+      "verified_at": "2026-11-02T16:28:14+00:00",
+      "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
+      "note": "عمرانی، مناقصه: 1.30 — تأیید چشمی کاربر از روی تصویر رندر شده صفحه ۵ PDF (صفحه ۲ بولتن)"
+    },
+    "OVERHEAD_CIVIL_NON_TENDER": {
+      "approved_reference_value": 1.20,
+      "verification_status": "تأییدشده توسط کاربر",
+      "verified_by": "کاربر (ashkanbabaei92)",
+      "verified_at": "2026-11-02T16:28:14+00:00",
+      "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
+      "note": "عمرانی، ترک تشریفات: 1.20 — تأیید چشمی کاربر از روی تصویر رندر شده صفحه ۵ PDF (صفحه ۲ بولتن)"
+    },
+    "OVERHEAD_NON_CIVIL_TENDER": {
+      "approved_reference_value": 1.41,
+      "verification_status": "تأییدشده توسط کاربر",
+      "verified_by": "کاربر (ashkanbabaei92)",
+      "verified_at": "2026-11-02T16:28:14+00:00",
+      "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
+      "note": "غیرعمرانی، مناقصه: 1.41 — تأیید چشمی کاربر از روی تصویر رندر شده صفحه ۵ PDF (صفحه ۲ بولتن)"
+    },
+    "OVERHEAD_NON_CIVIL_NON_TENDER": {
+      "approved_reference_value": 1.30,
+      "verification_status": "تأییدشده توسط کاربر",
+      "verified_by": "کاربر (ashkanbabaei92)",
+      "verified_at": "2026-11-02T16:28:14+00:00",
+      "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
+      "note": "غیرعمرانی، ترک تشریفات: 1.30 — تأیید چشمی کاربر از روی تصویر رندر شده صفحه ۵ PDF (صفحه ۲ بولتن)"
+    },
+    "OVERHEAD_PURCHASE_ONLY": {
+      "approved_reference_value": 1.14,
+      "verification_status": "تأییدشده توسط کاربر",
+      "verified_by": "کاربر (ashkanbabaei92)",
+      "verified_at": "2026-11-02T16:28:14+00:00",
+      "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
+      "note": "ضریب فصول خرید: 1.14 — تأیید چشمی کاربر از روی تصویر رندر شده صفحه ۵ PDF (صفحه ۲ بولتن)"
+    }
+  }
+}

@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-تعریف اسکیمای ۸ جدول دیتابیس مرجع SQLite (schema.py)
-منطبق با docs/ARCHITECTURE_STAGE1.md و تصمیم‌های تأییدشده کارفرما در مرحله ۲
-(شامل افزودن ستون unit_raw به جدول items).
+تعریف اسکیمای ۱٫۱ دیتابیس مرجع SQLite (schema.py)
+منطبق با docs/ARCHITECTURE_STAGE1.md و تصمیم‌های تأییدشده کارفرما در مرحله ۲ و گام الف:
+- ثبت نسخه اسکیما 1.1 در PRAGMA user_version (101)
+- شامل ستون unit_raw در جدول items
+- شامل ستون‌های verification_status، verified_by، verified_at، evidence_path در جدول coefficients
 """
 
 import sqlite3
 from pathlib import Path
 from typing import Union
+
+from src.config import SCHEMA_USER_VERSION
 
 SCHEMA_TABLES = [
     "chapters",
@@ -20,6 +24,12 @@ SCHEMA_TABLES = [
     "adjustment_indices",
     "material_on_site_factors",
 ]
+
+ALLOWED_VERIFICATION_STATUSES = (
+    "تأییدشده توسط کاربر",
+    "تأییدنشده",
+    "بدون مقدار (انتخاب پروژه)",
+)
 
 DDL_STATEMENTS = [
     # ۱. جدول فصول و بخش‌های فهرست بها
@@ -120,7 +130,7 @@ DDL_STATEMENTS = [
         UNIQUE(discipline, parent_code_official, child_code_official, rule_id)
     );
     """,
-    # ۶. جدول ضرایب پیمان، بالاسری، طبقات، منطقه‌ای و کسورات روکش
+    # ۶. جدول ضرایب پیمان، بالاسری، طبقات، منطقه‌ای و کسورات روکش (اسکیمای ۱٫۱ با ستون‌های تأیید)
     """
     CREATE TABLE IF NOT EXISTS coefficients (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -133,7 +143,17 @@ DDL_STATEMENTS = [
         formula_description TEXT NULL,
         source_file TEXT NULL,
         source_page_bulletin INTEGER NULL,
-        source_clause TEXT NULL
+        source_clause TEXT NULL,
+        verification_status TEXT NOT NULL CHECK (
+            verification_status IN (
+                'تأییدشده توسط کاربر',
+                'تأییدنشده',
+                'بدون مقدار (انتخاب پروژه)'
+            )
+        ),
+        verified_by TEXT NULL,
+        verified_at TEXT NULL,
+        evidence_path TEXT NULL
     );
     """,
     # ۷. جدول شاخص‌های فصلی تعدیل آحاد بها (رزرو فاز ۲)
@@ -171,7 +191,8 @@ DDL_STATEMENTS = [
 
 def init_database(db_path: Union[str, Path], reset: bool = True) -> sqlite3.Connection:
     """
-    ایجاد فایل دیتابیس SQLite و ساخت هر ۸ جدول استاندارد اسکیما.
+    ایجاد فایل دیتابیس SQLite، ثبت نسخه اسکیمای ۱٫۱ (PRAGMA user_version = 101)
+    و ساخت هر ۸ جدول استاندارد اسکیما.
     اگر reset=True باشد، جداول قبلی پاک و از نو ساخته می‌شوند.
     """
     path = Path(db_path)
@@ -183,5 +204,6 @@ def init_database(db_path: Union[str, Path], reset: bool = True) -> sqlite3.Conn
             cur.execute(f"DROP TABLE IF EXISTS {tbl};")
     for ddl in DDL_STATEMENTS:
         cur.execute(ddl)
+    cur.execute(f"PRAGMA user_version = {SCHEMA_USER_VERSION};")
     conn.commit()
     return conn

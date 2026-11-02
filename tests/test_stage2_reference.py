@@ -13,9 +13,11 @@ from src.config import (
     REFERENCE_DB_PATH,
     REFERENCE_XLSX_PATH,
     EXTRACTION_REPORT_PATH,
+    USER_APPROVALS_PATH,
+    SCHEMA_USER_VERSION,
     VALIDATION_RANDOM_SEED,
 )
-from src.schema import SCHEMA_TABLES
+from src.schema import SCHEMA_TABLES, ALLOWED_VERIFICATION_STATUSES
 from src.pdf_fix import open_patched_pdf, extract_rtl_page_lines
 from src.normalize import (
     digits_to_latin,
@@ -222,3 +224,79 @@ def test_independent_excel_and_pdf_sample_validation():
     )
     assert len(sample_20) == 20
     assert all(r["matched"] for r in sample_20), f"عدم تطابق در نمونه ۲۰ تایی: {sample_20}"
+
+
+def test_schema_v1_1_and_user_approvals_in_coefficients():
+    """
+    تست اسکیمای ۱٫۱ و ثبت تأییدهای کاربر در جدول coefficients:
+    - نسخه اسکیما در PRAGMA user_version برابر 101 (معادل 1.1)
+    - وجود ستون‌های verification_status، verified_by، verified_at، evidence_path
+    - دقیقاً ۵ ردیف تأییدشده توسط کاربر با مقادیر مرجع (1.30، 1.20، 1.41، 1.30، 1.14)
+    - هیچ ردیف دیگری «تأییدشده توسط کاربر» نیست (۳ ردیف «تأییدنشده» و ۱۰ ردیف «بدون مقدار (انتخاب پروژه)»)
+    - تمام ۱۸ ردیف دارای default_in_template IS NULL و مقادیر پروژه (بالاسری، منطقه، طبقات، ضریب پیمان) دارای reference_value IS NULL هستند.
+    """
+    assert USER_APPROVALS_PATH.exists(), "فایل docs/user_approvals.json وجود ندارد!"
+
+    conn = sqlite3.connect(str(REFERENCE_DB_PATH))
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    cur.execute("PRAGMA user_version;")
+    assert cur.fetchone()[0] == SCHEMA_USER_VERSION == 101
+
+    cur.execute("PRAGMA table_info(coefficients);")
+    coeff_cols = {r[1] for r in cur.fetchall()}
+    for col in ("verification_status", "verified_by", "verified_at", "evidence_path"):
+        assert col in coeff_cols, f"ستون {col} در جدول coefficients یافت نشد!"
+
+    cur.execute("SELECT * FROM coefficients ORDER BY id;")
+    rows = [dict(r) for r in cur.fetchall()]
+    assert len(rows) == 18
+
+    expected_approved = {
+        "OVERHEAD_CIVIL_TENDER": 1.30,
+        "OVERHEAD_CIVIL_NON_TENDER": 1.20,
+        "OVERHEAD_NON_CIVIL_TENDER": 1.41,
+        "OVERHEAD_NON_CIVIL_NON_TENDER": 1.30,
+        "OVERHEAD_PURCHASE_ONLY": 1.14,
+    }
+
+    approved_rows = [r for r in rows if r["verification_status"] == "تأییدشده توسط کاربر"]
+    unverified_rows = [r for r in rows if r["verification_status"] == "تأییدنشده"]
+    project_null_rows = [r for r in rows if r["verification_status"] == "بدون مقدار (انتخاب پروژه)"]
+
+    assert len(approved_rows) == 5
+    assert len(unverified_rows) == 3
+    assert len(project_null_rows) == 10
+
+    for r in rows:
+        assert r["verification_status"] in ALLOWED_VERIFICATION_STATUSES
+        assert r["default_in_template"] is None
+        ckey = r["coeff_key"]
+        if ckey in expected_approved:
+            assert r["verification_status"] == "تأییدشده توسط کاربر"
+            assert abs(r["reference_value"] - expected_approved[ckey]) < 1e-6
+            assert r["verified_by"] is not None and len(r["verified_by"]) > 0
+            assert r["verified_at"] == "2026-11-02T16:28:14+00:00"
+            assert r["evidence_path"] == "docs/evidence/abnieh_page_5_overhead.png"
+        elif r["reference_value"] is not None:
+            assert r["verification_status"] == "تأییدنشده"
+            assert r["verified_by"] is None
+            assert r["verified_at"] is None
+            assert r["evidence_path"] is None
+        else:
+            assert r["verification_status"] == "بدون مقدار (انتخاب پروژه)"
+            assert r["verified_by"] is None
+            assert r["verified_at"] is None
+            assert r["evidence_path"] is None
+
+    # بررسی صریح اینکه ۴ ضریب اصلی پروژه در هر دو ستون reference_value و default_in_template مقدار NULL دارند
+    project_main_keys = {"OVERHEAD_COEFF", "REGIONAL_COEFF", "FLOOR_COEFF", "CONTRACT_COEFF"}
+    for r in rows:
+        if r["coeff_key"] in project_main_keys:
+            assert r["reference_value"] is None
+            assert r["default_in_template"] is None
+            assert r["verification_status"] == "بدون مقدار (انتخاب پروژه)"
+
+    conn.close()
+

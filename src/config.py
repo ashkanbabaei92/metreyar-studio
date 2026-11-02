@@ -33,6 +33,11 @@ TESTS_DIR: Path = PROJECT_ROOT / "tests"
 REFERENCE_DB_PATH: Path = DATA_PROCESSED_DIR / "reference.db"
 REFERENCE_XLSX_PATH: Path = DATA_PROCESSED_DIR / "reference.xlsx"
 EXTRACTION_REPORT_PATH: Path = DOCS_DIR / "extraction_report.md"
+USER_APPROVALS_PATH: Path = DOCS_DIR / "user_approvals.json"
+
+# نسخه اسکیما
+SCHEMA_VERSION: str = "1.1"
+SCHEMA_USER_VERSION: int = 101
 
 # سال فهرست بها
 DEFAULT_YEAR: int = 1404
