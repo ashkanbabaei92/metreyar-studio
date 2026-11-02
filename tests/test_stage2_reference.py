@@ -62,8 +62,8 @@ def test_pdf_tounicode_patch_regression_pages_5_and_120():
 
 def test_schema_8_tables_and_record_counts():
     """
-    بررسی وجود هر ۸ جدول اسکیمای مرحله ۱ در reference.db و شمارش دقیق رکوردها:
-    items=1565, chapters=35, coefficients=18.
+    بررسی وجود جداول اسکیما در reference.db و شمارش دقیق رکوردها:
+    items=1565, chapters=35, coefficients=19 (در اسکیمای ۱٫۲ شامل سقف ۴٪ تجهیز کارگاه طبق D7).
     """
     assert REFERENCE_DB_PATH.exists(), "فایل reference.db ساخته نشده است!"
     assert REFERENCE_XLSX_PATH.exists(), "فایل reference.xlsx ساخته نشده است!"
@@ -75,6 +75,7 @@ def test_schema_8_tables_and_record_counts():
     cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")
     tables = {r[0] for r in cur.fetchall()}
     assert set(SCHEMA_TABLES) == tables
+    assert len(tables) == 12
 
     # بررسی ستون‌های جدول items (از جمله discipline و unit_raw)
     cur.execute("PRAGMA table_info(items);")
@@ -96,7 +97,7 @@ def test_schema_8_tables_and_record_counts():
     assert cur.fetchone()[0] == 35
 
     cur.execute("SELECT COUNT(*) FROM coefficients;")
-    assert cur.fetchone()[0] == 18
+    assert cur.fetchone()[0] == 19
 
     # بررسی اینکه تمام ضرایب در ستون default_in_template مقدار NULL دارند (تصمیم ۴ کارفرما)
     cur.execute("SELECT COUNT(*) FROM coefficients WHERE default_in_template IS NOT NULL;")
@@ -228,12 +229,12 @@ def test_independent_excel_and_pdf_sample_validation():
 
 def test_schema_v1_1_and_user_approvals_in_coefficients():
     """
-    تست اسکیمای ۱٫۱ و ثبت تأییدهای کاربر در جدول coefficients:
-    - نسخه اسکیما در PRAGMA user_version برابر 101 (معادل 1.1)
+    تست اسکیمای ۱٫۲ و ثبت تأییدهای کاربر در جدول coefficients:
+    - نسخه اسکیما در PRAGMA user_version برابر 102 (معادل 1.2)
     - وجود ستون‌های verification_status، verified_by، verified_at، evidence_path
     - دقیقاً ۵ ردیف تأییدشده توسط کاربر با مقادیر مرجع (1.30، 1.20، 1.41، 1.30، 1.14)
-    - هیچ ردیف دیگری «تأییدشده توسط کاربر» نیست (۳ ردیف «تأییدنشده» و ۱۰ ردیف «بدون مقدار (انتخاب پروژه)»)
-    - تمام ۱۸ ردیف دارای default_in_template IS NULL و مقادیر پروژه (بالاسری، منطقه، طبقات، ضریب پیمان) دارای reference_value IS NULL هستند.
+    - هیچ ردیف دیگری «تأییدشده توسط کاربر» نیست (۴ ردیف «تأییدنشده» شامل سقف ۴٪ تجهیز کارگاه و ۱۰ ردیف «بدون مقدار (انتخاب پروژه)»)
+    - تمام ۱۹ ردیف دارای default_in_template IS NULL و مقادیر پروژه (بالاسری، منطقه، طبقات، ضریب پیمان) دارای reference_value IS NULL هستند.
     """
     assert USER_APPROVALS_PATH.exists(), "فایل docs/user_approvals.json وجود ندارد!"
 
@@ -242,7 +243,7 @@ def test_schema_v1_1_and_user_approvals_in_coefficients():
     cur = conn.cursor()
 
     cur.execute("PRAGMA user_version;")
-    assert cur.fetchone()[0] == SCHEMA_USER_VERSION == 101
+    assert cur.fetchone()[0] == SCHEMA_USER_VERSION == 102
 
     cur.execute("PRAGMA table_info(coefficients);")
     coeff_cols = {r[1] for r in cur.fetchall()}
@@ -251,7 +252,7 @@ def test_schema_v1_1_and_user_approvals_in_coefficients():
 
     cur.execute("SELECT * FROM coefficients ORDER BY id;")
     rows = [dict(r) for r in cur.fetchall()]
-    assert len(rows) == 18
+    assert len(rows) == 19
 
     expected_approved = {
         "OVERHEAD_CIVIL_TENDER": 1.30,
@@ -266,7 +267,7 @@ def test_schema_v1_1_and_user_approvals_in_coefficients():
     project_null_rows = [r for r in rows if r["verification_status"] == "بدون مقدار (انتخاب پروژه)"]
 
     assert len(approved_rows) == 5
-    assert len(unverified_rows) == 3
+    assert len(unverified_rows) == 4
     assert len(project_null_rows) == 10
 
     for r in rows:

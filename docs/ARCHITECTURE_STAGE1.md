@@ -54,16 +54,21 @@
 
 ---
 
-## ۲. اسکیمای دیتابیس مرجع SQLite (`data_processed/reference.db` — نسخه اسکیما `1.1`، `PRAGMA user_version = 101`)
+## ۲. اسکیمای دیتابیس مرجع SQLite (`data_processed/reference.db` — نسخه اسکیما `1.2`، `PRAGMA user_version = 102`)
 
-طراحی جداول با رعایت کامل تصمیم‌های ۱ تا ۷ کارفرما و ارتقای اسکیمای `1.1` در گام الف:
-- ثبت نسخه اسکیما در دیتابیس با `PRAGMA user_version = 101` (معادل نسخه `1.1`).
+طراحی جداول با رعایت کامل تصمیم‌های ۱ تا ۷ کارفرما در مرحله ۱ و ۲، ارتقای اسکیمای `1.1` در گام الف، و **ارتقای اسکیمای `1.2` (`PRAGMA user_version = 102`) در گام ج (مرحله ۳ — تصمیم‌های D1 تا D7)**:
+- ثبت نسخه اسکیما در دیتابیس با `PRAGMA user_version = 102` (معادل نسخه `1.2`).
+- افزایش تعداد جداول اسکیما از ۸ جدول (معیار مرحله ۲) به **۱۲ جدول** با افزودن ۴ جدول مرجع تصمیم D7: `mortar_table` (جدول ۱-۱ کلیات)، `overhead_table` (جدول الف دستورالعمل کاربرد)، `floor_factor_params` (پیوست ۲ ضریب طبقات) و `region_factors` (پیوست ۴ ضریب منطقه‌ای).
+- افزایش رکوردهای جدول `coefficients` از ۱۸ به **۱۹ ردیف** با افزودن سقف ۴٪ تجهیز و برچیدن کارگاه (`EQUIP_DEMOB_CAP_PCT`) با وضعیت `'تأییدنشده'` طبق تصمیم D7.
+- افزودن ستون‌های `text_raw`، `text_normalized`، `clause_ref` و `status` (`'active'` / `'empty_in_source'`) به جدول `notes` (بخش ۵ پرامپت گام ج).
+- افزودن ستون‌های `target_kind` (`'item'`, `'range'`, `'list'`, `'text_topic'`)، `target_text`، `resolution_status` (`'resolved_explicit_code'`, `'unresolved_topic'`, `'ambiguous'`)، `source_file`، `source_page_pdf`، `source_clause_ref` و `clause_ref` به جدول `item_dependencies` و مجاز شدن `NULL` برای `parent_code_official` در ردیف‌های موضوعی بدون کد صریح (تصمیم D2).
+- افزودن ستون‌های `status` (`'active'` / `'pending_user_decision'`)، `source_text_raw` و `clause_ref` به جدول `rules`.
 - پشتیبانی چندرشته‌ای از روز اول با فیلد `discipline` (`'abnieh'`, `'mechanic'`, `'electric'`).
 - کلید یکتای ردیف‌ها: ترکیب `(discipline, code_official)`.
 - ذخیرهٔ هر سه شکل کد ردیف به صورت متن (`TEXT`): `code_official` (۶ رقمی با صفر ابتدایی مثل `'010101'`)، `discipline` (`'abnieh'`)، و `code_internal` (با پیشوند داخلی رشته مثل `'11010101'`).
 - ذخیرهٔ واحد خام اکسل در ستون `unit_raw` در کنار واحد استاندارد `unit` در جدول `items`.
-- ذخیرهٔ وضعیت تأیید مقادیر مرجع ضرایب در جدول `coefficients` با ۴ ستون جدید اسکیمای `1.1` (`verification_status`, `verified_by`, `verified_at`, `evidence_path`) که به صورت بازتولیدپذیر از فایل `docs/user_approvals.json` خوانده می‌شوند.
-- ثبت دقیق منبع (`source_file`, `source_page_pdf`, `source_page_bulletin`, `source_clause`) برای تک‌تک رکوردها.
+- ذخیرهٔ وضعیت تأیید مقادیر مرجع ضرایب در جدول `coefficients` با ۴ ستون اسکیمای `1.1/1.2` (`verification_status`, `verified_by`, `verified_at`, `evidence_path`) که به صورت بازتولیدپذیر از فایل `docs/user_approvals.json` خوانده می‌شوند.
+- ثبت دقیق منبع (`source_file`, `source_page_pdf`, `source_page_bulletin`, `clause_ref`) برای تک‌تک رکوردها.
 
 ### جدول ۱: `chapters` (فصول و بخش‌های فهرست بها)
 
@@ -205,8 +210,28 @@
 #### جدول ۷: `adjustment_indices` (شاخص‌های فصلی تعدیل آحاد بها - فاز ۲)
 - ستون‌ها: `id`, `discipline`, `chapter_code`, `year` (مثلاً `1404`), `quarter` (`1`, `2`, `3`, `4`), `index_value` (`REAL`), `is_provisional` (`INTEGER`: `0` قطعی / `1` موقت), `circular_number` (`TEXT`), `circular_date` (`TEXT`), `source_file` (`TEXT`), `source_page_pdf` (`INTEGER`).
 
-#### جدول ۸: `material_on_site_Factors` (ضرایب متوسط مصالح پای کار جدول ۱ پیوست ۱ - فاز ۲)
+#### جدول ۸: `material_on_site_factors` (ضرایب متوسط مصالح پای کار جدول ۱ پیوست ۱ - فاز ۲)
 - ستون‌ها: `id`, `discipline`, `year`, `chapter_code`, `material_description`, `factor_percent` (`REAL` — مثلاً `90` برای قالب مجوف ماندگار فصل ۵ طبق ص ۲۳۶ بولتن), `source_file`, `source_page_bulletin` (`236`), `source_page_pdf` (`239`).
+
+---
+
+### جداول ۹ تا ۱۲ (افزوده‌شده در اسکیمای `1.2` طبق تصمیم D7 کارفرما در گام ج مرحله ۳):
+
+#### جدول ۹: `mortar_table` (جدول ۱-۱ کلیات: مقدار سیمان در ملات‌ها — ص ۵ بولتن / ص ۸ PDF)
+- ستون‌ها: `id`, `mortar_code` (`UNIQUE`), `discipline`, `year`, `block_no`, `col_no`, `mortar_title`, `mix_ratio_normalized`, `mix_ratio_raw_pdf`, `cement_kg_per_m3`, `source_file`, `source_page_bulletin` (`5`), `source_page_pdf` (`8`), `clause_ref`, `verification_status` (`'تأییدنشده'`), `evidence_path` (`'docs/evidence/abnieh_page_8_mortar_table.png'`).
+- تعداد رکورد: **۱۱ ردیف** (۳ بلوک افقی جدول ۱-۱ کلیات).
+
+#### جدول ۱۰: `overhead_table` (جدول الف دستورالعمل کاربرد: ضرایب بالاسری، سقف ستاره‌دار و سقف تجهیز کارگاه — ص ۲ بولتن / ص ۵ PDF)
+- ستون‌ها: `id`, `row_key` (`UNIQUE`), `sector_fa`, `discipline_fa`, `equip_cap_pct` (`4.0`), `star_cap_public_pct` (`30.0`), `star_cap_limited_pct` (`15.0`), `star_cap_non_tender_pct` (`10.0`), `overhead_civil_tender` (`1.30`), `overhead_civil_non_tender` (`1.20`), `overhead_non_civil_tender` (`1.41`), `overhead_non_civil_non_tender` (`1.30`), `overhead_purchase_only` (`1.14` یا `NULL`), `purchase_clause_note`, `selected_project_overhead` (`NULL`), `source_file`, `source_page_bulletin` (`2`), `source_page_pdf` (`5`), `clause_ref`, `equip_cap_verification_status` (`'تأییدنشده'`), `overhead_verification_status` (`'تأییدشده توسط کاربر'`), `evidence_path` (`'docs/evidence/abnieh_page_5_overhead.png'`).
+- تعداد رکورد: **۴ ردیف** (ابنیه، تأسیسات مکانیکی، تأسیسات برقی، مرمت بناهای تاریخی).
+
+#### جدول ۱۱: `floor_factor_params` (فرمول و پارامترهای ضریب طبقات پیوست ۲ — ص ۲۳۹ و ۲۴۰ بولتن / ص ۲۴۲ و ۲۴۳ PDF)
+- ستون‌ها: `id`, `param_key` (`UNIQUE`), `discipline`, `year`, `title_fa`, `formula_text_simple`, `rounding_decimals` (`4`), `excludes_landscaping` (`1`), `excludes_material_on_site` (`1`), `selected_project_floor_coeff` (`NULL`), `source_file`, `source_page_bulletin` (`239`), `source_page_pdf` (`242`), `clause_ref`, `verification_status` (`'تأییدنشده؛ نیاز به بازبینی چشمی کاربر'`), `evidence_path` (`'docs/evidence/abnieh_page_242_app2_floor_formula.png'`).
+- تعداد رکورد: **۱ ردیف**.
+
+#### جدول ۱۲: `region_factors` (ضوابط و فرمول میانگین وزنی ضریب منطقه‌ای پیوست ۴ — ص ۲۴۳ بولتن / ص ۲۴۶ PDF)
+- ستون‌ها: `id`, `region_key` (`UNIQUE`), `discipline`, `year`, `circular_ref` (`'94/69416'`), `circular_date` (`'1394/04/30'`), `weighted_formula_simple`, `selected_project_region_coeff` (`NULL`), `source_file`, `source_page_bulletin` (`243`), `source_page_pdf` (`246`), `clause_ref`, `verification_status` (`'تأییدنشده؛ نیاز به بازبینی چشمی کاربر'`), `evidence_path` (`'docs/evidence/abnieh_page_246_app4_region_formula.png'`).
+- تعداد رکورد: **۱ ردیف**.
 
 ---
 

@@ -571,6 +571,19 @@ def extract_coefficients_from_pdf(
             "source_page_bulletin": 2,
             "source_clause": "بند 2-6 و جدول الف دستورالعمل کاربرد (ص 2 بولتن)",
         },
+        # ۱۲-الف (اسکیمای ۱٫۲ — تصمیم D7): سقف ۴٪ تجهیز و برچیدن کارگاه با وضعیت «تأییدنشده»
+        {
+            "coeff_key": "EQUIP_DEMOB_CAP_PCT",
+            "category": "equip_cap",
+            "title_fa": "سقف مجاز هزینه تجهیز و برچیدن کارگاه (درصد)",
+            "reference_value": val_eq4,
+            "default_in_template": None,
+            "is_enabled_default": 0,
+            "formula_description": "حداکثر 4 درصد مبلغ برآورد هزینه اجرای کار بدون هزینه‌های تجهیز و برچیدن کارگاه",
+            "source_file": pdf_filename,
+            "source_page_bulletin": 2,
+            "source_clause": "جدول الف ص 2 و بند 2-17-1 پیوست 5 ص 247 بولتن",
+        },
         # ۱۳ تا ۱۸: شش ردیف کسورات و اضافات مالی روکش صورت‌وضعیت (مقدار مرجع و پیش‌فرض هر دو NULL)
         {
             "coeff_key": "DED_GOOD_PERFORMANCE",

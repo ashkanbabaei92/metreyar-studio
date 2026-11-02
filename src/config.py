@@ -29,15 +29,24 @@ TEMPLATES_DIR: Path = PROJECT_ROOT / "templates"
 OUTPUT_DIR: Path = PROJECT_ROOT / "output"
 TESTS_DIR: Path = PROJECT_ROOT / "tests"
 
-# مسیر فایل‌های خروجی مرحله ۲
+# مسیر فایل‌های خروجی مرحله ۲ و ۳
 REFERENCE_DB_PATH: Path = DATA_PROCESSED_DIR / "reference.db"
 REFERENCE_XLSX_PATH: Path = DATA_PROCESSED_DIR / "reference.xlsx"
 EXTRACTION_REPORT_PATH: Path = DOCS_DIR / "extraction_report.md"
 USER_APPROVALS_PATH: Path = DOCS_DIR / "user_approvals.json"
+UNRESOLVED_DEPS_PATH: Path = DOCS_DIR / "unresolved_dependencies.md"
+AMBIGUOUS_RULES_PATH: Path = DOCS_DIR / "ambiguous_rules.md"
+RULES_TEST_MATRIX_PATH: Path = DOCS_DIR / "rules_test_matrix.md"
+SENSITIVE_NUMBERS_PATH: Path = DOCS_DIR / "sensitive_numbers.md"
+RULES_EXTRACTION_REPORT_PATH: Path = DOCS_DIR / "rules_extraction_report.md"
 
-# نسخه اسکیما
-SCHEMA_VERSION: str = "1.1"
-SCHEMA_USER_VERSION: int = 101
+# نسخه اسکیما (مرحله ۳ — گام ج: اسکیمای ۱٫۲)
+SCHEMA_VERSION: str = "1.2"
+SCHEMA_USER_VERSION: int = 102
+
+# دامنه برش مرحله ۳ برای notes و rules (تصمیم D1 کارفرما)
+STAGE3_SLICE_CHAPTERS: list[str] = ["01", "02", "03", "05", "06", "07", "08", "28"]
+STAGE3_SLICE_APPENDICES: list[str] = ["A2", "A3", "A4"]
 
 # سال فهرست بها
 DEFAULT_YEAR: int = 1404
