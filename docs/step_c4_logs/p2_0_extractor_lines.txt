@@ -1,0 +1,41 @@
+        price_val = normalize_number_str(row[c_price])
+
+        item_category = classify_item_category(row[c_desc], price_val)
+
+        # طبق تصمیم ۶ کارفرما:
+        # «ستاره‌دار» در فیلد is_star_price_zero یعنی «بدون بها طبق بند ۲-۴ دستورالعمل کاربرد»،
+        # یعنی ۶۲ ردیف دارای قیمت صفر در فصول ۱ تا ۴۱ (ردیف‌های فصل ۹۹ تجهیز کارگاه قیمتشان NULL است).
+        is_star_price_zero = 1 if (price_val is not None and price_val == 0.0) else 0
+
+        # طبق تصمیم ۷ کارفرما: ۸ ردیف با واحد «درصد» فقط ثبت شوند، تفسیر نشوند.
+        is_percent_unit = 1 if unit_std == "درصد" else 0
+
+        pdf_info = pdf_items_map.get(code_official, {})
+        page_bul = pdf_info.get("page_bulletin")
+        page_pdf = pdf_info.get("page_pdf")
+
+        items_list.append(
+            {
+                "discipline": discipline,
+                "year": year,
+                "code_official": code_official,
+                "code_internal": code_internal,
+                "chapter_code": chapter_code,
+                "group_code": group_code,
+                "item_seq": item_seq,
+                "description": desc_norm,
+                "unit_raw": unit_raw,
+                "unit": unit_std,
+                "unit_status": unit_status,
+                "unit_price_rial": price_val,
+                "item_category": item_category,
+                "is_star_price_zero": is_star_price_zero,
+                "is_percent_unit": is_percent_unit,
+                "source_excel_file": excel_filename,
+                "source_excel_row": excel_row_num,
+                "source_pdf_file": pdf_filename,
+                "source_page_bulletin": page_bul,
+                "source_page_pdf": page_pdf,
+            }
+        )
+

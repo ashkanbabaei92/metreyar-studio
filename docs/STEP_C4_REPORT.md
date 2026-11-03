@@ -83,16 +83,25 @@
 ### E2. تحلیل پرچم `is_star_price_zero`، فهرست ۶۲ ردیف و افزودن چک سازگاری
 
 #### ۱. محل تولید `is_star_price_zero` در کد (`grep -n`) و بررسی دایره‌ای بودن
-- خروجی `grep -n "is_star_price_zero" src/*.py`:
-  - `src/extractor.py:337`:
+- خروجی `grep -n "is_star_price_zero" src/extractor.py` و `sed -n '334,363p' src/extractor.py` (تأییدشده در P2-0):
+  - `src/extractor.py:335`: کامنت توضیحی `is_star_price_zero`.
+  - `src/extractor.py:337` (محل واقعی تولید پرچم):
     ```python
     is_star_price_zero = 1 if (price_val is not None and price_val == 0.0) else 0
     ```
-  - `src/extractor.py:361`: درج فیلد `"is_star_price_zero": is_star_price_zero` در دیکشنری رکورد `items`.
+  - `src/extractor.py:361`: درج کلید `"is_star_price_zero": is_star_price_zero` در دیکشنری رکورد `items`.
   - `src/build_reference.py:170,176`: درج ستون در جدول `items`.
 - **نتیجهٔ بررسی دایره‌ای بودن**: بله، مقدار `is_star_price_zero` در `src/extractor.py` خط ۳۳۷ **صرفاً و مستقیماً از شرط `price_val is not None and price_val == 0.0` (یعنی قیمت صفر در اکسل) مشتق می‌شود**. بنابراین چک برابری `COUNT(is_star_price_zero=1) == COUNT(unit_price_rial=0) == 62` **صرفاً یک چک سازگاری داخلی (Internal Consistency Check) است و به هیچ عنوان اثبات‌کنندهٔ وجود نماد ستاره (`*`) در فایل PDF نیست** (در PDF این ۶۲ ردیف فاقد کاراکتر `*` چاپی هستند و بهای واحد آن‌ها خالی/بدون بهاست).
 
-#### ۲. فهرست کامل ۶۲ ردیف دارای `is_star_price_zero = 1` (۴۸ ردیف `base` + ۱۴ ردیف `additional`)
+#### ۲. فهرست کامل ۶۲ ردیف دارای `is_star_price_zero = 1` و جدول متقاطع (P2-0: اصلاح ابهام تفکیک ۴۸ و ۱۴)
+
+**توضیح اصلاحی P2-0 (`src/c4_star_zero_split.py` / `docs/step_c4_logs/p2_0_split.txt`)**: اعداد `48` و `14` هم تقسیم بر حسب دستهٔ ردیف (`48` ردیف `base` در برابر `14` ردیف `additional`) و هم به طور تصادفی تقسیم بر حسب حضور در برش (`14` ردیف `in_slice` که همگی `base` هستند در برابر `48` ردیف `out_of_slice` شامل `34` ردیف `base` و `14` ردیف `additional`) هستند. برای رفع هرگونه ابهام بین «تفکیک دسته (`base`/`additional`)» و «تفکیک دامنهٔ برش (`in_slice`/`out_of_slice`)»، جدول متقاطع دقیق ۲×۳ در زیر درج شده است:
+
+| دامنهٔ فصل (`chapter_code`) | `base` | `additional` | `deduction` | جمع کل | فصول (`chapter_code`: تعداد) |
+|---|---:|---:|---:|---:|---|
+| **داخل برش فاز ۱** (`{01,02,03,05,06,07,08,28}`) | `14` | `0` | `0` | **`14`** | `02`: 2، `03`: 3، `06`: 5، `07`: 4 |
+| **خارج از برش فاز ۱** (۱۴ فصل خارج برش) | `34` | `14` | `0` | **`48`** | `04`: 2، `09`: 5، `12`: 4، `14`: 1، `16`: 6، `17`: 2، `18`: 2، `19`: 2، `20`: 2، `22`: 13، `23`: 5، `24`: 1، `25`: 2، `41`: 1 |
+| **جمع کل به تفکیک دسته (`item_category`)** | **`48`** | **`14`** | **`0`** | **`62`** | جمع کل = `62` ردیف |
 
 **الف) در برش فاز ۱ (۱۴ ردیف — همگی از دستهٔ `base`؛ ۰ ردیف `additional` در برش فاز ۱ قیمت صفر دارد):**
 | فصل | دسته (`item_category`) | تعداد | کدهای رسمی (`code_official`) |

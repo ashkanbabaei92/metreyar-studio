@@ -1,0 +1,52 @@
+Total rows with is_star_price_zero = 1: 62
+
+=== Cross-tab: (slice_status x item_category) ===
+  in_slice     | base       : 14
+  in_slice     | additional : 0
+  in_slice     | deduction  : 0
+  out_of_slice | base       : 34
+  out_of_slice | additional : 14
+  out_of_slice | deduction  : 0
+  TOTAL in_slice     : 14
+  TOTAL out_of_slice : 48
+  TOTAL base         : 48
+  TOTAL additional   : 14
+
+=== In-slice chapters breakdown (14 rows) ===
+  chapter 02: 2
+  chapter 03: 3
+  chapter 06: 5
+  chapter 07: 4
+
+=== Out-of-slice chapters breakdown (48 rows across 14 chapters) ===
+  Out-of-slice chapter_code list: 04, 09, 12, 14, 16, 17, 18, 19, 20, 22, 23, 24, 25, 41
+  chapter 04: 2
+  chapter 09: 5
+  chapter 12: 4
+  chapter 14: 1
+  chapter 16: 6
+  chapter 17: 2
+  chapter 18: 2
+  chapter 19: 2
+  chapter 20: 2
+  chapter 22: 13
+  chapter 23: 5
+  chapter 24: 1
+  chapter 25: 2
+  chapter 41: 1
+
+=== Detailed list of IN-SLICE star-price-zero rows ===
+  020105 | ch=02 | cat=base | unit=مترمکعب | price=0.0 | کندن زمین در زمین‌های سنگی با استفاده از مواد سوزا و کارگر و
+  020106 | ch=02 | cat=base | unit=مترمکعب | price=0.0 | کندن زمین در زمین‌های سنگی با استفاده از مواد منبسط شونده و 
+  030203 | ch=03 | cat=base | unit=مترمکعب | price=0.0 | کندن زمین در زمین‌های سنگی با بولدوزر یا وسیله مشابه و با اس
+  030706 | ch=03 | cat=base | unit=مترمکعب | price=0.0 | بارگیری و باراندازی هرگاه استفاده از جرثقیل و باکت یا وسیله 
+  030905 | ch=03 | cat=base | unit=None | price=0.0 | تحکیم زمین‌های ماسه‌ای به روش تراکم دینامیکی (Dynamic­Compac
+  061001 | ch=06 | cat=base | unit=مترمربع | price=0.0 | قالب‌بندی با استفاده از قالب فولادی، پشت بند، چوب بست، داربس
+  061002 | ch=06 | cat=base | unit=مترمربع | price=0.0 | قالب‌بندی با استفاده از قالب فولادی، پشت بند، چوب بست و دارب
+  061004 | ch=06 | cat=base | unit=مترمربع | price=0.0 | قالب‌بندی با استفاده از قالب فولادی، پشت بند، چوب بست و دارب
+  061005 | ch=06 | cat=base | unit=مترمربع | price=0.0 | قالب‌بندی با استفاده از قالب میزی در دال‌ها (تاوه‌ها) با تما
+  061006 | ch=06 | cat=base | unit=مترمربع | price=0.0 | قالب‌بندی جهت بتن‌ریزی هم‌زمان دیوار و سقف با استفاده از قال
+  070801 | ch=07 | cat=base | unit=عدد | price=0.0 | تهیه و کاشت بولت مکانیکی به همراه سوراخ‌کاری
+  070802 | ch=07 | cat=base | unit=عدد | price=0.0 | تهیه و کاشت بولت یا میلگرد با چسب مخصوص به همراه سوراخ‌کاری
+  070901 | ch=07 | cat=base | unit=عدد | price=0.0 | تهیه و اجرای اتصال مکانیکی میلگردها به یکدیگر به همراه رزوه 
+  070902 | ch=07 | cat=base | unit=عدد | price=0.0 | اتصال میلگردها به یکدیگر به روش جوشکاری ذوبی فشاری گازی به ه

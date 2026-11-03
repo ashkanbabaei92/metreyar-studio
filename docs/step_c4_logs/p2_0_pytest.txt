@@ -1,0 +1,52 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.14, pytest-9.0.3, pluggy-1.6.0 -- /usr/local/bin/python3.13
+cachedir: .pytest_cache
+rootdir: /home/user/webapp
+plugins: anyio-4.14.2
+collecting ... collected 43 items
+
+tests/test_rules_matrix.py::test_schema_v1_2_tables_and_columns PASSED   [  2%]
+tests/test_rules_matrix.py::test_notes_text_normalization_and_empty_clauses PASSED [  4%]
+tests/test_rules_matrix.py::test_item_dependencies_completeness_and_no_fake_codes PASSED [  6%]
+tests/test_rules_matrix.py::test_rules_uniqueness_sources_and_d3_d4_d5_d6 PASSED [  9%]
+tests/test_rules_matrix.py::test_d7_reference_tables PASSED              [ 11%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[01_R-INST-2-8-SEQUENTIAL-COEFFS__VERIFIED_SOURCE_EXPERIMENTAL_VALS-1] PASSED [ 13%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[02_R-GEN-10-HARDWARE-INVOICE__VERIFIED_SOURCE-2] PASSED [ 16%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[03_R-GEN-18-2-UNNOTIFIED-MINUTES-070__NEEDS_REVIEW_UNVERIFIED_PDF-3] PASSED [ 18%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[04_R-01-G1-1-1-EXCLUSION__VERIFIED_SOURCE-4] PASSED [ 20%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[05_R-01-G1-1-6-TREE-ROOT-EARTHWORK__NEEDS_REVIEW_UNVERIFIED_PDF-5] PASSED [ 23%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[06_R-01-G2-2-2-GROOVE-MAX-100CM2_AND_010209__VERIFIED_SOURCE-6] PASSED [ 25%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[07_R-01-G4-4-2-EXCLUSION-010403__VERIFIED_SOURCE-7] PASSED [ 27%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[08_R-01-G4-4-3-HEAVY-MACHINERY-050__NEEDS_REVIEW_UNVERIFIED_PDF-8] PASSED [ 30%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[09_R-ITEM-010517__VERIFIED_SOURCE-9] PASSED [ 32%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[10_R-ITEM-010921__VERIFIED_SOURCE-10] PASSED [ 34%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[11_R-ITEM-020201_D4_STEPS__VERIFIED_SOURCE-11] PASSED [ 37%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[12_R-ITEM-020304_D4_STEPS__VERIFIED_SOURCE-12] PASSED [ 39%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[13_R-ITEM-020402__VERIFIED_SOURCE-13] PASSED [ 41%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[14_R-03-G2-2-1-BLASTING-MAX-VOLUME__NEEDS_REVIEW_UNVERIFIED_PDF-14] PASSED [ 44%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[15_R-03-G2-2-2-CONTROLLED-BLASTING-30PCT__NEEDS_REVIEW_UNVERIFIED_PDF-15] PASSED [ 46%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[16_R-03-G6-6-1-EXCLUSION_AND_030603_D4__NEEDS_REVIEW_UNVERIFIED_PDF-16] PASSED [ 48%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[17_R-03-G7-7-4-DIRT-ROAD-HAUL-130__NEEDS_REVIEW_UNVERIFIED_PDF-17] PASSED [ 51%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[18_R-03-G9-9-2-LAYER-THICKNESS-DEDUCTION__NEEDS_REVIEW_UNVERIFIED_PDF-18] PASSED [ 53%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[19_R-03-G12-12-4-REDRILLING-50PCT__NEEDS_REVIEW_UNVERIFIED_PDF-19] PASSED [ 55%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[20_R-05-GEN-10-NON-NRAD-WOOD-DED-35PCT__NEEDS_REVIEW_UNVERIFIED_PDF-20] PASSED [ 58%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[21_R-05-G2-2-1-ONE-SIDED-WALL-20PCT__NEEDS_REVIEW_UNVERIFIED_PDF-21] PASSED [ 60%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[22_R-06-GEN-11-1-SLAB-BEAM-HEIGHT-10-TO-20M__NEEDS_REVIEW_UNVERIFIED_PDF-22] PASSED [ 62%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[23_R-06-GEN-11-2-WALL-COL-HEIGHT-10-TO-20M__NEEDS_REVIEW_UNVERIFIED_PDF-23] PASSED [ 65%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[24_R-06-G10-10-5-EXCLUSION-060801__VERIFIED_SOURCE-24] PASSED [ 67%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[25_R-07-GEN-5-WELDED-SPLICE-200PCT__NEEDS_REVIEW_UNVERIFIED_PDF-25] PASSED [ 69%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[26_R-08-G1-1-1-FC-CEMENT-EQUIV__NEEDS_REVIEW_UNVERIFIED_PDF-26] PASSED [ 72%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[27_R-08-G3-3-2-SLOPED-CONCRETE-150__NEEDS_REVIEW_UNVERIFIED_PDF-27] PASSED [ 74%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[28_R-08-G3-3-5-EXCLUSION-JOIST-BLOCK-SLAB__VERIFIED_SOURCE-28] PASSED [ 76%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[29_R-28-G1-1-2-2-BULK-CEMENT_AND_1-2-3-WASTE__NEEDS_REVIEW_UNVERIFIED_PDF-29] PASSED [ 79%]
+tests/test_rules_matrix.py::test_rules_matrix_calculations[30_APP2_FLOOR_FACTOR_FORMULA__NEEDS_REVIEW_UNVERIFIED_PDF-30] PASSED [ 81%]
+tests/test_stage2_reference.py::test_pdf_tounicode_patch_regression_pages_5_and_120 PASSED [ 83%]
+tests/test_stage2_reference.py::test_schema_12_tables_and_record_counts PASSED [ 86%]
+tests/test_stage2_reference.py::test_price_distribution_and_missing_unit PASSED [ 88%]
+tests/test_stage2_reference.py::test_item_categories_and_star_flags PASSED [ 90%]
+tests/test_stage2_reference.py::test_star_price_zero_flag_consistency_62 PASSED [ 93%]
+tests/test_stage2_reference.py::test_unit_standardization_and_percent_items PASSED [ 95%]
+tests/test_stage2_reference.py::test_independent_excel_and_pdf_sample_validation PASSED [ 97%]
+tests/test_stage2_reference.py::test_schema_v1_2_and_user_approvals_in_coefficients PASSED [100%]
+
+============================== 43 passed in 5.69s ==============================
