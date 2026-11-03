@@ -546,6 +546,7 @@ def extract_coefficients_from_pdf(
             "source_file": pdf_filename,
             "source_page_bulletin": 1,
             "source_clause": "بند 2-6 و جدول الف دستورالعمل کاربرد (ص 1 و 2 بولتن)",
+            "evidence_path": "docs/evidence/abnieh_page_4_instructions_2_4_2_6.png",
         },
         {
             "coeff_key": "STAR_ITEM_CAP_LIMITED_TENDER_PCT",
@@ -558,6 +559,7 @@ def extract_coefficients_from_pdf(
             "source_file": pdf_filename,
             "source_page_bulletin": 2,
             "source_clause": "بند 2-6 و جدول الف دستورالعمل کاربرد (ص 2 بولتن)",
+            "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
         },
         {
             "coeff_key": "STAR_ITEM_CAP_NON_TENDER_PCT",
@@ -570,6 +572,7 @@ def extract_coefficients_from_pdf(
             "source_file": pdf_filename,
             "source_page_bulletin": 2,
             "source_clause": "بند 2-6 و جدول الف دستورالعمل کاربرد (ص 2 بولتن)",
+            "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
         },
         # ۱۲-الف (اسکیمای ۱٫۲ — تصمیم D7): سقف ۴٪ تجهیز و برچیدن کارگاه با وضعیت «تأییدنشده»
         {
@@ -583,6 +586,7 @@ def extract_coefficients_from_pdf(
             "source_file": pdf_filename,
             "source_page_bulletin": 2,
             "source_clause": "جدول الف ص 2 و بند 2-17-1 پیوست 5 ص 247 بولتن",
+            "evidence_path": "docs/evidence/abnieh_page_5_overhead.png",
         },
         # ۱۳ تا ۱۸: شش ردیف کسورات و اضافات مالی روکش صورت‌وضعیت (مقدار مرجع و پیش‌فرض هر دو NULL)
         {
@@ -677,7 +681,7 @@ def extract_coefficients_from_pdf(
             c["verification_status"] = "تأییدنشده"
             c["verified_by"] = None
             c["verified_at"] = None
-            c["evidence_path"] = None
+            c["evidence_path"] = c.get("evidence_path")
         else:
             c["verification_status"] = "بدون مقدار (انتخاب پروژه)"
             c["verified_by"] = None

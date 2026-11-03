@@ -334,6 +334,21 @@ def test_d7_reference_tables():
     assert regions[0]["verification_status"] == "تأییدنشده؛ نیاز به بازبینی چشمی کاربر"
     assert Path(regions[0]["evidence_path"]).exists()
 
+    # ۴ ردیف سقف تأییدنشده در جدول coefficients نیز باید دارای مسیر مدرک معتبر در docs/evidence باشند (گام ج-۳: C5)
+    unverified_caps = [
+        dict(r)
+        for r in cur.execute(
+            "SELECT coeff_key, verification_status, evidence_path, source_page_bulletin FROM coefficients WHERE verification_status='تأییدنشده' ORDER BY id;"
+        ).fetchall()
+    ]
+    assert len(unverified_caps) == 4
+    for uc in unverified_caps:
+        assert uc["evidence_path"] is not None, f"Missing evidence_path for {uc['coeff_key']}"
+        assert Path(uc["evidence_path"]).exists(), f"Evidence file not found: {uc['evidence_path']}"
+    # سقف ۳۰٪ مناقصه عمومی در متن بند ۲-۶ صفحه ۱ بولتن (صفحه ۴ PDF) شروع می‌شود
+    cap_30 = next(c for c in unverified_caps if c["coeff_key"] == "STAR_ITEM_CAP_PUBLIC_TENDER_PCT")
+    assert cap_30["evidence_path"] == "docs/evidence/abnieh_page_4_instructions_2_4_2_6.png"
+
     conn.close()
 
 
@@ -350,37 +365,40 @@ def _get_rule_cond(cur: sqlite3.Cursor, rule_code: str) -> dict:
     return json.loads(row["condition_json"])
 
 
+# تفکیک ۳۰ سناریوی ماتریس تست طبق گام ج-۳ (C4):
+# - ۱۲ سناریوی متکی صرفاً به اکسل رسمی، ضرایب تأییدشده توسط کاربر یا استثناهای ساختاری مصوب: برچسب VERIFIED_SOURCE
+# - ۱۸ سناریوی متکی به اعداد یا فرمول‌های استخراج‌شده از لایه متنی PDF که هنوز در بخش ۵ تأیید چشمی نشده‌اند: برچسب NEEDS_REVIEW_UNVERIFIED_PDF
 RULES_MATRIX_30_SCENARIOS = [
-    ("01_R-INST-2-8-SEQUENTIAL-COEFFS", 1),
-    ("02_R-GEN-10-HARDWARE-INVOICE", 2),
-    ("03_R-GEN-18-2-UNNOTIFIED-MINUTES-070", 3),
-    ("04_R-01-G1-1-1-EXCLUSION", 4),
-    ("05_R-01-G1-1-6-TREE-ROOT-EARTHWORK", 5),
-    ("06_R-01-G2-2-2-GROOVE-MAX-100CM2_AND_010209", 6),
-    ("07_R-01-G4-4-2-EXCLUSION-010403", 7),
-    ("08_R-01-G4-4-3-HEAVY-MACHINERY-050", 8),
-    ("09_R-ITEM-010517", 9),
-    ("10_R-ITEM-010921", 10),
-    ("11_R-ITEM-020201_D4_STEPS", 11),
-    ("12_R-ITEM-020304_D4_STEPS", 12),
-    ("13_R-ITEM-020402", 13),
-    ("14_R-03-G2-2-1-BLASTING-MAX-VOLUME", 14),
-    ("15_R-03-G2-2-2-CONTROLLED-BLASTING-30PCT", 15),
-    ("16_R-03-G6-6-1-EXCLUSION_AND_030603_D4", 16),
-    ("17_R-03-G7-7-4-DIRT-ROAD-HAUL-130", 17),
-    ("18_R-03-G9-9-2-LAYER-THICKNESS-DEDUCTION", 18),
-    ("19_R-03-G12-12-4-REDRILLING-50PCT", 19),
-    ("20_R-05-GEN-10-NON-NRAD-WOOD-DED-35PCT", 20),
-    ("21_R-05-G2-2-1-ONE-SIDED-WALL-20PCT", 21),
-    ("22_R-06-GEN-11-1-SLAB-BEAM-HEIGHT-10-TO-20M", 22),
-    ("23_R-06-GEN-11-2-WALL-COL-HEIGHT-10-TO-20M", 23),
-    ("24_R-06-G10-10-5-EXCLUSION-060801", 24),
-    ("25_R-07-GEN-5-WELDED-SPLICE-200PCT", 25),
-    ("26_R-08-G1-1-1-FC-CEMENT-EQUIV", 26),
-    ("27_R-08-G3-3-2-SLOPED-CONCRETE-150", 27),
-    ("28_R-08-G3-3-5-EXCLUSION-JOIST-BLOCK-SLAB", 28),
-    ("29_R-28-G1-1-2-2-BULK-CEMENT_AND_1-2-3-WASTE", 29),
-    ("30_APP2_FLOOR_FACTOR_FORMULA", 30),
+    ("01_R-INST-2-8-SEQUENTIAL-COEFFS__VERIFIED_SOURCE_EXPERIMENTAL_VALS", 1),
+    ("02_R-GEN-10-HARDWARE-INVOICE__VERIFIED_SOURCE", 2),
+    ("03_R-GEN-18-2-UNNOTIFIED-MINUTES-070__NEEDS_REVIEW_UNVERIFIED_PDF", 3),
+    ("04_R-01-G1-1-1-EXCLUSION__VERIFIED_SOURCE", 4),
+    ("05_R-01-G1-1-6-TREE-ROOT-EARTHWORK__NEEDS_REVIEW_UNVERIFIED_PDF", 5),
+    ("06_R-01-G2-2-2-GROOVE-MAX-100CM2_AND_010209__VERIFIED_SOURCE", 6),
+    ("07_R-01-G4-4-2-EXCLUSION-010403__VERIFIED_SOURCE", 7),
+    ("08_R-01-G4-4-3-HEAVY-MACHINERY-050__NEEDS_REVIEW_UNVERIFIED_PDF", 8),
+    ("09_R-ITEM-010517__VERIFIED_SOURCE", 9),
+    ("10_R-ITEM-010921__VERIFIED_SOURCE", 10),
+    ("11_R-ITEM-020201_D4_STEPS__VERIFIED_SOURCE", 11),
+    ("12_R-ITEM-020304_D4_STEPS__VERIFIED_SOURCE", 12),
+    ("13_R-ITEM-020402__VERIFIED_SOURCE", 13),
+    ("14_R-03-G2-2-1-BLASTING-MAX-VOLUME__NEEDS_REVIEW_UNVERIFIED_PDF", 14),
+    ("15_R-03-G2-2-2-CONTROLLED-BLASTING-30PCT__NEEDS_REVIEW_UNVERIFIED_PDF", 15),
+    ("16_R-03-G6-6-1-EXCLUSION_AND_030603_D4__NEEDS_REVIEW_UNVERIFIED_PDF", 16),
+    ("17_R-03-G7-7-4-DIRT-ROAD-HAUL-130__NEEDS_REVIEW_UNVERIFIED_PDF", 17),
+    ("18_R-03-G9-9-2-LAYER-THICKNESS-DEDUCTION__NEEDS_REVIEW_UNVERIFIED_PDF", 18),
+    ("19_R-03-G12-12-4-REDRILLING-50PCT__NEEDS_REVIEW_UNVERIFIED_PDF", 19),
+    ("20_R-05-GEN-10-NON-NRAD-WOOD-DED-35PCT__NEEDS_REVIEW_UNVERIFIED_PDF", 20),
+    ("21_R-05-G2-2-1-ONE-SIDED-WALL-20PCT__NEEDS_REVIEW_UNVERIFIED_PDF", 21),
+    ("22_R-06-GEN-11-1-SLAB-BEAM-HEIGHT-10-TO-20M__NEEDS_REVIEW_UNVERIFIED_PDF", 22),
+    ("23_R-06-GEN-11-2-WALL-COL-HEIGHT-10-TO-20M__NEEDS_REVIEW_UNVERIFIED_PDF", 23),
+    ("24_R-06-G10-10-5-EXCLUSION-060801__VERIFIED_SOURCE", 24),
+    ("25_R-07-GEN-5-WELDED-SPLICE-200PCT__NEEDS_REVIEW_UNVERIFIED_PDF", 25),
+    ("26_R-08-G1-1-1-FC-CEMENT-EQUIV__NEEDS_REVIEW_UNVERIFIED_PDF", 26),
+    ("27_R-08-G3-3-2-SLOPED-CONCRETE-150__NEEDS_REVIEW_UNVERIFIED_PDF", 27),
+    ("28_R-08-G3-3-5-EXCLUSION-JOIST-BLOCK-SLAB__VERIFIED_SOURCE", 28),
+    ("29_R-28-G1-1-2-2-BULK-CEMENT_AND_1-2-3-WASTE__NEEDS_REVIEW_UNVERIFIED_PDF", 29),
+    ("30_APP2_FLOOR_FACTOR_FORMULA__NEEDS_REVIEW_UNVERIFIED_PDF", 30),
 ]
 
 

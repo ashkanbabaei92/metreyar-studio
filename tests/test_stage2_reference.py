@@ -284,7 +284,7 @@ def test_schema_v1_2_and_user_approvals_in_coefficients():
             assert r["verification_status"] == "تأییدنشده"
             assert r["verified_by"] is None
             assert r["verified_at"] is None
-            assert r["evidence_path"] is None
+            assert r["evidence_path"] is not None and Path(r["evidence_path"]).exists()
         else:
             assert r["verification_status"] == "بدون مقدار (انتخاب پروژه)"
             assert r["verified_by"] is None
