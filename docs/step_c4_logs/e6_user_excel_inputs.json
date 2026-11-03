@@ -1,0 +1,40 @@
+{
+  "source": "اسکرین‌شات اکسل کاربر؛ منبع رسمی نیست",
+  "building_name": "آینده",
+  "rows": [
+    {"type": "B", "floor": 3, "area": 400},
+    {"type": "B", "floor": 2, "area": 400},
+    {"type": "B", "floor": 1, "area": 400},
+    {"type": "B", "floor": 0, "area": 400},
+    {"type": "F", "floor": 0, "area": 600},
+    {"type": "F", "floor": 1, "area": 500},
+    {"type": "F", "floor": 2, "area": 500},
+    {"type": "F", "floor": 3, "area": 500},
+    {"type": "F", "floor": 4, "area": 500},
+    {"type": "F", "floor": 5, "area": 500},
+    {"type": "F", "floor": 6, "area": 500},
+    {"type": "F", "floor": 7, "area": 500},
+    {"type": "F", "floor": 8, "area": 500},
+    {"type": "F", "floor": 9, "area": 500},
+    {"type": "F", "floor": 10, "area": 500},
+    {"type": "F", "floor": 11, "area": 400}
+  ],
+  "user_displayed": {
+    "S": 7600,
+    "W": 34300,
+    "P": 1.0451
+  },
+  "user_formula_note": "P = 1 + [Σk×Bk + Σk×Fk] ÷ (S×100)، طبقهٔ صفر فقط در S می‌آید، گردکردن ۴ رقم اعشار",
+  "user_area_source_checkbox": {
+    "from_book_page_243": false,
+    "constructed_by_user": false,
+    "unknown": false
+  },
+  "user_page_observation": {
+    "s": "",
+    "numerator": "",
+    "denominator": "",
+    "intermediate": "",
+    "p": ""
+  }
+}
