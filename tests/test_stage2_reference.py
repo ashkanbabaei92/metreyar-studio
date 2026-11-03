@@ -60,9 +60,9 @@ def test_pdf_tounicode_patch_regression_pages_5_and_120():
     doc.close()
 
 
-def test_schema_8_tables_and_record_counts():
+def test_schema_12_tables_and_record_counts():
     """
-    بررسی وجود جداول اسکیما در reference.db و شمارش دقیق رکوردها:
+    بررسی وجود هر ۱۲ جدول اسکیمای ۱٫۲ در reference.db و شمارش دقیق رکوردها:
     items=1565, chapters=35, coefficients=19 (در اسکیمای ۱٫۲ شامل سقف ۴٪ تجهیز کارگاه طبق D7).
     """
     assert REFERENCE_DB_PATH.exists(), "فایل reference.db ساخته نشده است!"
@@ -227,7 +227,7 @@ def test_independent_excel_and_pdf_sample_validation():
     assert all(r["matched"] for r in sample_20), f"عدم تطابق در نمونه ۲۰ تایی: {sample_20}"
 
 
-def test_schema_v1_1_and_user_approvals_in_coefficients():
+def test_schema_v1_2_and_user_approvals_in_coefficients():
     """
     تست اسکیمای ۱٫۲ و ثبت تأییدهای کاربر در جدول coefficients:
     - نسخه اسکیما در PRAGMA user_version برابر 102 (معادل 1.2)
