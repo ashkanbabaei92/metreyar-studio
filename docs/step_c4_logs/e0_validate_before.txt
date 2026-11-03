@@ -1,0 +1,5 @@
+اعتبارسنجی کامل انجام شد:
+  items=1565, chapters=35, coefficients=19
+  pos=1423, neg=20, zero=62, null=60
+  base=1241, additional=304, deduction=20, add_star=14
+  excel_match=1565/1565, sample_20_all_matched=True

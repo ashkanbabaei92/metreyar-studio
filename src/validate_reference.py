@@ -235,6 +235,14 @@ def run_all_validations(
     cur.execute("SELECT item_category, COUNT(*) FROM items GROUP BY item_category;")
     cat_counts = dict(cur.fetchall())
 
+    cur.execute("SELECT COUNT(*) FROM items WHERE is_star_price_zero=1;")
+    star_flag_count = cur.fetchone()[0]
+
+    cur.execute(
+        "SELECT COUNT(*) FROM items WHERE (is_star_price_zero=1 AND (unit_price_rial IS NULL OR unit_price_rial != 0)) OR (is_star_price_zero=0 AND unit_price_rial = 0);"
+    )
+    star_flag_mismatch_count = cur.fetchone()[0]
+
     cur.execute("SELECT COUNT(*) FROM items WHERE item_category='additional' AND is_star_price_zero=1;")
     add_star_count = cur.fetchone()[0]
 
@@ -303,6 +311,8 @@ def run_all_validations(
         "base_count": cat_counts.get("base", 0),
         "additional_count": cat_counts.get("additional", 0),
         "deduction_count": cat_counts.get("deduction", 0),
+        "star_flag_count": star_flag_count,
+        "star_flag_mismatch_count": star_flag_mismatch_count,
         "add_star_count": add_star_count,
         "percent_codes": percent_codes,
         "excel_matched": ex_matched,
@@ -353,6 +363,7 @@ def _write_extraction_report(summary: Dict[str, Any], report_path: Path) -> None
         f"| دسته‌بندی `base` | `1241` | `{summary['base_count']}` | {'پاس' if summary['base_count'] == 1241 else 'رد'} |",
         f"| دسته‌بندی `additional` | `304` | `{summary['additional_count']}` | {'پاس' if summary['additional_count'] == 304 else 'رد'} |",
         f"| دسته‌بندی `deduction` | `20` | `{summary['deduction_count']}` | {'پاس' if summary['deduction_count'] == 20 else 'رد'} |",
+        f"| سازگاری پرچم `is_star_price_zero=1` با قیمت صفر (صرفاً چک سازگاری داخلی، نه اثبات وجود ستاره در PDF) | `62 = 62 (mismatch=0)` | `{summary['star_flag_count']} = {summary['zero_price_count']} (mismatch={summary['star_flag_mismatch_count']})` | {'پاس' if summary['star_flag_count'] == 62 and summary['zero_price_count'] == 62 and summary['star_flag_mismatch_count'] == 0 else 'رد'} |",
         f"| ردیف‌های `additional` دارای `is_star_price_zero=1` | `14` | `{summary['add_star_count']}` | {'پاس' if summary['add_star_count'] == 14 else 'رد'} |",
         f"| ردیف‌های با واحد «درصد» | `8` ردیف | `{len(summary['percent_codes'])}` ردیف (`{', '.join(summary['percent_codes'])}`) | {'پاس' if len(summary['percent_codes']) == 8 else 'رد'} |",
         f"| انطباق مستقل با `abn1404.xlsx` | `1565 / 1565` | `{summary['excel_matched']} / {summary['excel_total']}` | {'پاس' if summary['excel_matched'] == 1565 else 'رد'} |",
@@ -449,5 +460,6 @@ if __name__ == "__main__":
     print("اعتبارسنجی کامل انجام شد:")
     print(f"  items={res['items_count']}, chapters={res['chapters_count']}, coefficients={res['coefficients_count']}")
     print(f"  pos={res['pos_price_count']}, neg={res['neg_price_count']}, zero={res['zero_price_count']}, null={res['null_price_count']}")
+    print(f"  star_flag={res['star_flag_count']}==zero={res['zero_price_count']} (mismatch={res['star_flag_mismatch_count']})")
     print(f"  base={res['base_count']}, additional={res['additional_count']}, deduction={res['deduction_count']}, add_star={res['add_star_count']}")
     print(f"  excel_match={res['excel_matched']}/{res['excel_total']}, sample_20_all_matched={all(x['matched'] for x in res['sample_20'])}")

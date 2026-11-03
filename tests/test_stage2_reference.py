@@ -163,6 +163,38 @@ def test_item_categories_and_star_flags():
     conn.close()
 
 
+def test_star_price_zero_flag_consistency_62():
+    """
+    تست سازگاری داخلی پرچم is_star_price_zero با ردیف‌های دارای قیمت صفر (unit_price_rial == 0):
+    تعداد پرچم‌ها = تعداد ردیف‌های قیمت‌صفر = 62 و عدم تطابق = 0.
+    توجه: این تست صرفاً چک سازگاری داخلی مشتق‌شدن از قیمت صفر است، نه اثبات وجود کاراکتر ستاره (*) در PDF.
+    """
+    conn = sqlite3.connect(str(REFERENCE_DB_PATH))
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM items WHERE is_star_price_zero = 1;")
+    flag_cnt = cur.fetchone()[0]
+
+    cur.execute("SELECT COUNT(*) FROM items WHERE unit_price_rial = 0;")
+    zero_cnt = cur.fetchone()[0]
+
+    cur.execute(
+        """
+        SELECT COUNT(*) FROM items
+        WHERE (is_star_price_zero = 1 AND (unit_price_rial IS NULL OR unit_price_rial != 0))
+           OR (is_star_price_zero = 0 AND unit_price_rial = 0);
+        """
+    )
+    mismatch_cnt = cur.fetchone()[0]
+
+    assert flag_cnt == 62
+    assert zero_cnt == 62
+    assert flag_cnt == zero_cnt
+    assert mismatch_cnt == 0
+
+    conn.close()
+
+
 def test_unit_standardization_and_percent_items():
     """
     بررسی استانداردسازی واحدها طبق تصمیم ۵ کارفرما و ۸ ردیف واحد «درصد» طبق تصمیم ۷ کارفرما.
