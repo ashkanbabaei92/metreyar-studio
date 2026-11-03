@@ -94,7 +94,12 @@ def test_notes_text_normalization_and_empty_clauses():
     cur = conn.cursor()
 
     total_notes = cur.execute("SELECT COUNT(*) FROM notes;").fetchone()[0]
-    assert total_notes == 435
+    assert total_notes == 1196
+
+    in_slice_notes = cur.execute("SELECT COUNT(*) FROM notes WHERE status IN ('active', 'empty_in_source');").fetchone()[0]
+    out_of_slice_notes = cur.execute("SELECT COUNT(*) FROM notes WHERE status = 'out_of_slice';").fetchone()[0]
+    assert in_slice_notes == 435
+    assert out_of_slice_notes == 761
 
     # هیچ رکوردی بدون source_file، source_page_bulletin، source_page_pdf یا clause_ref نیست
     missing_src = cur.execute(

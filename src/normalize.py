@@ -223,6 +223,10 @@ def normalize_clause_text(raw_text: Optional[str]) -> str:
     return s
 
 
+# نام مستعار برای سازگاری کامل با اسکریپت‌ها و ایمپورت‌های قبلی
+normalize_pdf_note_text = normalize_clause_text
+
+
 def normalize_number_str(val: Any) -> Optional[float]:
     """
     تبدیل رشته یا مقدار عددی (شامل ارقام فارسی، جداکننده هزارگان ',' یا '،' و ممیز '/')

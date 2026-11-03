@@ -43,18 +43,18 @@ def extract_notes_stage3_slice(
     discipline: str = "abnieh",
     year: int = DEFAULT_YEAR,
     page_offset: int = 3,
+    include_out_of_slice: bool = True,
 ) -> List[Dict[str, Any]]:
     """
-    استخراج بندهای جدول `notes` صرفاً در دامنه برش تصمیم D1 کارفرما:
-    - دستورالعمل کاربرد (ص ۱ تا ۳ بولتن / ۴ تا ۶ PDF)
-    - کلیات (ص ۴ تا ۶ بولتن / ۷ تا ۹ PDF)
-    - فصول 01, 02, 03, 05, 06, 07, 08, 28
-    - پیوست‌های A2 (پیوست ۲)، A3 (پیوست ۳)، A4 (پیوست ۴)
-    شامل:
-    - ستون `text_raw` (خروجی مستقیم `pdf_fix` بدون ویرایش واژگانی)
-    - ستون `text_normalized` (با اصلاح قاعده‌مند «ال/لا» و فاصله‌های شکسته)
-    - ثبت بندهای خالی منبع (`9.` در دستورالعمل کاربرد و `7.` در کلیات) با متن خالی و `status='empty_in_source'`
-    - ثبت `source_file`, `source_page_bulletin`, `source_page_pdf`, `clause_ref`.
+    استخراج بندهای جدول `notes` طبق تصمیم D1 کارفرما:
+    - دامنه برش مصوب D1: دستورالعمل کاربرد (ص ۱ تا ۳ بولتن / ۴ تا ۶ PDF)، کلیات (ص ۴ تا ۶ بولتن / ۷ تا ۹ PDF)،
+      فصول 01, 02, 03, 05, 06, 07, 08, 28 و پیوست‌های A2 (پیوست ۲)، A3 (پیوست ۳)، A4 (پیوست ۴)
+    - طبق دستور صریح D1 («توجه: notes فعلی (۱۱۸۳) همه فصل‌ها را پوشش می‌دهد. حذفش نکن. گزارش کن که چند ردیفش در دامنه برش است و چند ردیف بیرون است»):
+      تمام ۷۶۱ ردیف خارج از برش D1 نیز حفظ می‌شوند (با status='out_of_slice') و ۴۳۵ ردیف داخل برش D1
+      (شامل ۴۳۳ بند فعال با status='active' و ۲ بند خالی منبع `9.` دستورالعمل کاربرد و `7.` کلیات با status='empty_in_source')
+      مجموعاً ۱٬۱۹۶ رکورد را تشکیل می‌دهند.
+    - شامل ستون `text_raw` (خروجی مستقیم `pdf_fix` بدون ویرایش واژگانی)، `text_normalized` (با اصلاح قاعده‌مند «ال/لا» و فاصله‌های شکسته)،
+      `source_file`, `source_page_bulletin`, `source_page_pdf`, `clause_ref`.
     """
     notes: List[Dict[str, Any]] = []
 
@@ -241,6 +241,52 @@ def extract_notes_stage3_slice(
             sec_t,
             ch_code,
         )
+
+    # ۴. حفظ ۷۶۱ ردیف خارج از برش D1 از استخراج مرحله ۲ (طبق دستور صریح D1: «حذفش نکن»)
+    if include_out_of_slice:
+        from src.extractor import extract_notes_from_pdf
+
+        all_stage2_notes = extract_notes_from_pdf(
+            doc=doc,
+            chapters_list=chapters_list,
+            pdf_filename=pdf_filename,
+            discipline=discipline,
+            year=year,
+            page_offset=page_offset,
+        )
+        for old_n in all_stage2_notes:
+            if (
+                old_n["section_type"] not in ("instructions", "general_terms")
+                and old_n["chapter_code"] not in allowed_codes
+            ):
+                raw_t = old_n["clause_text"]
+                norm_t = normalize_clause_text(raw_t)
+                cl_ref = _build_clause_ref(
+                    old_n["section_type"],
+                    old_n["chapter_code"],
+                    old_n["group_code"],
+                    old_n["clause_number"],
+                    old_n["source_page_bulletin"],
+                )
+                notes.append(
+                    {
+                        "discipline": old_n["discipline"],
+                        "year": old_n["year"],
+                        "section_type": old_n["section_type"],
+                        "chapter_code": old_n["chapter_code"],
+                        "group_code": old_n["group_code"],
+                        "clause_number": old_n["clause_number"],
+                        "clause_ref": cl_ref,
+                        "text_raw": raw_t,
+                        "text_normalized": norm_t,
+                        "clause_text": norm_t,
+                        "status": "out_of_slice",
+                        "has_calculation_rule": old_n["has_calculation_rule"],
+                        "source_file": old_n["source_file"],
+                        "source_page_bulletin": old_n["source_page_bulletin"],
+                        "source_page_pdf": old_n["source_page_pdf"],
+                    }
+                )
 
     return notes
 
