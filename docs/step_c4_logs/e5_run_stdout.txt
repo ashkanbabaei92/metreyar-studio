@@ -1,0 +1,18 @@
+=== E5 TEXT NOISE MEASUREMENT RAW LOG ===
+notes_total=1196 slice=435 non_slice=761
+slice_criterion=status != 'out_of_slice' (status in {'active': 433, 'empty_in_source': 2} => 435 vs 'out_of_slice': 761)
+items_total=1565 item_desc_col=description
+notes_changed: all=1163 slice=415 non_slice=748
+raw_tokens: all=61239 slice=22369 non_slice=38870
+norm_tokens: all=56276 slice=20287 non_slice=35989
+U1_total: all=2522 slice=1033 non_slice=1489
+U1_notes_with_hits: all=716 slice=260 non_slice=456
+U2_result: {'status': 'completed', 'all_pages_count': 123, 'slice_pages_count': 44, 'non_slice_pages_count': 79, 'overlap_pages': [], 'within_span_all': 2365, 'within_span_slice': 931, 'within_span_non_slice': 1434, 'within_line_all': 2365, 'within_line_slice': 931, 'within_line_non_slice': 1434, 'within_span_la_all': 2, 'within_span_la_slice': 0, 'within_span_la_non_slice': 2}
+U3_total: all=5271 slice=2043 non_slice=3228
+U4[all]: {'replace_opcodes': 4544, 'delete_opcodes': 0, 'insert_opcodes': 1, 'replace_raw_words': 10234, 'replace_norm_words': 5270, 'delete_raw_words': 0, 'insert_norm_words': 1, 'raw_changed_total': 10234, 'norm_changed_total': 5271, 'one_to_one_words': 659, 'many_to_one_norm_words': 3309, 'many_to_one_raw_words': 6939}
+U4[slice]: {'replace_opcodes': 1737, 'delete_opcodes': 0, 'insert_opcodes': 0, 'replace_raw_words': 4125, 'replace_norm_words': 2043, 'delete_raw_words': 0, 'insert_norm_words': 0, 'raw_changed_total': 4125, 'norm_changed_total': 2043, 'one_to_one_words': 249, 'many_to_one_norm_words': 1254, 'many_to_one_raw_words': 2776}
+U4[non_slice]: {'replace_opcodes': 2807, 'delete_opcodes': 0, 'insert_opcodes': 1, 'replace_raw_words': 6109, 'replace_norm_words': 3227, 'delete_raw_words': 0, 'insert_norm_words': 1, 'raw_changed_total': 6109, 'norm_changed_total': 3228, 'one_to_one_words': 410, 'many_to_one_norm_words': 2055, 'many_to_one_raw_words': 4163}
+cat_a_count=96 unsafe_cat_a_count=1
+  UNSAFE_A: BW-49 line=165 \bبتن\s+ر\s*یزی\b -> بتن‌ریزی items_hits=1
+cat_b_count=20 unsafe_cat_b_count=0
+cat_b_1to1_count=20 unsafe_cat_b_1to1_count=0
