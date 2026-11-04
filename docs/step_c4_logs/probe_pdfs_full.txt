@@ -1,0 +1,222 @@
+=== [0] RAW FILE LIST FROM os.walk('data/') ===
+FILE_01: data/تعدیل آحاد بها/101-173073.pdf (size=422105 bytes)
+FILE_02: data/تعدیل آحاد بها/1147659-1404.pdf (size=3021348 bytes)
+FILE_03: data/تعدیل آحاد بها/941636_Tadil-Movaghat-3-4-1404-14041219.pdf (size=429980 bytes)
+FILE_04: data/تعدیل آحاد بها/Arz4(DrMostafaNajafi.ir).pdf (size=215328 bytes)
+FILE_05: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-pdf.pdf (size=2860781 bytes)
+FILE_06: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-word.doc (size=227328 bytes)
+FILE_07: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/ابلاغ اصلاحيه موافقتنامه، شرايط عمومي.pdf (size=345764 bytes)
+FILE_08: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/تفسیر شرایط عمومی و خصوصی پیمان.pdf (size=2547823 bytes)
+FILE_09: data/فهرست‌بها (پایه محاسبات متره و برآورد)/11-Abnieh1404.pdf (size=12206162 bytes)
+FILE_10: data/فهرست‌بها (پایه محاسبات متره و برآورد)/12-Mechanic1404.pdf (size=7190390 bytes)
+FILE_11: data/فهرست‌بها (پایه محاسبات متره و برآورد)/13-barghi1404.pdf (size=10441414 bytes)
+FILE_12: data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx (size=110550 bytes)
+FILE_13: data/فهرست‌بها (پایه محاسبات متره و برآورد)/elec1404.xlsx (size=92665 bytes)
+FILE_14: data/فهرست‌بها (پایه محاسبات متره و برآورد)/mec1404.xlsx (size=69853 bytes)
+TOTAL_FILES=14 | PDFS=10 | XLSX=3 | DOC=1
+
+=== [A] FULL PDF SCAN ===
+--- PDF #1: data/تعدیل آحاد بها/101-173073.pdf ---
+PDF_1_PAGES: 11
+PDF_1_BOTH_ZERO (n_fix=0 & n_raw=0): 11
+PDF_1_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_1_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_1_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 11
+PDF_1_N_FIX_STATS: avg=0.00 min=0
+PDF_1_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(1, 0, 0, 1), (2, 0, 0, 1), (3, 0, 0, 1), (4, 0, 0, 1), (5, 0, 0, 1), (6, 0, 0, 1), (7, 0, 0, 1), (8, 0, 0, 1), (9, 0, 0, 1), (10, 0, 0, 1)]
+PDF_1_U066B_LINES: 0
+PDF_1_REPEATED_GT_50PCT (up to 5):
+  REPEATED: none
+PDF_1_MID_PAGE_RAW_SAMPLE (page=6): خالی
+PDF_1_STATUS: OK
+
+--- PDF #2: data/تعدیل آحاد بها/1147659-1404.pdf ---
+PDF_2_PAGES: 53
+PDF_2_BOTH_ZERO (n_fix=0 & n_raw=0): 1
+PDF_2_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_2_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_2_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 1
+PDF_2_N_FIX_STATS: avg=1567.83 min=0
+PDF_2_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(1, 0, 0, 2), (4, 256, 284, 1), (47, 886, 1302, 0), (24, 893, 1278, 0), (8, 921, 1294, 0), (13, 940, 1339, 0), (52, 942, 1358, 0), (53, 952, 1351, 0), (45, 969, 1376, 0), (22, 990, 1362, 0)]
+PDF_2_U066B_LINES: 642
+PDF_2_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=49/53 text='۲ . بر اساس فهرست پایه سال۱۳۸۱ با شاخص مبنای دوره سه ماهه تسلیم پیشنهاد پیمانکار در سال۱۳۸۲'
+  REPEATED: count=49/53 text='یادآوری : شاخص های پیوست۳ صرفا برای محاسبه تعدیل پیمانهایی به شرح زیر می باشد :'
+  REPEATED: count=49/53 text='۳ . بر اساس فهرست های غیر پایه با شاخص مبنای دوره های سه ماهه سال۱۳۸۲ و پس از آن'
+  REPEATED: count=49/53 text='۱ . بر اساس فهرست های پایه سال۱۳۸۲ و پس از آن'
+  REPEATED: count=48/53 text='پیوست۳ بخشنامه شماره۵۱۵۲۴۰ مورخ ۱۴۰۴٫۰۹٫۲۹'
+PDF_2_STATUS: OK
+
+--- PDF #3: data/تعدیل آحاد بها/941636_Tadil-Movaghat-3-4-1404-14041219.pdf ---
+PDF_3_PAGES: 3
+PDF_3_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_3_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_3_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_3_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_3_N_FIX_STATS: avg=1261.67 min=814
+PDF_3_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(3, 814, 896, 0), (2, 1079, 1146, 0), (1, 1892, 2203, 3)]
+PDF_3_U066B_LINES: 0
+PDF_3_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=2/3 text='ضریب شاخص های موقت تعدیل رشته ای و گروهی ( فصلی )'
+  REPEATED: count=2/3 text='شاخص تولید کننده در تابستان 1404'
+  REPEATED: count=2/3 text='ضر بی شاخص ها ی موقت تعد لی آحادبها، ن ی مه دوم سال 1404'
+  REPEATED: count=2/3 text='فهرست بهای واحد پایه رشته'
+  REPEATED: count=2/3 text='سه ماهه سوم 1404 سه ماهه چهارم 1404'
+PDF_3_STATUS: OK
+
+--- PDF #4: data/تعدیل آحاد بها/Arz4(DrMostafaNajafi.ir).pdf ---
+PDF_4_PAGES: 9
+PDF_4_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_4_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_4_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_4_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_4_N_FIX_STATS: avg=2431.11 min=938
+PDF_4_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(1, 938, 1236, 3), (8, 2235, 2358, 2), (6, 2423, 2563, 1), (5, 2443, 2527, 1), (9, 2496, 2567, 2), (7, 2513, 2595, 1), (2, 2829, 2893, 1), (4, 2859, 2954, 1), (3, 3144, 3240, 1)]
+PDF_4_U066B_LINES: 0
+PDF_4_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=9/9 text='رئیس ساز مان'
+  REPEATED: count=9/9 text='رياست جمهوري'
+  REPEATED: count=8/9 text='سازمان ربانمه و بودجه کشور'
+  REPEATED: count=8/9 text='پیوست بخشنامه شماره 1463.881666 مورخ 11.11 / 1463'
+PDF_4_STATUS: OK
+
+--- PDF #5: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-pdf.pdf ---
+PDF_5_PAGES: 76
+PDF_5_BOTH_ZERO (n_fix=0 & n_raw=0): 76
+PDF_5_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_5_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_5_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 76
+PDF_5_N_FIX_STATS: avg=0.00 min=0
+PDF_5_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(1, 0, 0, 1), (2, 0, 0, 1), (3, 0, 0, 1), (4, 0, 0, 1), (5, 0, 0, 1), (6, 0, 0, 1), (7, 0, 0, 1), (8, 0, 0, 1), (9, 0, 0, 1), (10, 0, 0, 1)]
+PDF_5_U066B_LINES: 0
+PDF_5_REPEATED_GT_50PCT (up to 5):
+  REPEATED: none
+PDF_5_MID_PAGE_RAW_SAMPLE (page=39): خالی
+PDF_5_STATUS: OK
+
+--- PDF #6: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/ابلاغ اصلاحيه موافقتنامه، شرايط عمومي.pdf ---
+PDF_6_PAGES: 1
+PDF_6_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_6_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_6_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_6_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_6_N_FIX_STATS: avg=1915.00 min=1915
+PDF_6_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(1, 1915, 2037, 2)]
+PDF_6_U066B_LINES: 0
+PDF_6_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=1/1 text='ٍبط ًاه ضيعی استاى ) ج ْت ططح استو اع زفاعيات ططفيي ت َسط " کاضگط پيواى ٍض َابط ف ٌی " اعالم ًظط'
+  REPEATED: count=1/1 text='ب ش َضای ف ٌی استاى اتراش تصوين زض ش َضای ف ٌی اضسال ًوايس . ًتيج تصوين ش َضای ف ٌی استاى، حساکثطَ'
+  REPEATED: count=1/1 text='تبصط : بطای فسد پيواى زض ه َضز ططح ُّا پط ٍغ ّای استا ًی، ک برشی يا توام اعتباضآى اظ هحل اعتباضات'
+  REPEATED: count=1/1 text='ضييس ساظهاى'
+  REPEATED: count=1/1 text='ض ٍظ ) بطای پيوا ًکاض پس اظ ابالغ اذطاض، هست ٌسات الظم ضا ب زبيطذا ش َضای ف ٌی استاى ( ساظهاى هسيطيتِ'
+PDF_6_STATUS: OK
+
+--- PDF #7: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/تفسیر شرایط عمومی و خصوصی پیمان.pdf ---
+PDF_7_PAGES: 436
+PDF_7_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_7_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_7_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_7_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_7_N_FIX_STATS: avg=504.96 min=82
+PDF_7_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(15, 82, 82, 2), (410, 87, 89, 2), (19, 89, 91, 2), (25, 96, 97, 2), (57, 106, 108, 2), (144, 107, 109, 2), (258, 109, 110, 2), (3, 112, 113, 2), (2, 150, 151, 2), (1, 157, 159, 1)]
+PDF_7_U066B_LINES: 0
+PDF_7_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=430/436 text='Academyofcivil.com Academyofcivil.com'
+  REPEATED: count=429/436 text='Academyofcivil.com'
+  REPEATED: count=424/436 text='آکادمی عمران'
+PDF_7_STATUS: OK
+
+--- PDF #8: data/فهرست‌بها (پایه محاسبات متره و برآورد)/11-Abnieh1404.pdf ---
+PDF_8_PAGES: 258
+PDF_8_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_8_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_8_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_8_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_8_N_FIX_STATS: avg=1946.70 min=132
+PDF_8_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(237, 132, 233, 1), (54, 143, 163, 1), (33, 317, 336, 1), (13, 318, 336, 1), (230, 361, 402, 1), (235, 393, 451, 1), (87, 410, 457, 1), (61, 413, 437, 1), (236, 448, 478, 1), (207, 461, 507, 1)]
+PDF_8_U066B_LINES: 0
+PDF_8_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=254/258 text='فهرست بهای واحد پایه رشته ابنیه سال 1404'
+PDF_8_STATUS: OK
+
+--- PDF #9: data/فهرست‌بها (پایه محاسبات متره و برآورد)/12-Mechanic1404.pdf ---
+PDF_9_PAGES: 152
+PDF_9_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_9_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_9_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_9_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_9_N_FIX_STATS: avg=1603.97 min=141
+PDF_9_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(132, 141, 184, 1), (30, 201, 235, 1), (128, 251, 288, 1), (13, 256, 284, 1), (59, 271, 321, 1), (20, 304, 331, 1), (63, 388, 420, 1), (110, 437, 504, 1), (129, 498, 584, 1), (14, 508, 581, 1)]
+PDF_9_U066B_LINES: 0
+PDF_9_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=148/152 text='فهرست بهای واحد پایه رشته تاسیسات مکانیکی سال 1404'
+  REPEATED: count=77/152 text='شماره شرح واحد بهای واحد ( ریال ) مقدار بهای کل ( ریال )'
+PDF_9_STATUS: OK
+
+--- PDF #10: data/فهرست‌بها (پایه محاسبات متره و برآورد)/13-barghi1404.pdf ---
+PDF_10_PAGES: 207
+PDF_10_BOTH_ZERO (n_fix=0 & n_raw=0): 0
+PDF_10_FIX_ZERO_RAW_POS (n_fix=0 & n_raw>0): count=0 pages_up_to_20=[]
+PDF_10_FIX_POS_RAW_ZERO (n_fix>0 & n_raw=0): 0
+PDF_10_IMG_POS_FIX_ZERO (n_img>0 & n_fix=0): 0
+PDF_10_N_FIX_STATS: avg=1755.70 min=137
+PDF_10_LOWEST_10 (page_1based, n_fix, n_raw, n_img): [(188, 137, 237, 1), (178, 214, 235, 1), (118, 219, 257, 1), (22, 226, 263, 1), (190, 274, 321, 1), (18, 305, 340, 1), (16, 395, 433, 1), (187, 469, 532, 1), (9, 573, 614, 1), (205, 662, 747, 1)]
+PDF_10_U066B_LINES: 0
+PDF_10_REPEATED_GT_50PCT (up to 5):
+  REPEATED: count=202/207 text='فهرست بهای واحد پایه رشته تاسیسات برقی سال 1404'
+  REPEATED: count=122/207 text='شماره شرح واحد بهای واحد ( ریال ) مقدار بهای کل ( ریال )'
+PDF_10_STATUS: OK
+
+=== [B] ENVIRONMENT TOOLS & PYTHON MODULES ===
+WHICH_antiword: None
+WHICH_catdoc: None
+WHICH_soffice: '/usr/local/bin/soffice'
+WHICH_libreoffice: '/usr/local/bin/libreoffice'
+WHICH_tesseract: '/usr/bin/tesseract'
+WHICH_pdftotext: '/usr/bin/pdftotext'
+WHICH_pdftoppm: '/usr/bin/pdftoppm'
+WHICH_unrtf: None
+TESSERACT_LANGS: rc=0 stdout='List of available languages in "/usr/share/tesseract-ocr/5/tessdata/" (6):\nchi_sim\nchi_tra\neng\njpn\nkor\nosd\n' stderr=''
+IMPORT_docx: OK version='1.1.2'
+IMPORT_pytesseract: OK version='0.3.13'
+IMPORT_olefile: OK version='0.47'
+IMPORT_fitz: OK version='2.0'
+
+=== [C] 4311-word.doc HEADER & SIZE ===
+DOC_FILE: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-word.doc | size=227328 | first8_hex=d0cf11e0a1b11ae1 | first8_repr=b'\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1'
+
+=== [E] FTS5 TRIGRAM TEST ===
+FTS5_TRIGRAM: OK | match_قالب=[('بتن مگر و قالب\u200cبندی فونداسیون',)] | match_بتن=[('بتن مگر و قالب\u200cبندی فونداسیون',)]
+
+=== [D] XLSX (mec1404.xlsx & elec1404.xlsx) & DB INTERSECTION ===
+DB_TABLES: [('sqlite_sequence', 'table'), ('chapters', 'table'), ('items', 'table'), ('notes', 'table'), ('rules', 'table'), ('item_dependencies', 'table'), ('coefficients', 'table'), ('adjustment_indices', 'table'), ('material_on_site_factors', 'table'), ('mortar_table', 'table'), ('overhead_table', 'table'), ('floor_factor_params', 'table'), ('region_factors', 'table')]
+DB_ITEMS_PRAGMA: [(0, 'id', 'INTEGER', 0, None, 1), (1, 'discipline', 'TEXT', 1, None, 0), (2, 'year', 'INTEGER', 1, '1404', 0), (3, 'code_official', 'TEXT', 1, None, 0), (4, 'code_internal', 'TEXT', 1, None, 0), (5, 'chapter_code', 'TEXT', 1, None, 0), (6, 'group_code', 'TEXT', 1, None, 0), (7, 'item_seq', 'TEXT', 1, None, 0), (8, 'description', 'TEXT', 1, None, 0), (9, 'unit_raw', 'TEXT', 0, None, 0), (10, 'unit', 'TEXT', 0, None, 0), (11, 'unit_status', 'TEXT', 1, None, 0), (12, 'unit_price_rial', 'REAL', 0, None, 0), (13, 'item_category', 'TEXT', 1, None, 0), (14, 'is_star_price_zero', 'INTEGER', 1, '0', 0), (15, 'is_percent_unit', 'INTEGER', 1, '0', 0), (16, 'source_excel_file', 'TEXT', 1, None, 0), (17, 'source_excel_row', 'INTEGER', 1, None, 0), (18, 'source_pdf_file', 'TEXT', 0, None, 0), (19, 'source_page_bulletin', 'INTEGER', 0, None, 0), (20, 'source_page_pdf', 'INTEGER', 0, None, 0)]
+DB_ITEMS_CODE_OFFICIAL_COUNT: 1565 (sample_5=['010101', '010102', '010121', '010122', '010123'])
+XLSX_SKIP_OTHER: data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx
+--- XLSX: data/فهرست‌بها (پایه محاسبات متره و برآورد)/elec1404.xlsx ---
+XLSX_SHEETS: ['elec1404']
+SHEET 'elec1404': dimension='A1:G1586' max_row=1586 max_column=7
+  ROW_1: ('شماره ردیف', 'شرح', 'واحد', 'قیمت واحد', None, None, None)
+  ROW_2: ('13016302', 'چراغ روشویی، آینه LED شصت سانتی\u200cمتر، با ماژول یکپارچه (Integrated) و درایور مربوطه، دارای شار نوری ۹۰۰ لومن و بهره نوری ۷۵ لومن بر وات.', 'عدد', 12784000, None, None, None)
+  ROW_3: ('13017102', 'چراغ های سقفی روکار LED، با حباب شیشه\u200cای یا پلیمری، گرد یا چهارگوش به قطر حدود ۳۰ سانتی\u200cمتر با ماژول یکپارچه (Integrated) و درایور مربوطه، دارای شار نوری ۱۵۰۰ لومن و بهره نوری ۸۵ لومن بر وات.', 'عدد', 9536000, None, None, None)
+  COL0_NON_EMPTY_ROWS (including header if non-empty): 1586
+  DATA_CODES_COUNT (row>1): 1585 | UNIQUE_CODES: 1585
+  SAMPLE_10_CODES: ['13016302', '13017102', '13017103', '13017301', '13017302', '13017303', '13017304', '13017401', '13017402', '13017403']
+  CODE_LENGTH_DIST: {8: 1585}
+  PRICE_COL: idx=3 header='قیمت واحد' | total_data_rows=1585 | null_or_empty_or_dash=0 | zero=236
+  OVERLAP_WITH_DB_ITEMS_CODE_OFFICIAL: count=0 sample_up_to_10=[]
+
+--- XLSX: data/فهرست‌بها (پایه محاسبات متره و برآورد)/mec1404.xlsx ---
+XLSX_SHEETS: ['mec1404']
+SHEET 'mec1404': dimension='A1:G1189' max_row=1189 max_column=7
+  ROW_1: ('شماره ردیف', 'شرح', 'واحد', 'قیمت واحد', None, None, None)
+  ROW_2: ('12010101', 'لوله فولادی سیاه درز دار، به \u200cقطر نامی 15 (یک دوم اینچ).', 'مترطول', 1843000, None, None, None)
+  ROW_3: ('12010102', 'لوله فولادی سیاه درزدار، به قطر نامی 20 (سه چهارم اینچ).', 'مترطول', 2084000, None, None, None)
+  COL0_NON_EMPTY_ROWS (including header if non-empty): 1189
+  DATA_CODES_COUNT (row>1): 1188 | UNIQUE_CODES: 1188
+  SAMPLE_10_CODES: ['12010101', '12010102', '12010103', '12010104', '12010105', '12010106', '12010107', '12010108', '12010109', '12010110']
+  CODE_LENGTH_DIST: {8: 1188}
+  PRICE_COL: idx=3 header='قیمت واحد' | total_data_rows=1188 | null_or_empty_or_dash=0 | zero=332
+  OVERLAP_WITH_DB_ITEMS_CODE_OFFICIAL: count=0 sample_up_to_10=[]
+
+=== END OF FULL PROBE ===
