@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متره‌یار — جستجوی صفحه‌محور چندسندی</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Tahoma, "IRANSans", "Vazirmatn", sans-serif;
+    margin: 0;
+    padding: 16px;
+    background: #f6f7f9;
+    color: #1f2937;
+    line-height: 1.65;
+    direction: rtl;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .notice {
+    background: #fffbeb;
+    border: 1px solid #f59e0b;
+    border-right: 5px solid #d97706;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    margin-bottom: 14px;
+  }
+  .panel {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+  .search-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  #qInput {
+    flex: 1 1 320px;
+    padding: 9px 12px;
+    font-size: 15px;
+    border: 1px solid #9ca3af;
+    border-radius: 6px;
+    font-family: inherit;
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    font-size: 13.5px;
+    margin-bottom: 10px;
+  }
+  .filters label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+  }
+  .folder-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 13px;
+    color: #4b5563;
+  }
+  #basePath {
+    flex: 1 1 260px;
+    padding: 5px 8px;
+    font-size: 12.5px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    direction: ltr;
+    text-align: left;
+  }
+  #statsBar {
+    font-size: 13.5px;
+    margin-bottom: 12px;
+    color: #374151;
+  }
+  .doc-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    background: #e5e7eb;
+    color: #111827;
+  }
+  .badge-group {
+    background: #dbeafe;
+    color: #1e40af;
+    font-weight: bold;
+  }
+  .badge-bulten {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .card-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 13.5px;
+  }
+  .snippet-line {
+    font-size: 13.5px;
+    background: #f9fafb;
+    border-right: 3px solid #9ca3af;
+    padding: 4px 8px;
+    margin: 4px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .fallback-note {
+    font-size: 13px;
+    color: #6b7280;
+    font-style: italic;
+  }
+  mark {
+    background: #fef08a;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  th, td {
+    border: 1px solid #d1d5db;
+    padding: 6px 8px;
+    text-align: right;
+  }
+  th {
+    background: #f3f4f6;
+  }
+  footer {
+    margin-top: 18px;
+    font-size: 13px;
+    color: #4b5563;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="notice">
+    این ابزار فقط نشان می‌دهد لغت در کدام صفحه آمده؛ پاسخ مهندسی یا قیمت نمی‌دهد. متن از لایهٔ متنی PDF استخراج شده و ممکن است ناقص یا نادرست باشد؛ همیشه صفحهٔ اصلی را ببینید. اسناد اسکن (بدون متن) جستجو نمی‌شوند.
+  </div>
+
+  <div class="panel">
+    <div class="search-row">
+      <input type="text" id="qInput" placeholder="عبارت جستجو... (برای عبارت دقیق از &quot;...&quot; استفاده کنید)" autofocus>
+    </div>
+    <div class="filters">
+      <strong>گروه‌ها:</strong>
+      <label><input type="checkbox" class="grp-cb" value="ابنیه" checked> ابنیه</label>
+      <label><input type="checkbox" class="grp-cb" value="مکانیک" checked> مکانیک</label>
+      <label><input type="checkbox" class="grp-cb" value="برق" checked> برق</label>
+      <label><input type="checkbox" class="grp-cb" value="پیمان" checked> پیمان</label>
+      <label><input type="checkbox" class="grp-cb" value="تعدیل" checked> تعدیل</label>
+      <span style="margin-right:auto;"></span>
+      <label><input type="checkbox" id="noSpaceCb"> نادیده‌گرفتن فاصله‌ها (برای متن خراب)</label>
+    </div>
+    <div class="folder-row">
+      <label for="basePath">پوشهٔ PDFها (اختیاری):</label>
+      <input type="text" id="basePath" placeholder="مثال: file:///C:/pdfs/ یا ./pdfs/">
+    </div>
+  </div>
+
+  <div id="statsBar"></div>
+  <div id="resultsList"></div>
+
+  <footer>
+    <details>
+      <summary>جدول اسناد، تاریخ ساخت و خودآزمایی</summary>
+      <div style="margin-top:8px;">
+        <div>تاریخ ساخت: <span id="builtDate"></span> | <span id="selftest"></span></div>
+        <table>
+          <thead>
+            <tr>
+              <th>برچسب سند</th>
+              <th>گروه</th>
+              <th>وضعیت</th>
+              <th>تعداد صفحه/واحد</th>
+              <th>صفحه‌های کم‌متن</th>
+            </tr>
+          </thead>
+          <tbody id="docsTableBody"></tbody>
+        </table>
+      </div>
+    </details>
+  </footer>
+</div>
+
+<script>
+const DATA = /*__DATA__*/;
+
+// (الف) تابع normalize با همان ۸ قاعده و همان ترتیب پایتون
+const REMOVE_RE = /[\uFEFF\u200D\u200E\u200F\u202A-\u202E\u064B-\u065F\u0670\u0640]/g;
+const DIGIT_MAP = {
+  '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9',
+  '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9',
+  '٫':'.','٬':','
+};
+const DIGIT_RE = /[۰-۹٠-٩٫٬]/g;
+
+function normalize(s) {
+  if (!s) return "";
+  // 1) NFKC
+  s = String(s).normalize('NFKC');
+  // 2) حذف: U+FEFF، U+200D، U+200E، U+200F، U+202A–U+202E، اعراب U+064B–U+065F و U+0670، کشیده U+0640
+  s = s.replace(REMOVE_RE, '');
+  // 3) U+200C -> فاصله
+  s = s.replace(/\u200C/g, ' ');
+  // 4) ي(U+064A) و ى(U+0649)->ی(U+06CC)؛ ك(U+0643)->ک(U+06A9)
+  s = s.replace(/[\u064A\u0649]/g, '\u06CC').replace(/\u0643/g, '\u06A9');
+  // 5) ارقام فارسی و عربی -> 0-9 و ٫->. و ٬->,
+  s = s.replace(DIGIT_RE, function(ch) { return DIGIT_MAP[ch] || ch; });
+  // 6) 'لا' -> 'ال'
+  s = s.replace(/لا/g, 'ال');
+  // 7) حروف لاتین lowercase
+  s = s.replace(/[A-Z]/g, function(ch) { return ch.toLowerCase(); });
+  // 8) فاصله‌های متوالی -> یکی و trim
+  s = s.replace(/\s+/g, ' ').trim();
+  return s;
+}
+
+// پارس پرسش به توکن‌ها (متن داخل "..." یک توکن/عبارت)
+function parseQueryTokens(qStr, noSpace) {
+  const tokens = [];
+  const re = /"([^"]+)"|(\S+)/g;
+  let m;
+  while ((m = re.exec(qStr)) !== null) {
+    const rawTok = m[1] !== undefined ? m[1] : m[2];
+    let nt = normalize(rawTok);
+    if (noSpace) {
+      nt = nt.replace(/\s+/g, '');
+    }
+    if (nt.length > 0) {
+      tokens.push(nt);
+    }
+  }
+  return tokens;
+}
+
+function countOccurrences(haystack, needle) {
+  if (!needle) return 0;
+  let count = 0;
+  let pos = 0;
+  while (true) {
+    const idx = haystack.indexOf(needle, pos);
+    if (idx === -1) break;
+    count++;
+    pos = idx + needle.length;
+  }
+  return count;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+const DOC_MAP = {};
+if (DATA && Array.isArray(DATA.docs)) {
+  for (let i = 0; i < DATA.docs.length; i++) {
+    DOC_MAP[DATA.docs[i].id] = DATA.docs[i];
+  }
+}
+
+// کش تنبل برای n بی‌فاصله
+const NO_SPACE_CACHE = new Array(DATA && DATA.pages ? DATA.pages.length : 0);
+function getNoSpaceN(idx) {
+  let v = NO_SPACE_CACHE[idx];
+  if (v === undefined) {
+    v = DATA.pages[idx][2].replace(/\s+/g, '');
+    NO_SPACE_CACHE[idx] = v;
+  }
+  return v;
+}
+
+const qInput = document.getElementById('qInput');
+const noSpaceCb = document.getElementById('noSpaceCb');
+const basePathInput = document.getElementById('basePath');
+const statsBar = document.getElementById('statsBar');
+const resultsList = document.getElementById('resultsList');
+const grpCbs = Array.prototype.slice.call(document.querySelectorAll('.grp-cb'));
+
+// بارگذاری پوشه PDF از localStorage در try/catch
+try {
+  const savedBase = localStorage.getItem('metreyar_pdf_base');
+  if (savedBase) basePathInput.value = savedBase;
+} catch (e) {}
+
+basePathInput.addEventListener('input', function() {
+  try {
+    localStorage.setItem('metreyar_pdf_base', basePathInput.value.trim());
+  } catch (e) {}
+  runSearch();
+});
+
+function runSearch() {
+  if (!DATA || !Array.isArray(DATA.pages)) return;
+  const qRaw = qInput.value || '';
+  const noSpace = noSpaceCb.checked;
+  const tokens = parseQueryTokens(qRaw, noSpace);
+
+  const activeGroups = {};
+  for (let i = 0; i < grpCbs.length; i++) {
+    if (grpCbs[i].checked) activeGroups[grpCbs[i].value] = true;
+  }
+
+  if (tokens.length === 0) {
+    statsBar.innerHTML = '';
+    resultsList.innerHTML = '';
+    return;
+  }
+
+  const matched = [];
+  const perDocCounts = {};
+  const pages = DATA.pages;
+
+  for (let i = 0; i < pages.length; i++) {
+    const rec = pages[i];
+    const docId = rec[0];
+    const docInfo = DOC_MAP[docId];
+    if (!docInfo || !activeGroups[docInfo.group]) continue;
+
+    const targetN = noSpace ? getNoSpaceN(i) : rec[2];
+    let allFound = true;
+    let score = 0;
+
+    for (let t = 0; t < tokens.length; t++) {
+      const occ = countOccurrences(targetN, tokens[t]);
+      if (occ === 0) {
+        allFound = false;
+        break;
+      }
+      score += occ;
+    }
+
+    if (allFound) {
+      matched.push({ idx: i, docId: docId, page: rec[1], score: score });
+      perDocCounts[docId] = (perDocCounts[docId] || 0) + 1;
+    }
+  }
+
+  // مرتب‌سازی: امتیاز نزولی، سپس ترتیب سند و صفحه
+  matched.sort(function(a, b) {
+    if (b.score !== a.score) return b.score - a.score;
+    if (a.docId !== b.docId) return a.docId - b.docId;
+    return a.page - b.page;
+  });
+
+  // نوار آمار و شمار به تفکیک سند
+  let statsHtml = '<strong>' + matched.length + ' صفحه یافت شد</strong>';
+  if (matched.length > 200) {
+    statsHtml += ' <span>(نمایش ۲۰۰ نتیجهٔ اول)</span>';
+  }
+  const docBadges = [];
+  for (let d = 0; d < DATA.docs.length; d++) {
+    const di = DATA.docs[d];
+    const cnt = perDocCounts[di.id];
+    if (cnt) {
+      docBadges.push('<span class="badge">' + escapeHtml(di.label) + ': ' + cnt + '</span>');
+    }
+  }
+  if (docBadges.length > 0) {
+    statsHtml += '<div class="doc-counts">' + docBadges.join(' ') + '</div>';
+  }
+  statsBar.innerHTML = statsHtml;
+
+  const baseVal = (basePathInput.value || '').trim();
+  const limit = Math.min(matched.length, 200);
+  const cardsHtml = [];
+
+  for (let k = 0; k < limit; k++) {
+    const item = matched[k];
+    const rec = pages[item.idx];
+    const docInfo = DOC_MAP[item.docId];
+    const pno = item.page;
+    const sText = rec[3] || '';
+
+    const isDocWord = (docInfo.file === '4311-word.txt');
+    let pageLabel = '';
+    if (isDocWord) {
+      pageLabel = (pno === 0 ? 'مقدمه' : ('ماده ' + pno)) + ' — بدون شمارهٔ صفحه';
+    } else {
+      pageLabel = 'ص ' + pno + ' (PDF)';
+    }
+
+    let bultenHtml = '';
+    if (docInfo.group === 'ابنیه' && !isDocWord && pno > 3) {
+      bultenHtml = '<span class="badge badge-bulten">بولتن ≈ ' + (pno - 3) + ' (قاعدهٔ پروژه؛ فقط ابنیه)</span>';
+    }
+
+    let linkHtml = '';
+    if (baseVal && !isDocWord) {
+      const sep = baseVal.endsWith('/') ? '' : '/';
+      const href = baseVal + sep + encodeURIComponent(docInfo.file) + '#page=' + pno;
+      linkHtml = '<a href="' + escapeHtml(href) + '" target="_blank" rel="noopener">باز کردن PDF</a>';
+    }
+
+    // حداکثر ۳ خط از s که پس از normalize شامل یکی از توکن‌هاست
+    const sLines = sText.split('\n');
+    const pickedLines = [];
+    for (let l = 0; l < sLines.length && pickedLines.length < 3; l++) {
+      const rawLine = sLines[l].trim();
+      if (!rawLine) continue;
+      let normLine = normalize(rawLine);
+      if (noSpace) normLine = normLine.replace(/\s+/g, '');
+      let hasTok = false;
+      for (let t = 0; t < tokens.length; t++) {
+        if (normLine.indexOf(tokens[t]) !== -1) {
+          hasTok = true;
+          break;
+        }
+      }
+      if (hasTok) {
+        const clipped = rawLine.length > 200 ? (rawLine.slice(0, 200) + '…') : rawLine;
+        pickedLines.push('<div class="snippet-line">' + escapeHtml(clipped) + '</div>');
+      }
+    }
+
+    let bodyHtml = '';
+    if (pickedLines.length > 0) {
+      bodyHtml = pickedLines.join('');
+    } else {
+      bodyHtml = '<div class="fallback-note">(تطابق در متن خام یا حالت بی‌فاصله؛ صفحه را در PDF ببینید)</div>';
+    }
+
+    cardsHtml.push(
+      '<div class="card">' +
+        '<div class="card-head">' +
+          '<span class="badge badge-group">' + escapeHtml(docInfo.group) + '</span>' +
+          '<strong>' + escapeHtml(docInfo.label) + '</strong>' +
+          '<span class="badge">' + escapeHtml(pageLabel) + '</span>' +
+          bultenHtml +
+          '<span class="badge">امتیاز: ' + item.score + '</span>' +
+          linkHtml +
+        '</div>' +
+        bodyHtml +
+      '</div>'
+    );
+  }
+
+  resultsList.innerHTML = cardsHtml.join('');
+}
+
+let debounceTimer = null;
+qInput.addEventListener('input', function() {
+  if (debounceTimer) clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(runSearch, 200);
+});
+qInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    runSearch();
+  }
+});
+noSpaceCb.addEventListener('change', runSearch);
+for (let i = 0; i < grpCbs.length; i++) {
+  grpCbs[i].addEventListener('change', runSearch);
+}
+
+// پر کردن جدول اسناد و اجرای خودآزمایی (selftest)
+(function initFooterAndSelftest() {
+  if (!DATA) return;
+  document.getElementById('builtDate').textContent = DATA.built || '';
+  const tbody = document.getElementById('docsTableBody');
+  const rows = [];
+  if (Array.isArray(DATA.docs)) {
+    for (let i = 0; i < DATA.docs.length; i++) {
+      const d = DATA.docs[i];
+      rows.push(
+        '<tr>' +
+          '<td>' + escapeHtml(d.label) + '</td>' +
+          '<td>' + escapeHtml(d.group) + '</td>' +
+          '<td>' + escapeHtml(d.status) + '</td>' +
+          '<td>' + escapeHtml(d.pages) + '</td>' +
+          '<td>' + escapeHtml(d.low_text_pages) + '</td>' +
+        '</tr>'
+      );
+    }
+  }
+  tbody.innerHTML = rows.join('');
+
+  const stEl = document.getElementById('selftest');
+  const mismatches = [];
+  if (Array.isArray(DATA.selftest)) {
+    for (let i = 0; i < DATA.selftest.length; i++) {
+      const pair = DATA.selftest[i];
+      const inp = pair[0];
+      const pyOut = pair[1];
+      const jsOut = normalize(inp);
+      if (jsOut !== pyOut) {
+        mismatches.push('[' + i + '] in=' + JSON.stringify(inp) + ' py=' + JSON.stringify(pyOut) + ' js=' + JSON.stringify(jsOut));
+      }
+    }
+  }
+  if (mismatches.length === 0) {
+    stEl.textContent = 'خودآزمایی: OK';
+  } else {
+    stEl.textContent = 'FAIL: ' + mismatches.join(' ; ');
+  }
+})();
+</script>
+</body>
+</html>
