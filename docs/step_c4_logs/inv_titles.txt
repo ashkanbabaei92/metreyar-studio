@@ -1,0 +1,30 @@
+=== 1) DISTINCT discipline, year ===
+chapters: [('abnieh', 1404, 35)]
+items: [('abnieh', 1404, 1565)]
+notes: [('abnieh', 1404, 1196)]
+rules (no year col, cols=['id', 'rule_code', 'discipline', 'chapter_code', 'rule_type', 'trigger_item_code', 'source_note_id', 'condition_json', 'formula_type', 'excel_formula_template', 'is_ambiguous', 'status', 'source_text_raw', 'source_file', 'source_page_bulletin', 'source_page_pdf', 'source_clause_ref', 'clause_ref']): [('abnieh', 121)]
+=== 2) sqlite_master & PRAGMA index_list (chapters, items) ===
+[chapters] index sqlite_autoindex_chapters_1: None
+[chapters] table chapters: CREATE TABLE chapters ( id INTEGER PRIMARY KEY AUTOINCREMENT, discipline TEXT NOT NULL, year INTEGER NOT NULL DEFAULT 1404, chapter_code TEXT NOT NULL, chapter_type TEXT NOT NULL, title_official TEXT NOT NULL, is_active_phase1 INTEGER NOT NULL DEFAULT 0, excel_row_count INTEGER NOT NULL DEFAULT 0, start_page_bulletin INTEGER NULL, end_page_bulletin INTEGER NULL, start_page_pdf INTEGER NULL, end_page_pdf INTEGER NULL, source_file TEXT NOT NULL, notes_text TEXT NULL, UNIQUE(discipline, year, chapter_code) )
+[chapters] index_list: [(0, 'sqlite_autoindex_chapters_1', 1, 'u', 0)]
+[chapters] index_info(sqlite_autoindex_chapters_1): [(0, 1, 'discipline'), (1, 2, 'year'), (2, 3, 'chapter_code')]
+[items] index sqlite_autoindex_items_1: None
+[items] table items: CREATE TABLE items ( id INTEGER PRIMARY KEY AUTOINCREMENT, discipline TEXT NOT NULL, year INTEGER NOT NULL DEFAULT 1404, code_official TEXT NOT NULL, code_internal TEXT NOT NULL, chapter_code TEXT NOT NULL, group_code TEXT NOT NULL, item_seq TEXT NOT NULL, description TEXT NOT NULL, unit_raw TEXT NULL, unit TEXT NULL, unit_status TEXT NOT NULL, unit_price_rial REAL NULL, item_category TEXT NOT NULL, is_star_price_zero INTEGER NOT NULL DEFAULT 0, is_percent_unit INTEGER NOT NULL DEFAULT 0, source_excel_file TEXT NOT NULL, source_excel_row INTEGER NOT NULL, source_pdf_file TEXT NULL, source_page_bulletin INTEGER NULL, source_page_pdf INTEGER NULL, UNIQUE(discipline, code_official) )
+[items] index_list: [(0, 'sqlite_autoindex_items_1', 1, 'u', 0)]
+[items] index_info(sqlite_autoindex_items_1): [(0, 1, 'discipline'), (1, 3, 'code_official')]
+=== 3) chapters title_official repr for 02, 05, 06, 09 ===
+chapter_code='02' -> repr='فصل د وم . عملیات خاکی با دست'
+chapter_code='05' -> repr='فصل پنجم . قالب بند ی ریغ فوالد ی'
+chapter_code='06' -> repr='فصل ششم . قالب بندی فوالدی'
+chapter_code='09' -> repr='فصل نهم . کارهای فوالد ی سنگین'
+=== 4) items unit_price_rial NULL vs 0 ===
+ALL items (total, null, zero, pos): (1565, 60, 62, 1423)
+chapter_code='99' (total, null, zero, pos): (60, 60, 0, 0)
+=== 5) abn1404.xlsx read_only inspection ===
+xlsx_path found: /home/user/webapp/data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx
+sheetnames: ['فهرست بها ابنیه 1404']
+sheet[0] title='فهرست بها ابنیه 1404', dimensions='A1:F1566', max_row=1566, max_column=6
+row 1: ('ردیف فهرست', 'شرح', 'واحد', 'بهای واحد (ریال)', None, None)
+row 2: ('010101', 'کندن و خارج کردن بوته و ریشه\u200cهای مربوط در زمین\u200cهای پوشیده از آن\u200cها.', 'مترمربع', 2890, None, None)
+row 3: ('010102', 'کندن و یا بریدن و در صورت لزوم ریشه کن کردن هرنوع نهال، در صورتی که محیط بن آن کمتر از 15 سانتی\u200cمتر باشد، به ازای هر 5 سانتی\u200cمتر محیط بن (کسر 5 سانتی\u200cمتر به تناسب محاسبه می\u200cشود) و حمل آن به خارج کارگاه.', 'اصله', 101000, None, None)
+cells starting with 'فصل' (up to 5): []
