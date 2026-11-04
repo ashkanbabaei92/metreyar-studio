@@ -1,0 +1,211 @@
+=== 1. DATA DIRECTORY WALK (*.pdf, *.xlsx, and all files) ===
+FILE: data/تعدیل آحاد بها/101-173073.pdf | SIZE_BYTES: 422105
+FILE: data/تعدیل آحاد بها/1147659-1404.pdf | SIZE_BYTES: 3021348
+FILE: data/تعدیل آحاد بها/941636_Tadil-Movaghat-3-4-1404-14041219.pdf | SIZE_BYTES: 429980
+FILE: data/تعدیل آحاد بها/Arz4(DrMostafaNajafi.ir).pdf | SIZE_BYTES: 215328
+FILE: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-pdf.pdf | SIZE_BYTES: 2860781
+FILE: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-word.doc | SIZE_BYTES: 227328
+FILE: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/ابلاغ اصلاحيه موافقتنامه، شرايط عمومي.pdf | SIZE_BYTES: 345764
+FILE: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/تفسیر شرایط عمومی و خصوصی پیمان.pdf | SIZE_BYTES: 2547823
+FILE: data/فهرست‌بها (پایه محاسبات متره و برآورد)/11-Abnieh1404.pdf | SIZE_BYTES: 12206162
+FILE: data/فهرست‌بها (پایه محاسبات متره و برآورد)/12-Mechanic1404.pdf | SIZE_BYTES: 7190390
+FILE: data/فهرست‌بها (پایه محاسبات متره و برآورد)/13-barghi1404.pdf | SIZE_BYTES: 10441414
+FILE: data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx | SIZE_BYTES: 110550
+FILE: data/فهرست‌بها (پایه محاسبات متره و برآورد)/elec1404.xlsx | SIZE_BYTES: 92665
+FILE: data/فهرست‌بها (پایه محاسبات متره و برآورد)/mec1404.xlsx | SIZE_BYTES: 69853
+TOTAL_FILES_IN_DATA: 14 (compared to expected 14)
+PDF_COUNT: 10 | XLSX_COUNT: 3 | OTHER_COUNT: 1
+
+=== 2. SQLITE3 & FTS5 PROBE ===
+sqlite3.sqlite_version: 3.46.1
+FTS5_STATUS: OK | SAMPLE_MATCH_ROWS: [('تست', 'فهرست بهای ابنیه فولاد')]
+
+=== 3. PDF PROBE VIA src/pdf_fix.py ===
+--- PDF [1/10]: data/تعدیل آحاد بها/101-173073.pdf ---
+PAGE_COUNT: 11
+SAMPLE_PAGE_INDICES_0BASED: [0, 1, 3, 4, 6, 7, 9, 10]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 2, 4, 5, 7, 8, 10, 11]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 8
+TOTAL_SAMPLE_CHARS: 0 | AVG_SAMPLE_CHARS: 0.0
+TOTAL_SAMPLE_AR_FA: 0 | AVG_SAMPLE_AR_FA: 0.0
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 0
+  PAGE_STAT: p1(0-idx=0): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p2(0-idx=1): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p4(0-idx=3): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p5(0-idx=4): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p7(0-idx=6): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p8(0-idx=7): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p10(0-idx=9): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p11(0-idx=10): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 7
+MID_200_CHARS_REPR: ''
+STATUS: OK
+
+--- PDF [2/10]: data/تعدیل آحاد بها/1147659-1404.pdf ---
+PAGE_COUNT: 53
+SAMPLE_PAGE_INDICES_0BASED: [0, 7, 15, 22, 30, 37, 45, 52]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 8, 16, 23, 31, 38, 46, 53]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 1
+TOTAL_SAMPLE_CHARS: 11491 | AVG_SAMPLE_CHARS: 1436.4
+TOTAL_SAMPLE_AR_FA: 8180 | AVG_SAMPLE_AR_FA: 1022.5
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 5
+  PAGE_STAT: p1(0-idx=0): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p8(0-idx=7): chars=921, ar_fa=658, lines=18, فولاد=0, فوالد=0
+  PAGE_STAT: p16(0-idx=15): chars=2681, ar_fa=1835, lines=32, فولاد=0, فوالد=0
+  PAGE_STAT: p23(0-idx=22): chars=2029, ar_fa=1460, lines=36, فولاد=0, فوالد=3
+  PAGE_STAT: p31(0-idx=30): chars=1543, ar_fa=1115, lines=29, فولاد=0, فوالد=2
+  PAGE_STAT: p38(0-idx=37): chars=1337, ar_fa=965, lines=23, فولاد=0, فوالد=0
+  PAGE_STAT: p46(0-idx=45): chars=2028, ar_fa=1462, lines=35, فولاد=0, فوالد=0
+  PAGE_STAT: p53(0-idx=52): chars=952, ar_fa=685, lines=18, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 31
+MID_200_CHARS_REPR: 'شاخص های قطعی تعدیل آحادبها، دوره های سه ماهه اول و دوم سال۱۴۰۴ صفحه۲۷ از۴۹\nپیوست۳ بخشنامه شماره۵۱۵۲۴۰ مورخ ۱۴۰۴٫۰۹٫۲۹\nشاخص های فصلی رشته ای فهرست بهای واحد پایه آبیاری و زهکشی\nدوره های سه ماهه سال۱۴۰'
+STATUS: OK
+
+--- PDF [3/10]: data/تعدیل آحاد بها/941636_Tadil-Movaghat-3-4-1404-14041219.pdf ---
+PAGE_COUNT: 3
+SAMPLE_PAGE_INDICES_0BASED: [0, 1, 2]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 2, 3]
+SAMPLES_COUNT: 3 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 3785 | AVG_SAMPLE_CHARS: 1261.7
+TOTAL_SAMPLE_AR_FA: 2480 | AVG_SAMPLE_AR_FA: 826.7
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 0
+  PAGE_STAT: p1(0-idx=0): chars=1892, ar_fa=1282, lines=31, فولاد=0, فوالد=0
+  PAGE_STAT: p2(0-idx=1): chars=1079, ar_fa=675, lines=32, فولاد=0, فوالد=0
+  PAGE_STAT: p3(0-idx=2): chars=814, ar_fa=523, lines=27, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 2
+MID_200_CHARS_REPR: 'ضر بی شاخص ها ی موقت تعد لی آحادبها، ن ی مه دوم سال 1404\nضریب شاخص های موقت تعدیل رشته ای و گروهی ( فصلی )\nفهرست بهای واحد پایه رشته\nسه ماهه سوم 1404 سه ماهه چهارم 1404\n1 - ابنیه\n2 - تاسیسات برقی\n3 - '
+STATUS: OK
+
+--- PDF [4/10]: data/تعدیل آحاد بها/Arz4(DrMostafaNajafi.ir).pdf ---
+PAGE_COUNT: 9
+SAMPLE_PAGE_INDICES_0BASED: [0, 1, 2, 3, 5, 6, 7, 8]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 2, 3, 4, 6, 7, 8, 9]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 19437 | AVG_SAMPLE_CHARS: 2429.6
+TOTAL_SAMPLE_AR_FA: 13926 | AVG_SAMPLE_AR_FA: 1740.8
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 2
+  PAGE_STAT: p1(0-idx=0): chars=938, ar_fa=614, lines=18, فولاد=0, فوالد=0
+  PAGE_STAT: p2(0-idx=1): chars=2829, ar_fa=2040, lines=35, فولاد=0, فوالد=0
+  PAGE_STAT: p3(0-idx=2): chars=3144, ar_fa=2281, lines=35, فولاد=0, فوالد=0
+  PAGE_STAT: p4(0-idx=3): chars=2859, ar_fa=2196, lines=35, فولاد=0, فوالد=0
+  PAGE_STAT: p6(0-idx=5): chars=2423, ar_fa=1674, lines=35, فولاد=0, فوالد=0
+  PAGE_STAT: p7(0-idx=6): chars=2513, ar_fa=1812, lines=36, فولاد=0, فوالد=0
+  PAGE_STAT: p8(0-idx=7): chars=2235, ar_fa=1493, lines=37, فولاد=0, فوالد=0
+  PAGE_STAT: p9(0-idx=8): chars=2496, ar_fa=1816, lines=32, فولاد=0, فوالد=2
+MID_SAMPLE_PAGE_1BASED: 6
+MID_200_CHARS_REPR: 'رياست جمهوري\nسازمان ربانمه و بودجه کشور\nرئیس ساز مان\nدستورالعمل نحوه جبران آثار ناش ی از افزا شی یق مت ارز در پ ی مان های یر ال ی فاقد تعد لی - نو بت چهارم صفحه 1 از 8\nپیوست بخشنامه شماره 1463.881666 '
+STATUS: OK
+
+--- PDF [5/10]: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/4311-pdf.pdf ---
+PAGE_COUNT: 76
+SAMPLE_PAGE_INDICES_0BASED: [0, 11, 21, 32, 43, 54, 64, 75]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 12, 22, 33, 44, 55, 65, 76]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 8
+TOTAL_SAMPLE_CHARS: 0 | AVG_SAMPLE_CHARS: 0.0
+TOTAL_SAMPLE_AR_FA: 0 | AVG_SAMPLE_AR_FA: 0.0
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 0
+  PAGE_STAT: p1(0-idx=0): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p12(0-idx=11): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p22(0-idx=21): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p33(0-idx=32): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p44(0-idx=43): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p55(0-idx=54): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p65(0-idx=64): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+  PAGE_STAT: p76(0-idx=75): chars=0, ar_fa=0, lines=0, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 44
+MID_200_CHARS_REPR: ''
+STATUS: OK
+
+--- PDF [6/10]: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/ابلاغ اصلاحيه موافقتنامه، شرايط عمومي.pdf ---
+PAGE_COUNT: 1
+SAMPLE_PAGE_INDICES_0BASED: [0]
+SAMPLE_PAGE_NUMBERS_1BASED: [1]
+SAMPLES_COUNT: 1 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 1915 | AVG_SAMPLE_CHARS: 1915.0
+TOTAL_SAMPLE_AR_FA: 1299 | AVG_SAMPLE_AR_FA: 1299.0
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 0
+  PAGE_STAT: p1(0-idx=0): chars=1915, ar_fa=1299, lines=26, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 1
+MID_200_CHARS_REPR: 'بسمه \u200c تعالي\nرياست جمهوري\nکشور\nسازمان ربانهم و بودهج\nضييس ساظهاى\nبخشنامه \u200c به \u200c سازمان \u200c مذ تیری \u200c و \u200c برنامه \u200c یسیر \u200c استان \u200c ،ها \u200c\u200c ره :ﺷﻤﺎ 389571.98\nدستگاه \u200c های \u200c اجرایي، \u200c مهنذسان \u200c مشاور \u200c و \u200c پ'
+STATUS: OK
+
+--- PDF [7/10]: data/شرایط عمومی پیمان (برای کنترل قرارداد، تاخیرات، صورت‌وضعیت)/نشریه 4311+ ابلاغ اصلاحیه/نشریه 4311+ ابلاغ اصلاحیه/تفسیر شرایط عمومی و خصوصی پیمان.pdf ---
+PAGE_COUNT: 436
+SAMPLE_PAGE_INDICES_0BASED: [0, 62, 124, 186, 249, 311, 373, 435]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 63, 125, 187, 250, 312, 374, 436]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 3616 | AVG_SAMPLE_CHARS: 452.0
+TOTAL_SAMPLE_AR_FA: 2350 | AVG_SAMPLE_AR_FA: 293.8
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 0
+  PAGE_STAT: p1(0-idx=0): chars=157, ar_fa=99, lines=8, فولاد=0, فوالد=0
+  PAGE_STAT: p63(0-idx=62): chars=427, ar_fa=266, lines=11, فولاد=0, فوالد=0
+  PAGE_STAT: p125(0-idx=124): chars=585, ar_fa=395, lines=12, فولاد=0, فوالد=0
+  PAGE_STAT: p187(0-idx=186): chars=464, ar_fa=296, lines=11, فولاد=0, فوالد=0
+  PAGE_STAT: p250(0-idx=249): chars=397, ar_fa=252, lines=9, فولاد=0, فوالد=0
+  PAGE_STAT: p312(0-idx=311): chars=695, ar_fa=478, lines=13, فولاد=0, فوالد=0
+  PAGE_STAT: p374(0-idx=373): chars=440, ar_fa=285, lines=10, فولاد=0, فوالد=0
+  PAGE_STAT: p436(0-idx=435): chars=451, ar_fa=279, lines=13, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 250
+MID_200_CHARS_REPR: 'Academyofcivil.com\nAcademyofcivil.com\nAcademyofcivil.com Academyofcivil.com\nماده 32 . نظارت بر اجرای کار\nه ) کارفرما در مدت اجرای،پیمان هر موقع که الزم،بداند توسط نمایندگان خود عملیات پیم انکار را\nباز'
+STATUS: OK
+
+--- PDF [8/10]: data/فهرست‌بها (پایه محاسبات متره و برآورد)/11-Abnieh1404.pdf ---
+PAGE_COUNT: 258
+SAMPLE_PAGE_INDICES_0BASED: [0, 37, 73, 110, 147, 184, 220, 257]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 38, 74, 111, 148, 185, 221, 258]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 13107 | AVG_SAMPLE_CHARS: 1638.4
+TOTAL_SAMPLE_AR_FA: 8954 | AVG_SAMPLE_AR_FA: 1119.2
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 2
+  PAGE_STAT: p1(0-idx=0): chars=773, ar_fa=537, lines=16, فولاد=0, فوالد=0
+  PAGE_STAT: p38(0-idx=37): chars=2244, ar_fa=1657, lines=33, فولاد=0, فوالد=0
+  PAGE_STAT: p74(0-idx=73): chars=2582, ar_fa=1730, lines=33, فولاد=0, فوالد=2
+  PAGE_STAT: p111(0-idx=110): chars=1986, ar_fa=1306, lines=39, فولاد=0, فوالد=0
+  PAGE_STAT: p148(0-idx=147): chars=1775, ar_fa=1145, lines=37, فولاد=0, فوالد=0
+  PAGE_STAT: p185(0-idx=184): chars=1603, ar_fa=960, lines=36, فولاد=0, فوالد=0
+  PAGE_STAT: p221(0-idx=220): chars=475, ar_fa=323, lines=14, فولاد=0, فوالد=0
+  PAGE_STAT: p258(0-idx=257): chars=1669, ar_fa=1296, lines=27, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 148
+MID_200_CHARS_REPR: 'فصل هجدهم . اندودکاری و بندکشی\nفهرست بهای واحد پایه رشته ابنیه سال 1404\nشماره شرح واحد بهای واحد ( ریال ) مقدار بهای کل ( ریال )\n180609 شمشه گیری روی نماسازی چکشی یا موزاییکی با شیشه\nبه ضخامت حدود 6 م'
+STATUS: OK
+
+--- PDF [9/10]: data/فهرست‌بها (پایه محاسبات متره و برآورد)/12-Mechanic1404.pdf ---
+PAGE_COUNT: 152
+SAMPLE_PAGE_INDICES_0BASED: [0, 22, 43, 65, 86, 108, 129, 151]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 23, 44, 66, 87, 109, 130, 152]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 14383 | AVG_SAMPLE_CHARS: 1797.9
+TOTAL_SAMPLE_AR_FA: 9728 | AVG_SAMPLE_AR_FA: 1216.0
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 2
+  PAGE_STAT: p1(0-idx=0): chars=788, ar_fa=552, lines=16, فولاد=0, فوالد=0
+  PAGE_STAT: p23(0-idx=22): chars=1668, ar_fa=900, lines=35, فولاد=0, فوالد=0
+  PAGE_STAT: p44(0-idx=43): chars=1997, ar_fa=1288, lines=33, فولاد=0, فوالد=0
+  PAGE_STAT: p66(0-idx=65): chars=1448, ar_fa=891, lines=31, فولاد=0, فوالد=0
+  PAGE_STAT: p87(0-idx=86): chars=3994, ar_fa=2946, lines=38, فولاد=0, فوالد=1
+  PAGE_STAT: p109(0-idx=108): chars=2024, ar_fa=1275, lines=38, فولاد=0, فوالد=0
+  PAGE_STAT: p130(0-idx=129): chars=782, ar_fa=561, lines=17, فولاد=0, فوالد=1
+  PAGE_STAT: p152(0-idx=151): chars=1682, ar_fa=1315, lines=26, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 87
+MID_200_CHARS_REPR: 'فصل بیست و هفتم . دستگاه های مبرد\nفهرست بهای واحد پایه رشته تاسیسات مکانیکی سال 1404\nبرای فشار کار 20 بار ( PSI 300) که باید به روش انبساطی داخل صفحه های نگهدارنده محک م شده باشند، پمپ های محلول و مبر'
+STATUS: OK
+
+--- PDF [10/10]: data/فهرست‌بها (پایه محاسبات متره و برآورد)/13-barghi1404.pdf ---
+PAGE_COUNT: 207
+SAMPLE_PAGE_INDICES_0BASED: [0, 29, 59, 88, 118, 147, 177, 206]
+SAMPLE_PAGE_NUMBERS_1BASED: [1, 30, 60, 89, 119, 148, 178, 207]
+SAMPLES_COUNT: 8 | EMPTY_SAMPLE_PAGES: 0
+TOTAL_SAMPLE_CHARS: 8964 | AVG_SAMPLE_CHARS: 1120.5
+TOTAL_SAMPLE_AR_FA: 5851 | AVG_SAMPLE_AR_FA: 731.4
+COUNT_فولاد_IN_SAMPLES: 0 | COUNT_فوالد_IN_SAMPLES: 0
+  PAGE_STAT: p1(0-idx=0): chars=791, ar_fa=550, lines=16, فولاد=0, فوالد=0
+  PAGE_STAT: p30(0-idx=29): chars=966, ar_fa=637, lines=22, فولاد=0, فوالد=0
+  PAGE_STAT: p60(0-idx=59): chars=1690, ar_fa=1057, lines=34, فولاد=0, فوالد=0
+  PAGE_STAT: p89(0-idx=88): chars=1757, ar_fa=849, lines=37, فولاد=0, فوالد=0
+  PAGE_STAT: p119(0-idx=118): chars=683, ar_fa=492, lines=15, فولاد=0, فوالد=0
+  PAGE_STAT: p148(0-idx=147): chars=1090, ar_fa=721, lines=21, فولاد=0, فوالد=0
+  PAGE_STAT: p178(0-idx=177): chars=214, ar_fa=156, lines=7, فولاد=0, فوالد=0
+  PAGE_STAT: p207(0-idx=206): chars=1773, ar_fa=1389, lines=28, فولاد=0, فوالد=0
+MID_SAMPLE_PAGE_1BASED: 119
+MID_200_CHARS_REPR: 'فصل بیست و دوم . وسایل ارتباطی\nفهرست بهای واحد پایه رشته تاسیسات برقی سال 1404\nفصل بیست و دوم . وسایل ارتباطی\nمقدمه\n1. هزینه آزمایش کابل های تلفن همراه با فرم بندی ، سربندی ، لحیم کاری و مانند آن ، در'
+STATUS: OK
+
