@@ -168,6 +168,10 @@ def main():
     except Exception as ex_a:
         signal.alarm(0)
         log(f"ERROR in Section A: {ex_a}")
+        diag_txt_path = os.path.join(ROOT_DIR, "docs", "search_logs", "s31_diag.txt")
+        with open(diag_txt_path, "w", encoding="utf-8") as df:
+            df.write("\n".join(out_lines) + "\n")
+        sys.exit(1)
 
     # ---------------------------------------------------------
     # Section B: R2 discrepancy ('کابل', 'کلید', 'قالب بندی')
@@ -203,6 +207,10 @@ def main():
     except Exception as ex_b:
         signal.alarm(0)
         log(f"ERROR in Section B: {ex_b}")
+        diag_txt_path = os.path.join(ROOT_DIR, "docs", "search_logs", "s31_diag.txt")
+        with open(diag_txt_path, "w", encoding="utf-8") as df:
+            df.write("\n".join(out_lines) + "\n")
+        sys.exit(1)
 
     # ---------------------------------------------------------
     # Section C: 'فوالد' vs 'فولاد' raw counts in xlsx descriptions
@@ -228,6 +236,10 @@ def main():
     except Exception as ex_c:
         signal.alarm(0)
         log(f"ERROR in Section C: {ex_c}")
+        diag_txt_path = os.path.join(ROOT_DIR, "docs", "search_logs", "s31_diag.txt")
+        with open(diag_txt_path, "w", encoding="utf-8") as df:
+            df.write("\n".join(out_lines) + "\n")
+        sys.exit(1)
 
     # ---------------------------------------------------------
     # Section D: Consistency invariants
@@ -261,6 +273,10 @@ def main():
     except Exception as ex_d:
         signal.alarm(0)
         log(f"ERROR in Section D: {ex_d}")
+        diag_txt_path = os.path.join(ROOT_DIR, "docs", "search_logs", "s31_diag.txt")
+        with open(diag_txt_path, "w", encoding="utf-8") as df:
+            df.write("\n".join(out_lines) + "\n")
+        sys.exit(1)
 
     # ---------------------------------------------------------
     # Section E: Rebuild s3_expected_rows.json
@@ -309,25 +325,25 @@ def main():
                 per_group_norm[g] = {
                     "total": pg_n["total"],
                     "by_group": pg_n["by_group"],
-                    "top_codes": [item["row"][1] for item in pg_n["results"][:10]],
+                    "top_codes": [item[3][1] for item in pg_n["results"][:10]],
                 }
                 per_group_nosp[g] = {
                     "total": pg_s["total"],
                     "by_group": pg_s["by_group"],
-                    "top_codes": [item["row"][1] for item in pg_s["results"][:10]],
+                    "top_codes": [item[3][1] for item in pg_s["results"][:10]],
                 }
 
             expected_obj["queries"][q] = {
                 "normal": {
                     "total": res_norm_all["total"],
                     "by_group": res_norm_all["by_group"],
-                    "top_codes": [item["row"][1] for item in res_norm_all["results"][:10]],
+                    "top_codes": [item[3][1] for item in res_norm_all["results"][:10]],
                     "single_group": per_group_norm,
                 },
                 "no_space": {
                     "total": res_nosp_all["total"],
                     "by_group": res_nosp_all["by_group"],
-                    "top_codes": [item["row"][1] for item in res_nosp_all["results"][:10]],
+                    "top_codes": [item[3][1] for item in res_nosp_all["results"][:10]],
                     "single_group": per_group_nosp,
                 },
             }
@@ -340,10 +356,31 @@ def main():
         with open(exp_path, "w", encoding="utf-8") as ef:
             json.dump(expected_obj, ef, ensure_ascii=False, indent=2)
         log(f"Saved {exp_path} successfully (built={payload.get('built')}).")
+
+        with open(exp_path, "r", encoding="utf-8") as vf:
+            saved_exp = json.load(vf)
+        allowed_row_groups = {"ابنیه", "مکانیک", "برق"}
+        seen_by_group_keys = set()
+        seen_all_group_keys = set(saved_exp.get("groups", []))
+        for q_key, q_val in saved_exp.get("queries", {}).items():
+            for mode_name in ("normal", "no_space"):
+                m_obj = q_val.get(mode_name, {})
+                seen_by_group_keys.update(m_obj.get("by_group", {}).keys())
+                for sg_key, sg_val in m_obj.get("single_group", {}).items():
+                    seen_all_group_keys.add(sg_key)
+                    seen_by_group_keys.update(sg_val.get("by_group", {}).keys())
+        bad_prefix = [k for k in (seen_all_group_keys | seen_by_group_keys) if k.startswith("فهرست‌بها")]
+        assert not bad_prefix, f"Found group keys starting with فهرست‌بها: {bad_prefix}"
+        assert seen_by_group_keys.issubset(allowed_row_groups), f"Row by_group keys not subset of {allowed_row_groups}: {seen_by_group_keys}"
+        log(f"Verified s3_expected_rows.json: row by_group keys={sorted(seen_by_group_keys)} subset of {sorted(allowed_row_groups)}, no 'فهرست‌بها' prefix anywhere (all group keys={sorted(seen_all_group_keys)}): OK")
         signal.alarm(0)
     except Exception as ex_e:
         signal.alarm(0)
         log(f"ERROR in Section E: {ex_e}")
+        diag_txt_path = os.path.join(ROOT_DIR, "docs", "search_logs", "s31_diag.txt")
+        with open(diag_txt_path, "w", encoding="utf-8") as df:
+            df.write("\n".join(out_lines) + "\n")
+        sys.exit(1)
 
     diag_txt_path = os.path.join(ROOT_DIR, "docs", "search_logs", "s31_diag.txt")
     with open(diag_txt_path, "w", encoding="utf-8") as df:

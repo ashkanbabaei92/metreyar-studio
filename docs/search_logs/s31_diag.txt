@@ -51,4 +51,14 @@ Raw 'فولاد' count in rows descriptions: total=381 | by_group={'ابنیه':
 3) Assert every row in DATA.rows has 7 fields: OK (checked 4338 rows)
 
 --- بخش E: بازسازی docs/search_logs/s3_expected_rows.json ---
-ERROR in Section E: tuple indices must be integers or slices, not str
+Query 'بتن': normal.total=215 (by_group={'ابنیه': 181, 'مکانیک': 7, 'برق': 27}) | no_space.total=218 (by_group={'ابنیه': 182, 'مکانیک': 9, 'برق': 27})
+Query 'فولاد': normal.total=381 (by_group={'ابنیه': 148, 'مکانیک': 164, 'برق': 69}) | no_space.total=381 (by_group={'ابنیه': 148, 'مکانیک': 164, 'برق': 69})
+Query 'شیشه': normal.total=109 (by_group={'ابنیه': 59, 'مکانیک': 37, 'برق': 13}) | no_space.total=109 (by_group={'ابنیه': 59, 'مکانیک': 37, 'برق': 13})
+Query 'لوله': normal.total=442 (by_group={'ابنیه': 56, 'مکانیک': 204, 'برق': 182}) | no_space.total=442 (by_group={'ابنیه': 56, 'مکانیک': 204, 'برق': 182})
+Query 'کابل': normal.total=456 (by_group={'ابنیه': 9, 'مکانیک': 1, 'برق': 446}) | no_space.total=456 (by_group={'ابنیه': 9, 'مکانیک': 1, 'برق': 446})
+Query 'قالب بندی': normal.total=52 (by_group={'ابنیه': 52}) | no_space.total=52 (by_group={'ابنیه': 52})
+Query '010101': normal.total=2 (by_group={'ابنیه': 1, 'مکانیک': 1}) | no_space.total=2 (by_group={'ابنیه': 1, 'مکانیک': 1})
+Query '12010101': normal.total=1 (by_group={'مکانیک': 1}) | no_space.total=1 (by_group={'مکانیک': 1})
+Query '13016302': normal.total=1 (by_group={'برق': 1}) | no_space.total=1 (by_group={'برق': 1})
+Saved /home/user/webapp/docs/search_logs/s3_expected_rows.json successfully (built=2026-11-05).
+Verified s3_expected_rows.json: row by_group keys=['ابنیه', 'برق', 'مکانیک'] subset of ['ابنیه', 'برق', 'مکانیک'], no 'فهرست‌بها' prefix anywhere (all group keys=['ابنیه', 'برق', 'تعدیل', 'مکانیک', 'پیمان']): OK
