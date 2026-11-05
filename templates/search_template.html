@@ -409,7 +409,13 @@ function runSearch() {
     const isDocWord = (docInfo.file === '4311-word.txt');
     let pageLabel = '';
     if (isDocWord) {
-      pageLabel = (pno === 0 ? 'مقدمه' : ('ماده ' + pno)) + ' — بدون شمارهٔ صفحه';
+      const uMeta = rec[4] || null;
+      const madehTitle = (pno === 0 ? 'مقدمه' : ('ماده ' + pno));
+      if (uMeta && uMeta.i !== undefined && uMeta.t !== undefined && uMeta.l !== undefined) {
+        pageLabel = madehTitle + ' — واحد ' + uMeta.i + ' از ' + uMeta.t + ' — خط ' + uMeta.l + ' از 4311-word.txt — بدون شمارهٔ صفحه';
+      } else {
+        pageLabel = madehTitle + ' — بدون شمارهٔ صفحه';
+      }
     } else {
       pageLabel = 'ص ' + pno + ' (PDF)';
     }

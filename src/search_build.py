@@ -213,8 +213,10 @@ def main():
             continue
 
         # (د) حذف خطوط سرصفحه تکراری (>50% صفحات در اسناد با >=20 صفحه) فقط از n
+        # اصلاح S2.1 (الف): حذف فقط برای خط‌هایی که پس از normalize حداقل ۳ توکن دارند
         repeated_norm_lines = set()
         removed_lines_report = []
+        removed_lines_before_s21 = []
         if num_pages >= 20:
             line_page_freq = Counter()
             for _pno, s_txt, r_txt in raw_fix_list:
@@ -231,8 +233,11 @@ def main():
             threshold = num_pages * 0.5
             for nln, cnt in sorted(line_page_freq.items(), key=lambda x: (-x[1], x[0])):
                 if cnt > threshold:
-                    repeated_norm_lines.add(nln)
-                    removed_lines_report.append((nln, cnt, num_pages))
+                    tcnt = len(nln.split())
+                    removed_lines_before_s21.append((nln, cnt, num_pages, tcnt))
+                    if tcnt >= 3:
+                        repeated_norm_lines.add(nln)
+                        removed_lines_report.append((nln, cnt, num_pages, tcnt))
 
         doc_page_records = []
         for pno, s_txt, r_txt in raw_fix_list:
@@ -260,6 +265,7 @@ def main():
             "group": spec["group"],
             "num_pages": num_pages,
             "low_text_pages": low_text_count,
+            "removed_headers_before": removed_lines_before_s21,
             "removed_headers": removed_lines_report,
             "records": doc_page_records,
         }
@@ -290,46 +296,58 @@ def main():
             raw_word = raw_word.lstrip("\ufeff")
 
         madeh_re = re.compile(r"^\s*ماده\s*(\d+)\b")
-        units = []  # (unit_label, madeh_num_or_None, lines)
+        units = []  # (unit_label, madeh_num_or_None, start_line_1based, lines)
         cur_label = "مقدمه"
         cur_num = None
+        cur_start_line = 1
         cur_lines = []
         madeh_numbers_seq = []
 
-        for orig_line in raw_word.splitlines():
+        for line_idx0, orig_line in enumerate(raw_word.splitlines()):
+            line_no_1based = line_idx0 + 1
             norm_line = normalize(orig_line)
             m = madeh_re.match(norm_line)
             if m:
                 if cur_lines:
-                    units.append((cur_label, cur_num, cur_lines))
+                    units.append((cur_label, cur_num, cur_start_line, cur_lines))
                 num_val = int(m.group(1))
                 madeh_numbers_seq.append(num_val)
                 cur_label = f"ماده {num_val}"
                 cur_num = num_val
+                cur_start_line = line_no_1based
                 cur_lines = [orig_line]
             else:
                 cur_lines.append(orig_line)
         if cur_lines:
-            units.append((cur_label, cur_num, cur_lines))
+            units.append((cur_label, cur_num, cur_start_line, cur_lines))
 
+        total_doc_units = len(units)
         low_u_count = 0
         doc_page_records = []
-        for u_label, u_num, u_lines in units:
+        for unit_idx0, (u_label, u_num, u_start_line, u_lines) in enumerate(units):
+            unit_seq_1based = unit_idx0 + 1
             s_txt = "\n".join(u_lines).strip()
             r_txt = ""
             if len(s_txt) < 50:
                 low_u_count += 1
             n_txt = normalize(s_txt) + "\n"
-            # برای واحدهای .doc فیلد page در آرایه pages_data همان رشته u_label یا عدد ماده است
+            # اصلاح S2.1 (ب): ذخیره شماره ماده N، شماره ترتیبی یکتا (i از T) و خط شروع L در 4311-word.txt
             page_field = u_num if u_num is not None else 0
-            pages_data.append([doc_id, page_field, n_txt, s_txt])
-            doc_page_records.append((u_label, s_txt, r_txt, n_txt))
+            unit_meta = {
+                "n": page_field,
+                "i": unit_seq_1based,
+                "t": total_doc_units,
+                "l": u_start_line,
+            }
+            pages_data.append([doc_id, page_field, n_txt, s_txt, unit_meta])
+            doc_page_records.append((f"{u_label} (واحد {unit_seq_1based}/{total_doc_units}, خط {u_start_line})", s_txt, r_txt, n_txt))
 
         doc_raw_fix_pages[doc_id] = {
             "label": "4311-word.txt",
             "group": "پیمان",
             "num_pages": len(units),
             "low_text_pages": low_u_count,
+            "removed_headers_before": [],
             "removed_headers": [],
             "records": doc_page_records,
         }
@@ -367,19 +385,25 @@ def main():
         log(f"  descents (index, prev, curr)={descents}")
         log(f"  missing in [min..max]={missing_in_range}")
 
-    # گزارش بخش (د): خطوط سرصفحه حذف‌شده و صفحات کم‌متن
-    log("\n--- (د) خطوط سرصفحه حذف‌شده (>50% صفحات در اسناد با >=20 صفحه) و صفحات کم‌متن (<50 نویسه در s+r) ---")
+    # گزارش بخش (د): خطوط سرصفحه حذف‌شده (قبل و بعد از آستانه >=3 توکن در S2.1) و صفحات کم‌متن
+    log("\n--- (د) خطوط سرصفحه حذف‌شده (>50% صفحات در اسناد با >=20 صفحه؛ آستانه S2.1: حداقل ۳ توکن پس از normalize) و صفحات کم‌متن (<50 نویسه در s+r) ---")
     for dm in docs_meta:
         did = dm["id"]
         log(f"DOC[{did}] {dm['label']} | group={dm['group']} | status={dm['status']} | pages/units={dm['pages']} | low_text(<50)={dm['low_text_pages']}")
         if did in doc_raw_fix_pages:
-            rem = doc_raw_fix_pages[did]["removed_headers"]
-            if rem:
-                log(f"  Removed repeated lines from n ({len(rem)} lines):")
-                for nln, cnt, tot in rem:
-                    log(f"    - [{cnt}/{tot} pages] '{nln}'")
+            rem_before = doc_raw_fix_pages[did].get("removed_headers_before", [])
+            rem_after = doc_raw_fix_pages[did]["removed_headers"]
+            log(f"  Before S2.1 (all >50%): {len(rem_before)} lines | After S2.1 (>=3 tokens): {len(rem_after)} lines")
+            if rem_before:
+                log("  List BEFORE S2.1:")
+                for nln, cnt, tot, tcnt in rem_before:
+                    log(f"    - [{cnt}/{tot} pages] (tokens={tcnt}) '{nln}'")
+            if rem_after:
+                log("  List AFTER S2.1 (actually removed from n):")
+                for nln, cnt, tot, tcnt in rem_after:
+                    log(f"    - [{cnt}/{tot} pages] (tokens={tcnt}) '{nln}'")
             else:
-                log("  Removed repeated lines from n: NONE")
+                log("  List AFTER S2.1 (actually removed from n): NONE")
 
     # (ه-۱) اعتبارسنجی با reference.db (read-only)
     log("\n--- (ه-۱) اعتبارسنجی کدهای ابنیه با reference.db ---")
@@ -525,8 +549,8 @@ def main():
     except Exception as e:
         log(f"ERROR in (ه-۳): {e}")
 
-    # (ه-۴) شبیه‌سازی جستجو در پایتون
-    log("\n--- (ه-۴) شبیه‌سازی جستجو در پایتون (عادی و بی‌فاصله) ---")
+    # (ه-۴) شبیه‌سازی جستجو در پایتون و تولید s21_expected_counts.json
+    log("\n--- (ه-۴) شبیه‌سازی جستجو در پایتون (عادی و بی‌فاصله) و مقایسه با S2 ---")
     try:
         doc_group_map = {dm["id"]: dm["group"] for dm in docs_meta}
         groups_order = ["ابنیه", "مکانیک", "برق", "پیمان", "تعدیل"]
@@ -538,18 +562,75 @@ def main():
                 tokens = [t.replace(" ", "") for t in tokens]
             total_hits = 0
             by_group = {g: 0 for g in groups_order}
-            for did, _pno, n_txt, _s_txt in pages_data:
+            for rec in pages_data:
+                did = rec[0]
+                n_txt = rec[2]
                 target = n_txt.replace(" ", "").replace("\n", "") if ignore_spaces else n_txt
                 if all(tok in target for tok in tokens):
                     total_hits += 1
                     by_group[doc_group_map[did]] += 1
             return total_hits, by_group
 
-        c_folad, g_folad = sim_search("فولاد", False)
-        c_fovalad, g_fovalad = sim_search("فوالد", False)
+        # شبیه‌ساز با n قبل از تغییر S2.1 (حذف همه خطوط >50% حتی <3 توکن) برای ثبت دقیق اعداد S2 در کنار S2.1
+        pages_data_s2_legacy = []
+        for dm in docs_meta:
+            did = dm["id"]
+            if did not in doc_raw_fix_pages:
+                continue
+            dinfo = doc_raw_fix_pages[did]
+            if dm["kind"] == "doc_madeh":
+                for _ulab, s_t, _r_t, n_t in dinfo["records"]:
+                    pages_data_s2_legacy.append((did, n_t))
+            else:
+                rep_before_set = {x[0] for x in dinfo.get("removed_headers_before", [])}
+                for _pno, s_t, r_t, _n_t in dinfo["records"]:
+                    r_nd = remove_digit_tokens(r_t)
+                    if rep_before_set:
+                        sn = [normalize(ln) for ln in s_t.splitlines()]
+                        rn = [normalize(ln) for ln in r_nd.splitlines()]
+                        sn = [ln for ln in sn if ln and ln not in rep_before_set]
+                        rn = [ln for ln in rn if ln and ln not in rep_before_set]
+                        nt_old = " ".join(sn) + "\n" + " ".join(rn)
+                    else:
+                        nt_old = normalize(s_t) + "\n" + normalize(r_nd)
+                    pages_data_s2_legacy.append((did, nt_old))
+
+        def sim_search_s2_legacy(query_str: str, ignore_spaces: bool = False):
+            nq = normalize(query_str)
+            tokens = [t for t in nq.split(" ") if t]
+            if ignore_spaces:
+                tokens = [t.replace(" ", "") for t in tokens]
+            total_hits = 0
+            by_group = {g: 0 for g in groups_order}
+            for did, n_txt in pages_data_s2_legacy:
+                target = n_txt.replace(" ", "").replace("\n", "") if ignore_spaces else n_txt
+                if all(tok in target for tok in tokens):
+                    total_hits += 1
+                    by_group[doc_group_map[did]] += 1
+            return total_hits, by_group
+
+        expected_counts_payload = {
+            "groups_order": groups_order,
+            "queries": [],
+        }
+
+        def record_query_pair(q_str: str):
+            tot_norm, grp_norm = sim_search(q_str, False)
+            tot_nosp, grp_nosp = sim_search(q_str, True)
+            s2_tot_norm, s2_grp_norm = sim_search_s2_legacy(q_str, False)
+            s2_tot_nosp, s2_grp_nosp = sim_search_s2_legacy(q_str, True)
+            expected_counts_payload["queries"].append({
+                "query": q_str,
+                "normal": {"total": tot_norm, "by_group": grp_norm, "s2_total": s2_tot_norm, "s2_by_group": s2_grp_norm},
+                "no_space": {"total": tot_nosp, "by_group": grp_nosp, "s2_total": s2_tot_nosp, "s2_by_group": s2_grp_nosp},
+            })
+            return (tot_norm, grp_norm, s2_tot_norm, s2_grp_norm), (tot_nosp, grp_nosp, s2_tot_nosp, s2_grp_nosp)
+
+        (c_folad, g_folad, s2_cf, s2_gf), _ = record_query_pair("فولاد")
+        (c_fovalad, g_fovalad, s2_cfv, s2_gfv), _ = record_query_pair("فوالد")
         same_flag = "یکسان (OK)" if (c_folad == c_fovalad and g_folad == g_fovalad) else "ناهمسان!"
-        log(f"Query 'فولاد': total={c_folad} {g_folad}")
-        log(f"Query 'فوالد': total={c_fovalad} {g_fovalad} -> مقایسه: {same_flag}")
+        log(f"Query 'فولاد' (عادی): S2.1 total={c_folad} {g_folad} | S2 total={s2_cf} {s2_gf}")
+        log(f"Query 'فوالد' (عادی): S2.1 total={c_fovalad} {g_fovalad} | S2 total={s2_cfv} {s2_gfv} -> مقایسه: {same_flag}")
 
         test_queries = [
             "بتن",
@@ -560,13 +641,19 @@ def main():
             "پیش پرداخت",
             "ضریب طبقات",
             "شیشه",
+            "پیمانکار",
+            "پیمان",
         ]
         for q in test_queries:
-            tot_norm, grp_norm = sim_search(q, False)
-            tot_nosp, grp_nosp = sim_search(q, True)
+            (tot_norm, grp_norm, s2_tn, s2_gn), (tot_nosp, grp_nosp, s2_tns, s2_gns) = record_query_pair(q)
             log(f"Query '{q}':")
-            log(f"  عادی     : total={tot_norm:4d} | {grp_norm}")
-            log(f"  بی‌فاصله : total={tot_nosp:4d} | {grp_nosp}")
+            log(f"  عادی     : S2.1 total={tot_norm:4d} {grp_norm} | S2 total={s2_tn:4d} {s2_gn}")
+            log(f"  بی‌فاصله : S2.1 total={tot_nosp:4d} {grp_nosp} | S2 total={s2_tns:4d} {s2_gns}")
+
+        expected_json_path = "docs/search_logs/s21_expected_counts.json"
+        with open(expected_json_path, "w", encoding="utf-8") as ejf:
+            json.dump(expected_counts_payload, ejf, ensure_ascii=False, indent=2)
+        log(f"Saved expected counts JSON to {expected_json_path} (queries={len(expected_counts_payload['queries'])})")
     except Exception as e:
         log(f"ERROR in (ه-۴): {e}")
 
