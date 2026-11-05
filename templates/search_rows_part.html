@@ -1,0 +1,383 @@
+<!-- S3: بخش مستقل ردیف‌های فهرست‌بها (بدون قیمت) -->
+<style>
+  #rowsSection {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+  .rows-header-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+  .rows-notice {
+    background: #eff6ff;
+    border: 1px solid #93c5fd;
+    border-right: 5px solid #2563eb;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #1e3a8a;
+    margin-bottom: 10px;
+  }
+  #rowsStatsBar {
+    font-size: 13.5px;
+    margin-bottom: 10px;
+    color: #374151;
+  }
+  .row-card {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-right: 4px solid #0ea5e9;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+  }
+  .row-card-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .badge-code {
+    background: #fef3c7;
+    color: #92400e;
+    font-weight: bold;
+    font-family: monospace;
+    font-size: 13px;
+  }
+  .badge-unit {
+    background: #e0e7ff;
+    color: #3730a3;
+    font-weight: bold;
+  }
+  .badge-excel {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  .badge-page-ref {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .row-desc {
+    font-size: 13.5px;
+    color: #111827;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .row-desc mark {
+    background: #fde047;
+    color: #000;
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  #selftest_rows {
+    display: inline-block;
+    margin-right: 12px;
+    font-size: 12px;
+    color: #4b5563;
+  }
+</style>
+
+<div class="container" id="rowsOuterContainer">
+  <div class="panel" id="rowsSection">
+    <div class="rows-header-title">ردیف‌های فهرست‌بها (ابنیه، مکانیک، برق) <span id="selftest_rows"></span></div>
+    <div class="rows-notice">ردیف‌ها از فایل‌های اکسل فهرست‌بها گرفته شده‌اند؛ قیمت نمایش داده نمی‌شود؛ بندهای توضیحی و ضرایب را در صفحهٔ اصلی PDF ببینید.</div>
+    <div id="rowsStatsBar">عبارت مورد نظر را در کادر بالا وارد کنید تا ردیف‌های فهرست‌بها نیز جستجو شوند.</div>
+    <div id="rowsResultsList"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  "use strict";
+
+  const REMOVE_RE_ROWS = /[\uFEFF\u200D\u200E\u200F\u202A-\u202E\u064B-\u065F\u0670\u0640]/g;
+  const DIGIT_MAP_ROWS = {
+    '۰':'0','۱':'1','۲':'2','۳':'3','۴':'4','۵':'5','۶':'6','۷':'7','۸':'8','۹':'9',
+    '٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'
+  };
+  const DIGIT_RE_ROWS = /[۰-۹٠-٩]/g;
+
+  function normalizeRows(s) {
+    if (!s) return "";
+    let out = String(s).normalize('NFKC');
+    out = out.replace(REMOVE_RE_ROWS, '');
+    out = out.replace(/\u200C/g, ' ');
+    out = out.replace(/[يى]/g, 'ی').replace(/ك/g, 'ک');
+    out = out.replace(DIGIT_RE_ROWS, function(ch) { return DIGIT_MAP_ROWS[ch] || ch; });
+    out = out.replace(/\u066B/g, '.').replace(/\u066C/g, ',');
+    out = out.replace(/لا/g, 'ال');
+    out = out.toLowerCase();
+    out = out.replace(/\s+/g, ' ').trim();
+    return out;
+  }
+
+  function escapeHtmlRows(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function countOccurrencesRows(haystack, needle) {
+    if (!needle) return 0;
+    let count = 0;
+    let pos = 0;
+    const step = needle.length;
+    while (true) {
+      const idx = haystack.indexOf(needle, pos);
+      if (idx === -1) break;
+      count++;
+      pos = idx + step;
+    }
+    return count;
+  }
+
+  function parseQueryTokensRows(qStr, noSpace) {
+    const norm = normalizeRows(qStr);
+    if (!norm) return [];
+    const rawTokens = norm.split(' ').filter(Boolean);
+    if (!noSpace) return rawTokens;
+    return rawTokens.map(function(t) { return t.replace(/\s+/g, ''); }).filter(Boolean);
+  }
+
+  const rowsNoSpaceCache = new Map();
+  function getRowNoSpaceN(idx, nTxt) {
+    if (rowsNoSpaceCache.has(idx)) return rowsNoSpaceCache.get(idx);
+    const val = (nTxt || '').replace(/\s+/g, '');
+    rowsNoSpaceCache.set(idx, val);
+    return val;
+  }
+
+  function executeRowsSearch(queryStr, ignoreSpaces, groupsArray) {
+    const rowsData = (typeof DATA !== 'undefined' && Array.isArray(DATA.rows)) ? DATA.rows : [];
+    const tokens = parseQueryTokensRows(queryStr, !!ignoreSpaces);
+    if (tokens.length === 0) {
+      return { total: 0, by_group: {}, items: [], tokens: [] };
+    }
+
+    const allowedSet = Array.isArray(groupsArray) ? new Set(groupsArray) : null;
+    const byGroup = {};
+    const matched = [];
+
+    for (let i = 0; i < rowsData.length; i++) {
+      const r = rowsData[i];
+      const grp = r[0];
+      if (allowedSet !== null && !allowedSet.has(grp)) continue;
+
+      const code = r[1];
+      const nTxt = r[6] || '';
+      const hay = ignoreSpaces ? getRowNoSpaceN(i, nTxt) : nTxt;
+
+      let ok = true;
+      let totalOcc = 0;
+      for (let t = 0; t < tokens.length; t++) {
+        const tok = tokens[t];
+        if (hay.indexOf(tok) === -1) {
+          ok = false;
+          break;
+        }
+        totalOcc += countOccurrencesRows(hay, tok);
+      }
+      if (!ok) continue;
+
+      let normCode = normalizeRows(code);
+      if (ignoreSpaces) normCode = normCode.replace(/\s+/g, '');
+      let exactCode = 0;
+      for (let t = 0; t < tokens.length; t++) {
+        if (normCode === tokens[t]) {
+          exactCode = 1;
+          break;
+        }
+      }
+
+      byGroup[grp] = (byGroup[grp] || 0) + 1;
+      matched.push({
+        idx: i,
+        row: r,
+        exactCode: exactCode,
+        totalOcc: totalOcc
+      });
+    }
+
+    matched.sort(function(a, b) {
+      if (b.exactCode !== a.exactCode) return b.exactCode - a.exactCode;
+      if (b.totalOcc !== a.totalOcc) return b.totalOcc - a.totalOcc;
+      return a.idx - b.idx;
+    });
+
+    return {
+      total: matched.length,
+      by_group: byGroup,
+      items: matched.slice(0, 100),
+      tokens: tokens
+    };
+  }
+
+  // تابع سراسری برای آزمون node
+  window.__rowsSearch = function(query, ignoreSpaces, groupsArray) {
+    const res = executeRowsSearch(query, ignoreSpaces, groupsArray);
+    return {
+      total: res.total,
+      by_group: res.by_group,
+      top_codes: res.items.slice(0, 10).map(function(m) { return m.row[1]; })
+    };
+  };
+
+  function formatPagesBadge(grp, pagesList) {
+    if (!Array.isArray(pagesList) || pagesList.length === 0) {
+      return '<span class="badge badge-page-ref">صفحه نامعلوم</span>';
+    }
+    if (grp === 'فهرست‌بها — ابنیه') {
+      const parts = pagesList.map(function(x) {
+        const b = x - 3;
+        return 'ص PDF ' + x + ' (طبق پایگاه)، بولتن ≈ ' + b;
+      });
+      return '<span class="badge badge-page-ref">' + escapeHtmlRows(parts.join(' | ')) + '</span>';
+    } else {
+      const parts = pagesList.map(function(x) {
+        return 'ص PDF ' + x + ' (یافته‌شده در متن)';
+      });
+      return '<span class="badge badge-page-ref">' + escapeHtmlRows(parts.join(' | ')) + '</span>';
+    }
+  }
+
+  function renderRowsUI() {
+    const qInput = document.getElementById('qInput');
+    const noSpaceCb = document.getElementById('noSpaceCb');
+    const statsEl = document.getElementById('rowsStatsBar');
+    const listEl = document.getElementById('rowsResultsList');
+    if (!qInput || !statsEl || !listEl) return;
+
+    const qVal = qInput.value || '';
+    const noSpace = !!(noSpaceCb && noSpaceCb.checked);
+    const grpCbs = document.querySelectorAll('.grp-cb');
+    const selectedGroups = [];
+    for (let i = 0; i < grpCbs.length; i++) {
+      if (grpCbs[i].checked) selectedGroups.push(grpCbs[i].value);
+    }
+
+    const res = executeRowsSearch(qVal, noSpace, selectedGroups);
+    if (res.tokens.length === 0) {
+      statsEl.innerHTML = 'عبارت مورد نظر را در کادر بالا وارد کنید تا ردیف‌های فهرست‌بها نیز جستجو شوند.';
+      listEl.innerHTML = '';
+      return;
+    }
+
+    let statsHtml = '<strong>' + res.total + ' ردیف یافت شد</strong>';
+    if (res.total > 100) {
+      statsHtml += ' (نمایش ۱۰۰ ردیف اول)';
+    }
+    const groupOrder = ['فهرست‌بها — ابنیه', 'فهرست‌بها — مکانیک', 'فهرست‌بها — برق'];
+    const badges = [];
+    for (let g = 0; g < groupOrder.length; g++) {
+      const gName = groupOrder[g];
+      const cnt = res.by_group[gName] || 0;
+      if (cnt > 0) {
+        badges.push('<span class="badge">' + escapeHtmlRows(gName) + ': <strong>' + cnt + '</strong></span>');
+      }
+    }
+    if (badges.length > 0) {
+      statsHtml += '<div class="doc-counts">' + badges.join(' ') + '</div>';
+    }
+    statsEl.innerHTML = statsHtml;
+
+    if (res.items.length === 0) {
+      listEl.innerHTML = '<div style="font-size:13px;color:#6b7280;">ردیفی در فهرست‌بها با این عبارت یافت نشد.</div>';
+      return;
+    }
+
+    const cardsHtml = [];
+    for (let i = 0; i < res.items.length; i++) {
+      const item = res.items[i];
+      const r = item.row;
+      const grp = r[0];
+      const code = r[1];
+      const desc = r[2];
+      const unit = r[3];
+      const excelRow = r[4];
+      const pagesList = r[5];
+
+      cardsHtml.push(
+        '<div class="row-card">' +
+          '<div class="row-card-head">' +
+            '<span class="badge badge-group">' + escapeHtmlRows(grp) + '</span>' +
+            '<span class="badge badge-code">کد: ' + escapeHtmlRows(code) + '</span>' +
+            '<span class="badge badge-unit">واحد: ' + escapeHtmlRows(unit) + '</span>' +
+            '<span class="badge badge-excel">ردیف اکسل ' + escapeHtmlRows(excelRow) + '</span>' +
+            formatPagesBadge(grp, pagesList) +
+          '</div>' +
+          '<div class="row-desc">' + escapeHtmlRows(desc) + '</div>' +
+        '</div>'
+      );
+    }
+    listEl.innerHTML = cardsHtml.join('');
+  }
+
+  function initRowsLayer() {
+    // انتقال بخش ردیف‌ها به داخل container اصلی (درست بعد از resultsList)
+    const resultsList = document.getElementById('resultsList');
+    const rowsSection = document.getElementById('rowsSection');
+    const outer = document.getElementById('rowsOuterContainer');
+    if (resultsList && resultsList.parentNode && rowsSection) {
+      resultsList.parentNode.insertBefore(rowsSection, resultsList.nextSibling);
+      if (outer && outer.parentNode && outer.children.length === 0) {
+        outer.parentNode.removeChild(outer);
+      }
+    }
+
+    // خودآزمایی normalize روی DATA.selftest در عنصر id="selftest_rows"
+    const stRowsEl = document.getElementById('selftest_rows');
+    if (stRowsEl) {
+      const mismatches = [];
+      if (typeof DATA !== 'undefined' && Array.isArray(DATA.selftest)) {
+        for (let i = 0; i < DATA.selftest.length; i++) {
+          const pair = DATA.selftest[i];
+          const inp = pair[0];
+          const pyOut = pair[1];
+          const jsOut = normalizeRows(inp);
+          if (jsOut !== pyOut) {
+            mismatches.push('[' + i + ']');
+          }
+        }
+      }
+      if (mismatches.length === 0) {
+        stRowsEl.textContent = 'خودآزمایی ردیف‌ها: OK';
+      } else {
+        stRowsEl.textContent = 'FAIL: ' + mismatches.join(',');
+      }
+    }
+
+    const qInput = document.getElementById('qInput');
+    const noSpaceCb = document.getElementById('noSpaceCb');
+    const grpCbs = document.querySelectorAll('.grp-cb');
+
+    let debounceRows = null;
+    if (qInput) {
+      qInput.addEventListener('input', function() {
+        if (debounceRows) clearTimeout(debounceRows);
+        debounceRows = setTimeout(renderRowsUI, 120);
+      });
+      qInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          if (debounceRows) clearTimeout(debounceRows);
+          renderRowsUI();
+        }
+      });
+    }
+    if (noSpaceCb) {
+      noSpaceCb.addEventListener('change', renderRowsUI);
+    }
+    for (let i = 0; i < grpCbs.length; i++) {
+      grpCbs[i].addEventListener('change', renderRowsUI);
+    }
+  }
+
+  initRowsLayer();
+})();
+</script>

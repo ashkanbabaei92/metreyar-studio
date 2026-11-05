@@ -668,15 +668,95 @@ def main():
         log(f"  in={repr(inp)} -> out={repr(actual)} | ok={ok}")
     log(f"Python selftest overall: {'OK' if all_ok else 'FAIL'}")
 
+    # (و-۰) S3: لایهٔ ردیف‌های فهرست‌بها از سه فایل xlsx (بدون قیمت)
+    log("\n--- (و-۰) S3: پردازش ردیف‌های فهرست‌بها از سه فایل xlsx (بدون قیمت) ---")
+    rows_json_data = []
+    try:
+        from src.search_rows import (
+            load_abnieh_db_codes,
+            read_catalog,
+            map_pages_and_build_rows,
+            format_s3_build_report,
+        )
+        db_code_to_pages, db_all_codes, db_info = load_abnieh_db_codes("data_processed/reference.db")
+        xlsx_specs = [
+            ("abn1404.xlsx", "فهرست‌بها — ابنیه"),
+            ("mec1404.xlsx", "فهرست‌بها — مکانیک"),
+            ("elec1404.xlsx", "فهرست‌بها — برق"),
+        ]
+        # یافتن فایل‌های xlsx با os.walk و تطبیق نام نرمال‌شده
+        found_xlsx = {}
+        for root_dir, _dirs, files in os.walk("data"):
+            for fn in files:
+                n_fn = normalize(fn)
+                for target_fn, grp_name in xlsx_specs:
+                    if n_fn == normalize(target_fn):
+                        found_xlsx[grp_name] = (os.path.join(root_dir, fn), fn)
+
+        catalog_by_group = {}
+        catalog_reports = {}
+        for target_fn, grp_name in xlsx_specs:
+            try:
+                if grp_name not in found_xlsx:
+                    log(f"XLSX for {grp_name} ({target_fn}) -> نیازمند بررسی (یافت نشد)")
+                    continue
+                x_path, actual_xfn = found_xlsx[grp_name]
+                use_db_codes = db_all_codes if grp_name == "فهرست‌بها — ابنیه" else None
+                entries, rep = read_catalog(x_path, grp_name, db_codes=use_db_codes)
+                catalog_by_group[grp_name] = entries
+                catalog_reports[grp_name] = rep
+                docs_meta.append({
+                    "id": doc_id_counter,
+                    "label": actual_xfn,
+                    "group": grp_name,
+                    "status": "ردیف‌های xlsx (بدون قیمت)",
+                    "pages": len(entries),
+                    "low_text_pages": len(rep["non_code_rows"]),
+                    "file": actual_xfn,
+                    "kind": "xlsx",
+                })
+                doc_id_counter += 1
+                log(f"Loaded XLSX {actual_xfn} ({grp_name}): valid_rows={len(entries)}, non_code_rows={len(rep['non_code_rows'])}")
+            except Exception as ex_cat:
+                log(f"ERROR reading catalog {target_fn}: {ex_cat}")
+
+        pdf_records_by_group = {}
+        for _did, dinfo in doc_raw_fix_pages.items():
+            gname = dinfo["group"]
+            if gname in ("فهرست‌بها — ابنیه", "فهرست‌بها — مکانیک", "فهرست‌بها — برق"):
+                pdf_records_by_group[gname] = dinfo["records"]
+
+        try:
+            rows_json_data, mapping_report = map_pages_and_build_rows(
+                catalog_by_group, pdf_records_by_group, db_code_to_pages
+            )
+            s3_report_text = format_s3_build_report(catalog_reports, mapping_report, db_info)
+            s3_report_path = "docs/search_logs/s3_build_report.txt"
+            with open(s3_report_path, "w", encoding="utf-8") as s3rf:
+                s3rf.write(s3_report_text)
+            log(f"Saved S3 build report to {s3_report_path} (total rows={len(rows_json_data)})")
+        except Exception as ex_map:
+            log(f"ERROR mapping pages for S3 rows: {ex_map}")
+    except Exception as ex_s3:
+        log(f"ERROR in S3 block: {ex_s3}")
+
     # (و) تولید HTML
     log("\n--- (و) تولید فایل HTML تک‌فایلی ---")
     template_path = "templates/search_template.html"
+    rows_part_path = "templates/search_rows_part.html"
     output_html_path = "output/search/metreyar_search.html"
     if not os.path.exists(template_path):
         log(f"Template not found at {template_path}")
     else:
         with open(template_path, "r", encoding="utf-8") as tf:
             tpl_html = tf.read()
+
+        if "<!--__ROWS_PART__-->" not in tpl_html:
+            raise RuntimeError("Placeholder <!--__ROWS_PART__--> not found in templates/search_template.html")
+        if not os.path.exists(rows_part_path):
+            raise RuntimeError(f"Rows template part not found at {rows_part_path}")
+        with open(rows_part_path, "r", encoding="utf-8") as rpf:
+            rows_part_html = rpf.read()
 
         docs_json_list = [
             {
@@ -694,14 +774,15 @@ def main():
             "built": built_date,
             "docs": docs_json_list,
             "pages": pages_data,
+            "rows": rows_json_data,
             "selftest": selftest_pairs,
         }
         json_str = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-        final_html = tpl_html.replace("/*__DATA__*/", json_str)
+        final_html = tpl_html.replace("/*__DATA__*/", json_str).replace("<!--__ROWS_PART__-->", rows_part_html)
         with open(output_html_path, "w", encoding="utf-8") as outf:
             outf.write(final_html)
         html_size = os.path.getsize(output_html_path)
-        log(f"Generated {output_html_path} | size={html_size} bytes ({html_size / (1024*1024):.2f} MB) | indexed_pages_units={len(pages_data)}")
+        log(f"Generated {output_html_path} | size={html_size} bytes ({html_size / (1024*1024):.2f} MB) | indexed_pages_units={len(pages_data)} | rows={len(rows_json_data)}")
 
     report_path = "docs/search_logs/s2_build_report.txt"
     with open(report_path, "w", encoding="utf-8") as rf:

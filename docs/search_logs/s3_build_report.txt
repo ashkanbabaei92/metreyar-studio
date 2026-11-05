@@ -1,0 +1,79 @@
+=== S3 Build Report: لایهٔ ردیف‌های فهرست‌بها (xlsx بدون قیمت) ===
+DB Info (mode=ro): total_rows=1565, unique_codes=1565
+DB Columns: [('id', 'INTEGER'), ('discipline', 'TEXT'), ('year', 'INTEGER'), ('code_official', 'TEXT'), ('code_internal', 'TEXT'), ('chapter_code', 'TEXT'), ('group_code', 'TEXT'), ('item_seq', 'TEXT'), ('description', 'TEXT'), ('unit_raw', 'TEXT'), ('unit', 'TEXT'), ('unit_status', 'TEXT'), ('unit_price_rial', 'REAL'), ('item_category', 'TEXT'), ('is_star_price_zero', 'INTEGER'), ('is_percent_unit', 'INTEGER'), ('source_excel_file', 'TEXT'), ('source_excel_row', 'INTEGER'), ('source_pdf_file', 'TEXT'), ('source_page_bulletin', 'INTEGER'), ('source_page_pdf', 'INTEGER')]
+
+=== گروه: فهرست‌بها — ابنیه | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx ===
+Sheets: ['فهرست بها ابنیه 1404'] | max_col_seen: 6
+Header (cols 1..3): ("'ردیف فهرست'", "'شرح'", "'واحد'")
+First 3 rows (cols 1..3 repr):
+  row 1 (len=6): col1='ردیف فهرست' | col2='شرح' | col3='واحد'
+  row 2 (len=6): col1='010101' | col2='کندن و خارج کردن بوته و ریشه\u200cهای مربوط در زمین\u200cهای پوشیده از آن\u200cها.' | col3='مترمربع'
+  row 3 (len=6): col1='010102' | col2='کندن و یا بریدن و در صورت لزوم ریشه کن کردن هرنوع نهال، در صورتی که محیط بن آن کمتر از 15 سانتی\u200cمتر باشد، به ازای هر 5 سانتی\u200cمتر محیط بن (کسر 5 سانتی\u200cمتر به تناسب محاسبه می\u200cشود) و حمل آن به خارج کارگاه.' | col3='اصله'
+Valid catalog rows count: 1565
+Code cell data types (rows 2..N): {'str': 1565}
+Lead-zero fixes via DB comparison: count=0, samples=[]
+Short numeric codes (<6 digits): count=0, samples=[]
+Non-code / skipped rows count: 0
+Duplicate codes in file: count=0, items=[]
+Extra columns (col 5 onwards, E=5, F=6, G=7) [NOT stored in JSON/HTML]:
+  Row 1 cell types in extra cols: {5: 'NoneType', 6: 'NoneType'}
+  Col 5 (E): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
+  Col 6 (F): non_empty_rows(2..N)=1 | 5 samples (excel_row, repr)=[(95, "'https://t.me/fehres_analysis'")]
+
+=== گروه: فهرست‌بها — مکانیک | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/mec1404.xlsx ===
+Sheets: ['mec1404'] | max_col_seen: 7
+Header (cols 1..3): ("'شماره ردیف'", "'شرح'", "'واحد'")
+First 3 rows (cols 1..3 repr):
+  row 1 (len=7): col1='شماره ردیف' | col2='شرح' | col3='واحد'
+  row 2 (len=7): col1='12010101' | col2='لوله فولادی سیاه درز دار، به \u200cقطر نامی 15 (یک دوم اینچ).' | col3='مترطول'
+  row 3 (len=7): col1='12010102' | col2='لوله فولادی سیاه درزدار، به قطر نامی 20 (سه چهارم اینچ).' | col3='مترطول'
+Valid catalog rows count: 1188
+Code cell data types (rows 2..N): {'str': 1188}
+Lead-zero fixes via DB comparison: count=0, samples=[]
+Short numeric codes (<6 digits): count=0, samples=[]
+Non-code / skipped rows count: 0
+Duplicate codes in file: count=0, items=[]
+Extra columns (col 5 onwards, E=5, F=6, G=7) [NOT stored in JSON/HTML]:
+  Row 1 cell types in extra cols: {5: 'NoneType', 6: 'NoneType', 7: 'NoneType'}
+  Col 5 (E): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
+  Col 6 (F): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
+  Col 7 (G): non_empty_rows(2..N)=1 | 5 samples (excel_row, repr)=[(6, "'https://t.me/fehres_analysis'")]
+
+=== گروه: فهرست‌بها — برق | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/elec1404.xlsx ===
+Sheets: ['elec1404'] | max_col_seen: 7
+Header (cols 1..3): ("'شماره ردیف'", "'شرح'", "'واحد'")
+First 3 rows (cols 1..3 repr):
+  row 1 (len=7): col1='شماره ردیف' | col2='شرح' | col3='واحد'
+  row 2 (len=7): col1='13016302' | col2='چراغ روشویی، آینه LED شصت سانتی\u200cمتر، با ماژول یکپارچه (Integrated) و درایور مربوطه، دارای شار نوری ۹۰۰ لومن و بهره نوری ۷۵ لومن بر وات.' | col3='عدد'
+  row 3 (len=7): col1='13017102' | col2='چراغ های سقفی روکار LED، با حباب شیشه\u200cای یا پلیمری، گرد یا چهارگوش به قطر حدود ۳۰ سانتی\u200cمتر با ماژول یکپارچه (Integrated) و درایور مربوطه، دارای شار نوری ۱۵۰۰ لومن و بهره نوری ۸۵ لومن بر وات.' | col3='عدد'
+Valid catalog rows count: 1585
+Code cell data types (rows 2..N): {'str': 1585}
+Lead-zero fixes via DB comparison: count=0, samples=[]
+Short numeric codes (<6 digits): count=0, samples=[]
+Non-code / skipped rows count: 0
+Duplicate codes in file: count=0, items=[]
+Extra columns (col 5 onwards, E=5, F=6, G=7) [NOT stored in JSON/HTML]:
+  Row 1 cell types in extra cols: {5: 'NoneType', 6: 'NoneType', 7: 'NoneType'}
+  Col 5 (E): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
+  Col 6 (F): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
+  Col 7 (G): non_empty_rows(2..N)=1 | 5 samples (excel_row, repr)=[(6, "'https://t.me/fehres_analysis'")]
+
+=== بخش (ج): نگاشت صفحه (Page Mapping) ===
+--- فهرست‌بها — ابنیه (total=1565) ---
+  Text search on fix pages: not_found(0 pages)=1565, one_page(1)=0, multi_pages(>=2)=0
+  Text not_found samples (code, excel_row): [('010101', 2), ('010102', 3), ('010121', 4), ('010122', 5), ('010123', 6), ('010124', 7), ('010125', 8), ('010126', 9), ('010127', 10), ('010201', 11)]
+  Text multi_page samples (code, excel_row, pages): []
+  Abnieh DB vs Text comparison: db_found=1565, db_not_found=0, agree(DB page in text pages)=0, disagree(text found but differs from DB)=0, text_not_found=1565
+  Abnieh DB missing samples: []
+  Abnieh disagree samples (code, excel_row, db_pages, text_pages):
+
+--- فهرست‌بها — مکانیک (total=1188) ---
+  Text search on fix pages: not_found(0 pages)=1188, one_page(1)=0, multi_pages(>=2)=0
+  Text not_found samples (code, excel_row): [('12010101', 2), ('12010102', 3), ('12010103', 4), ('12010104', 5), ('12010105', 6), ('12010106', 7), ('12010107', 8), ('12010108', 9), ('12010109', 10), ('12010110', 11)]
+  Text multi_page samples (code, excel_row, pages): []
+
+--- فهرست‌بها — برق (total=1585) ---
+  Text search on fix pages: not_found(0 pages)=1585, one_page(1)=0, multi_pages(>=2)=0
+  Text not_found samples (code, excel_row): [('13016302', 2), ('13017102', 3), ('13017103', 4), ('13017301', 5), ('13017302', 6), ('13017303', 7), ('13017304', 8), ('13017401', 9), ('13017402', 10), ('13017403', 11)]
+  Text multi_page samples (code, excel_row, pages): []
+
