@@ -1,0 +1,38 @@
+=== S3.2b JS Show-More & Reset Test (s32b_showmore.txt) ===
+گروه‌های استخراج‌شده از HTML: ["ابنیه","مکانیک","برق","پیمان","تعدیل"]
+تعداد بلاک‌های <script> در HTML: 2
+
+--- بخش ۱: ردیف‌ها (پرسش "بتن"، همهٔ گروه‌ها، بی‌فاصله خاموش، کلمهٔ کامل خاموش) ---
+  [OK] ردیف‌ها وضعیت اولیه k=0: shown == min(total, 100) و برابر شمار کارت‌های DOM (shown=100, total=215, domCards=100)
+  [OK] ردیف‌ها بعد از کلیک k=1: shown == min(total, 100*(k+1))=200 و total ثابت=215 (shown=200, total=215, domCards=200)
+  [OK] ردیف‌ها بعد از کلیک k=2: shown == min(total, 100*(k+1))=215 و total ثابت=215 (shown=215, total=215, domCards=215)
+  [FAIL #1] ردیف‌ها در پایان حلقه‌ٔ نمایش بیشتر: shown == total و دکمهٔ نمایش بیشتر مخفی شده | مقدار واقعی: shown=215, total=215, wrapDisplay=''
+دنبالهٔ کامل shown/total ردیف‌ها برای «بتن»:
+  k=0 (اولیه): 100/215 -> k=1: 200/215 -> k=2: 215/215
+
+--- بخش ۲: آزمون ریست ردیف‌ها پس از تغییر پرسش و تغییر تیک کلمهٔ کامل ---
+وضعیت شنونده‌ها در DOM ساختگی: qInput(keydown)=true, qInput(input)=true, wholeWordCb(change)=true, noSpaceCb(change)=true
+  رویداد واقعی keydown(Enter) روی qInput اجرا شد.
+  [OK] ریست ردیف‌ها پس از تغییر پرسش به «فولاد»: shown == min(total, 100) (shown=100, total=381, domCards=100)
+  پس از یک کلیک __rowsShowMore روی «فولاد»: shown=200/381
+  رویداد واقعی change روی wholeWordCb اجرا شد.
+  [OK] ریست ردیف‌ها پس از روشن کردن تیک «کلمهٔ کامل» (change): shown == min(total, 100) (shown=83, total=83, domCards=83)
+  قبل از تغییر تیک wholeWordCb روی «بتن»: shown=121/121
+  [OK] ریست ردیف‌ها از shown=200 به min(total,100)=100 با رویداد change روی wholeWordCb در «بتن» (shown=100, total=215)
+
+--- بخش ۳: صفحه‌ها (جستجوی اولین پرسش از ["راه", "پیمان"] با total > 200) ---
+  بررسی __pagesSearch("راه", false, ALL, false): total=235
+  بررسی __pagesSearch("پیمان", false, ALL, false): total=583
+  پرسش انتخاب‌شده برای صفحه‌ها: «راه»
+  runSearch از طریق گیرندهٔ رویداد change روی noSpaceCb فراخوانی شد.
+  [OK] صفحه‌ها («راه») وضعیت اولیه k=0: shown == min(total, 200) و برابر کارت‌های DOM (shown=200, total=235, domCards=200)
+  [OK] صفحه‌ها («راه») بعد از کلیک k=1: shown == min(total, 200+100*k)=235 و total ثابت=235 (shown=235, total=235, domCards=235)
+  [FAIL #2] صفحه‌ها («راه») در پایان نمایش بیشتر: shown == total و مخفی شدن دکمه | مقدار واقعی: shown=235, total=235, wrapDisplay=''
+دنبالهٔ کامل shown/total صفحه‌ها برای «راه»:
+  k=0 (اولیه): 200/235 -> k=1: 235/235
+  [OK] ریست صفحه‌ها پس از تغییر پرسش به «پیمان»: shown == min(total, 200) (shown=200, total=583, domCards=200)
+
+============================================================
+[FAIL #1] ردیف‌ها در پایان حلقه‌ٔ نمایش بیشتر: shown == total و دکمهٔ نمایش بیشتر مخفی شده | مقدار واقعی: shown=215, total=215, wrapDisplay=''
+[FAIL #2] صفحه‌ها («راه») در پایان نمایش بیشتر: shown == total و مخفی شدن دکمه | مقدار واقعی: shown=235, total=235, wrapDisplay=''
+SHOWMORE: FAIL 2
