@@ -1,0 +1,12 @@
+=== S3.2 JS Parity Test (s32_parity.txt) ===
+Extracted checkbox groups from HTML via regex: ["ابنیه","مکانیک","برق","پیمان","تعدیل"]
+Found 2 <script> blocks in HTML.
+DOM #selftest: خودآزمایی: OK
+DOM #selftest_rows: خودآزمایی ردیف‌ها: OK
+Checked 132 query×group×mode cases for rows and pages.
+Rows ShowMore before click: shown=100, total=215, domCards=100
+Rows ShowMore after 1st click: shown=215, total=215, domCards=215
+Pages ShowMore before click: shown=123, total=123, domCards=123
+Pages ShowMore after 1st click: shown=123, total=123, domCards=123
+After new search (noSpace=true): rowsShown=100, pagesShown=129, wholeWordCb.disabled=true
+PARITY: FAIL 3

@@ -181,6 +181,7 @@
       <label><input type="checkbox" class="grp-cb" value="پیمان" checked> پیمان</label>
       <label><input type="checkbox" class="grp-cb" value="تعدیل" checked> تعدیل</label>
       <span style="margin-right:auto;"></span>
+      <label><input type="checkbox" id="wholeWordCb"> کلمهٔ کامل</label>
       <label><input type="checkbox" id="noSpaceCb"> نادیده‌گرفتن فاصله‌ها (برای متن خراب)</label>
     </div>
     <div class="folder-row">
@@ -191,6 +192,7 @@
 
   <div id="statsBar"></div>
   <div id="resultsList"></div>
+  <div id="pagesShowMoreWrap" style="margin: 12px 0; text-align: center;"></div>
 
   <footer>
     <details>
@@ -265,18 +267,36 @@ function parseQueryTokens(qStr, noSpace) {
   return tokens;
 }
 
-function countOccurrences(haystack, needle) {
+// تعریف نویسهٔ کلمه (یکتا در JS): حروف فارسی/عربی U+0621-U+063A, U+0641-U+064A, U+067E, U+0686, U+0698, U+06A9, U+06AF, U+06CC، لاتین a-z، ارقام 0-9
+const WORD_CHAR_RE = /[\u0621-\u063A\u0641-\u064A\u067E\u0686\u0698\u06A9\u06AF\u06CCa-z0-9]/;
+function isWordChar(ch) {
+  return !!ch && WORD_CHAR_RE.test(ch);
+}
+window.__isWordChar = isWordChar;
+window.__WORD_CHAR_RE = WORD_CHAR_RE;
+
+function countOccurrences(haystack, needle, wholeWord) {
   if (!needle) return 0;
   let count = 0;
   let pos = 0;
+  const nLen = needle.length;
   while (true) {
     const idx = haystack.indexOf(needle, pos);
     if (idx === -1) break;
+    if (wholeWord) {
+      const beforeCh = idx > 0 ? haystack.charAt(idx - 1) : '';
+      const afterCh = (idx + nLen < haystack.length) ? haystack.charAt(idx + nLen) : '';
+      if (isWordChar(beforeCh) || isWordChar(afterCh)) {
+        pos = idx + 1;
+        continue;
+      }
+    }
     count++;
-    pos = idx + needle.length;
+    pos = idx + nLen;
   }
   return count;
 }
+window.__countOccurrences = countOccurrences;
 
 function escapeHtml(str) {
   return String(str)
@@ -306,10 +326,21 @@ function getNoSpaceN(idx) {
 
 const qInput = document.getElementById('qInput');
 const noSpaceCb = document.getElementById('noSpaceCb');
+const wholeWordCb = document.getElementById('wholeWordCb');
 const basePathInput = document.getElementById('basePath');
 const statsBar = document.getElementById('statsBar');
 const resultsList = document.getElementById('resultsList');
+const pagesShowMoreWrap = document.getElementById('pagesShowMoreWrap');
 const grpCbs = Array.prototype.slice.call(document.querySelectorAll('.grp-cb'));
+
+const PAGES_INITIAL_LIMIT = 200;
+const PAGES_MORE_STEP = 100;
+let currentPagesShownLimit = PAGES_INITIAL_LIMIT;
+let lastPagesMatched = [];
+let lastPagesPerDocCounts = {};
+let lastPagesTokens = [];
+let lastPagesNoSpace = false;
+let lastPagesWholeWord = false;
 
 // بارگذاری پوشه PDF از localStorage در try/catch
 try {
@@ -327,7 +358,11 @@ basePathInput.addEventListener('input', function() {
 function runSearch() {
   if (!DATA || !Array.isArray(DATA.pages)) return;
   const qRaw = qInput.value || '';
-  const noSpace = noSpaceCb.checked;
+  const noSpace = !!(noSpaceCb && noSpaceCb.checked);
+  if (wholeWordCb) {
+    wholeWordCb.disabled = noSpace;
+  }
+  const wholeWord = !noSpace && !!(wholeWordCb && wholeWordCb.checked);
   const tokens = parseQueryTokens(qRaw, noSpace);
 
   const activeGroups = {};
@@ -335,9 +370,15 @@ function runSearch() {
     if (grpCbs[i].checked) activeGroups[grpCbs[i].value] = true;
   }
 
+  currentPagesShownLimit = PAGES_INITIAL_LIMIT;
+
   if (tokens.length === 0) {
+    lastPagesMatched = [];
+    lastPagesPerDocCounts = {};
+    lastPagesTokens = [];
     statsBar.innerHTML = '';
     resultsList.innerHTML = '';
+    if (pagesShowMoreWrap) pagesShowMoreWrap.innerHTML = '';
     return;
   }
 
@@ -356,7 +397,7 @@ function runSearch() {
     let score = 0;
 
     for (let t = 0; t < tokens.length; t++) {
-      const occ = countOccurrences(targetN, tokens[t]);
+      const occ = countOccurrences(targetN, tokens[t], wholeWord);
       if (occ === 0) {
         allFound = false;
         break;
@@ -377,10 +418,28 @@ function runSearch() {
     return a.page - b.page;
   });
 
+  lastPagesMatched = matched;
+  lastPagesPerDocCounts = perDocCounts;
+  lastPagesTokens = tokens;
+  lastPagesNoSpace = noSpace;
+  lastPagesWholeWord = wholeWord;
+
+  renderPagesResults();
+}
+
+function renderPagesResults() {
+  const matched = lastPagesMatched;
+  const perDocCounts = lastPagesPerDocCounts;
+  const tokens = lastPagesTokens;
+  const noSpace = lastPagesNoSpace;
+  const wholeWord = lastPagesWholeWord;
+  const pages = DATA.pages;
+  const limit = Math.min(matched.length, currentPagesShownLimit);
+
   // نوار آمار و شمار به تفکیک سند
   let statsHtml = '<strong>' + matched.length + ' صفحه یافت شد</strong>';
-  if (matched.length > 200) {
-    statsHtml += ' <span>(نمایش ۲۰۰ نتیجهٔ اول)</span>';
+  if (matched.length > 0) {
+    statsHtml += ' <span>(نمایش ' + limit + ' از ' + matched.length + ')</span>';
   }
   const docBadges = [];
   for (let d = 0; d < DATA.docs.length; d++) {
@@ -396,7 +455,6 @@ function runSearch() {
   statsBar.innerHTML = statsHtml;
 
   const baseVal = (basePathInput.value || '').trim();
-  const limit = Math.min(matched.length, 200);
   const cardsHtml = [];
 
   for (let k = 0; k < limit; k++) {
@@ -476,7 +534,82 @@ function runSearch() {
   }
 
   resultsList.innerHTML = cardsHtml.join('');
+
+  if (pagesShowMoreWrap) {
+    if (limit < matched.length) {
+      pagesShowMoreWrap.innerHTML = '<button type="button" id="pagesShowMoreBtn" style="padding:7px 18px;font-family:inherit;font-size:13px;cursor:pointer;border:1px solid #2563eb;background:#eff6ff;color:#1e40af;border-radius:6px;">نمایش بیشتر (نمایش ' + limit + ' از ' + matched.length + ')</button>';
+      const btn = document.getElementById('pagesShowMoreBtn');
+      if (btn) {
+        btn.addEventListener('click', showMorePages);
+      }
+    } else {
+      pagesShowMoreWrap.innerHTML = '';
+    }
+  }
 }
+
+function showMorePages() {
+  if (lastPagesMatched.length === 0) return { shown: 0, total: 0 };
+  currentPagesShownLimit = Math.min(lastPagesMatched.length, currentPagesShownLimit + PAGES_MORE_STEP);
+  renderPagesResults();
+  return {
+    shown: Math.min(lastPagesMatched.length, currentPagesShownLimit),
+    total: lastPagesMatched.length
+  };
+}
+window.__pagesShowMore = showMorePages;
+window.__getPagesState = function() {
+  return {
+    shown: Math.min(lastPagesMatched.length, currentPagesShownLimit),
+    total: lastPagesMatched.length
+  };
+};
+window.__pagesSearch = function(queryStr, ignoreSpaces, groupsArray, wholeWord) {
+  if (!DATA || !Array.isArray(DATA.pages)) return { total: 0, by_doc: {}, by_group: {}, top_keys: [] };
+  const effNoSpace = !!ignoreSpaces;
+  const effWholeWord = !effNoSpace && !!wholeWord;
+  const tokens = parseQueryTokens(queryStr || '', effNoSpace);
+  if (tokens.length === 0) return { total: 0, by_doc: {}, by_group: {}, top_keys: [] };
+  const allowedSet = Array.isArray(groupsArray) ? new Set(groupsArray) : null;
+  const byDoc = {};
+  const byGroup = {};
+  const matched = [];
+  const pages = DATA.pages;
+  for (let i = 0; i < pages.length; i++) {
+    const rec = pages[i];
+    const docId = rec[0];
+    const docInfo = DOC_MAP[docId];
+    if (!docInfo) continue;
+    if (allowedSet !== null && !allowedSet.has(docInfo.group)) continue;
+    const targetN = effNoSpace ? getNoSpaceN(i) : rec[2];
+    let allFound = true;
+    let score = 0;
+    for (let t = 0; t < tokens.length; t++) {
+      const occ = countOccurrences(targetN, tokens[t], effWholeWord);
+      if (occ === 0) {
+        allFound = false;
+        break;
+      }
+      score += occ;
+    }
+    if (allFound) {
+      matched.push({ docId: docId, page: rec[1], score: score });
+      byDoc[docId] = (byDoc[docId] || 0) + 1;
+      byGroup[docInfo.group] = (byGroup[docInfo.group] || 0) + 1;
+    }
+  }
+  matched.sort(function(a, b) {
+    if (b.score !== a.score) return b.score - a.score;
+    if (a.docId !== b.docId) return a.docId - b.docId;
+    return a.page - b.page;
+  });
+  return {
+    total: matched.length,
+    by_doc: byDoc,
+    by_group: byGroup,
+    top_keys: matched.slice(0, 10).map(function(m) { return m.docId + ':' + m.page; })
+  };
+};
 
 let debounceTimer = null;
 qInput.addEventListener('input', function() {
@@ -490,6 +623,9 @@ qInput.addEventListener('keydown', function(e) {
   }
 });
 noSpaceCb.addEventListener('change', runSearch);
+if (wholeWordCb) {
+  wholeWordCb.addEventListener('change', runSearch);
+}
 for (let i = 0; i < grpCbs.length; i++) {
   grpCbs[i].addEventListener('change', runSearch);
 }

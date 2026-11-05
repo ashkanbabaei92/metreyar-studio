@@ -88,6 +88,7 @@
     <div class="rows-notice">ردیف‌ها از فایل‌های اکسل فهرست‌بها گرفته شده‌اند؛ قیمت نمایش داده نمی‌شود؛ بندهای توضیحی و ضرایب را در صفحهٔ اصلی PDF ببینید.</div>
     <div id="rowsStatsBar">عبارت مورد نظر را در کادر بالا وارد کنید تا ردیف‌های فهرست‌بها نیز جستجو شوند.</div>
     <div id="rowsResultsList"></div>
+    <div id="rowsShowMoreWrap" style="margin: 12px 0; text-align: center;"></div>
   </div>
 </div>
 
@@ -124,7 +125,10 @@
       .replace(/"/g, '&quot;');
   }
 
-  function countOccurrencesRows(haystack, needle) {
+  function countOccurrencesRows(haystack, needle, wholeWord) {
+    if (typeof window.__countOccurrences === 'function') {
+      return window.__countOccurrences(haystack, needle, wholeWord);
+    }
     if (!needle) return 0;
     let count = 0;
     let pos = 0;
@@ -154,11 +158,13 @@
     return val;
   }
 
-  function executeRowsSearch(queryStr, ignoreSpaces, groupsArray) {
+  function executeRowsSearch(queryStr, ignoreSpaces, groupsArray, wholeWord) {
     const rowsData = (typeof DATA !== 'undefined' && Array.isArray(DATA.rows)) ? DATA.rows : [];
-    const tokens = parseQueryTokensRows(queryStr, !!ignoreSpaces);
+    const effIgnoreSpaces = !!ignoreSpaces;
+    const effWholeWord = !effIgnoreSpaces && !!wholeWord;
+    const tokens = parseQueryTokensRows(queryStr, effIgnoreSpaces);
     if (tokens.length === 0) {
-      return { total: 0, by_group: {}, items: [], tokens: [] };
+      return { total: 0, by_group: {}, items: [], all_items: [], tokens: [] };
     }
 
     const allowedSet = Array.isArray(groupsArray) ? new Set(groupsArray) : null;
@@ -172,22 +178,23 @@
 
       const code = r[1];
       const nTxt = r[6] || '';
-      const hay = ignoreSpaces ? getRowNoSpaceN(i, nTxt) : nTxt;
+      const hay = effIgnoreSpaces ? getRowNoSpaceN(i, nTxt) : nTxt;
 
       let ok = true;
       let totalOcc = 0;
       for (let t = 0; t < tokens.length; t++) {
         const tok = tokens[t];
-        if (hay.indexOf(tok) === -1) {
+        const occ = countOccurrencesRows(hay, tok, effWholeWord);
+        if (occ === 0) {
           ok = false;
           break;
         }
-        totalOcc += countOccurrencesRows(hay, tok);
+        totalOcc += occ;
       }
       if (!ok) continue;
 
       let normCode = normalizeRows(code);
-      if (ignoreSpaces) normCode = normCode.replace(/\s+/g, '');
+      if (effIgnoreSpaces) normCode = normCode.replace(/\s+/g, '');
       let exactCode = 0;
       for (let t = 0; t < tokens.length; t++) {
         if (normCode === tokens[t]) {
@@ -215,13 +222,14 @@
       total: matched.length,
       by_group: byGroup,
       items: matched.slice(0, 100),
+      all_items: matched,
       tokens: tokens
     };
   }
 
   // تابع سراسری برای آزمون node
-  window.__rowsSearch = function(query, ignoreSpaces, groupsArray) {
-    const res = executeRowsSearch(query, ignoreSpaces, groupsArray);
+  window.__rowsSearch = function(query, ignoreSpaces, groupsArray, wholeWord) {
+    const res = executeRowsSearch(query, ignoreSpaces, groupsArray, wholeWord);
     return {
       total: res.total,
       by_group: res.by_group,
@@ -247,31 +255,58 @@
     }
   }
 
+  const ROWS_INITIAL_LIMIT = 100;
+  const ROWS_MORE_STEP = 100;
+  let currentRowsShownLimit = ROWS_INITIAL_LIMIT;
+  let lastRowsRes = null;
+
   function renderRowsUI() {
     const qInput = document.getElementById('qInput');
     const noSpaceCb = document.getElementById('noSpaceCb');
+    const wholeWordCb = document.getElementById('wholeWordCb');
     const statsEl = document.getElementById('rowsStatsBar');
     const listEl = document.getElementById('rowsResultsList');
+    const showMoreWrapEl = document.getElementById('rowsShowMoreWrap');
     if (!qInput || !statsEl || !listEl) return;
 
     const qVal = qInput.value || '';
     const noSpace = !!(noSpaceCb && noSpaceCb.checked);
+    if (wholeWordCb) {
+      wholeWordCb.disabled = noSpace;
+    }
+    const wholeWord = !noSpace && !!(wholeWordCb && wholeWordCb.checked);
     const grpCbs = document.querySelectorAll('.grp-cb');
     const selectedGroups = [];
     for (let i = 0; i < grpCbs.length; i++) {
       if (grpCbs[i].checked) selectedGroups.push(grpCbs[i].value);
     }
 
-    const res = executeRowsSearch(qVal, noSpace, selectedGroups);
+    currentRowsShownLimit = ROWS_INITIAL_LIMIT;
+    const res = executeRowsSearch(qVal, noSpace, selectedGroups, wholeWord);
+    lastRowsRes = res;
     if (res.tokens.length === 0) {
       statsEl.innerHTML = 'عبارت مورد نظر را در کادر بالا وارد کنید تا ردیف‌های فهرست‌بها نیز جستجو شوند.';
       listEl.innerHTML = '';
+      if (showMoreWrapEl) showMoreWrapEl.innerHTML = '';
       return;
     }
 
+    renderRowsCards();
+  }
+
+  function renderRowsCards() {
+    const statsEl = document.getElementById('rowsStatsBar');
+    const listEl = document.getElementById('rowsResultsList');
+    const showMoreWrapEl = document.getElementById('rowsShowMoreWrap');
+    if (!statsEl || !listEl || !lastRowsRes) return;
+
+    const res = lastRowsRes;
+    const allItems = res.all_items || res.items || [];
+    const shownCount = Math.min(res.total, currentRowsShownLimit);
+
     let statsHtml = '<strong>' + res.total + ' ردیف یافت شد</strong>';
-    if (res.total > 100) {
-      statsHtml += ' (نمایش ۱۰۰ ردیف اول)';
+    if (res.total > 0) {
+      statsHtml += ' (نمایش ' + shownCount + ' از ' + res.total + ')';
     }
     const groupOrder = ['ابنیه', 'مکانیک', 'برق'];
     const badges = [];
@@ -287,14 +322,15 @@
     }
     statsEl.innerHTML = statsHtml;
 
-    if (res.items.length === 0) {
+    if (allItems.length === 0) {
       listEl.innerHTML = '<div style="font-size:13px;color:#6b7280;">ردیفی در فهرست‌بها با این عبارت یافت نشد.</div>';
+      if (showMoreWrapEl) showMoreWrapEl.innerHTML = '';
       return;
     }
 
     const cardsHtml = [];
-    for (let i = 0; i < res.items.length; i++) {
-      const item = res.items[i];
+    for (let i = 0; i < shownCount; i++) {
+      const item = allItems[i];
       const r = item.row;
       const grp = r[0];
       const code = r[1];
@@ -317,7 +353,38 @@
       );
     }
     listEl.innerHTML = cardsHtml.join('');
+
+    if (showMoreWrapEl) {
+      if (shownCount < res.total) {
+        showMoreWrapEl.innerHTML = '<button type="button" id="rowsShowMoreBtn" style="padding:7px 18px;font-family:inherit;font-size:13px;cursor:pointer;border:1px solid #16a34a;background:#f0fdf4;color:#166534;border-radius:6px;">نمایش بیشتر (نمایش ' + shownCount + ' از ' + res.total + ')</button>';
+        const btn = document.getElementById('rowsShowMoreBtn');
+        if (btn) {
+          btn.addEventListener('click', showMoreRows);
+        }
+      } else {
+        showMoreWrapEl.innerHTML = '';
+      }
+    }
   }
+
+  function showMoreRows() {
+    if (!lastRowsRes) return { shown: 0, total: 0 };
+    currentRowsShownLimit = Math.min(lastRowsRes.total, currentRowsShownLimit + ROWS_MORE_STEP);
+    renderRowsCards();
+    return {
+      shown: Math.min(lastRowsRes.total, currentRowsShownLimit),
+      total: lastRowsRes.total
+    };
+  }
+  window.__rowsShowMore = showMoreRows;
+  window.__getRowsState = function() {
+    if (!lastRowsRes) return { shown: 0, total: 0 };
+    return {
+      shown: Math.min(lastRowsRes.total, currentRowsShownLimit),
+      total: lastRowsRes.total
+    };
+  };
+  window.__renderRowsUI = renderRowsUI;
 
   function initRowsLayer() {
     // انتقال بخش ردیف‌ها به داخل container اصلی (درست بعد از resultsList)
@@ -372,6 +439,10 @@
     }
     if (noSpaceCb) {
       noSpaceCb.addEventListener('change', renderRowsUI);
+    }
+    const wholeWordCb = document.getElementById('wholeWordCb');
+    if (wholeWordCb) {
+      wholeWordCb.addEventListener('change', renderRowsUI);
     }
     for (let i = 0; i < grpCbs.length; i++) {
       grpCbs[i].addEventListener('change', renderRowsUI);

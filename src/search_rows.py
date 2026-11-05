@@ -317,7 +317,38 @@ def map_pages_and_build_rows(catalog_by_group, pdf_records_by_group, db_code_to_
     return all_rows_json, mapping_report
 
 
-def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, max_results=100):
+# تعریف نویسهٔ کلمه (یکتا در پایتون): حروف فارسی/عربی U+0621-U+063A, U+0641-U+064A, U+067E, U+0686, U+0698, U+06A9, U+06AF, U+06CC، لاتین a-z، ارقام 0-9
+WORD_CHAR_CLASS = r"\u0621-\u063A\u0641-\u064A\u067E\u0686\u0698\u06A9\u06AF\u06CCa-z0-9"
+WORD_CHAR_RE = re.compile(f"[{WORD_CHAR_CLASS}]")
+
+
+def is_word_char(ch: str) -> bool:
+    return bool(ch) and (WORD_CHAR_RE.match(ch) is not None)
+
+
+def count_occurrences_py(haystack: str, needle: str, whole_word: bool = False) -> int:
+    if not needle:
+        return 0
+    count = 0
+    pos = 0
+    tlen = len(needle)
+    hlen = len(haystack)
+    while True:
+        found = haystack.find(needle, pos)
+        if found == -1:
+            break
+        if whole_word:
+            before_ch = haystack[found - 1] if found > 0 else ""
+            after_ch = haystack[found + tlen] if (found + tlen) < hlen else ""
+            if is_word_char(before_ch) or is_word_char(after_ch):
+                pos = found + 1
+                continue
+        count += 1
+        pos = found + tlen
+    return count
+
+
+def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, max_results=100, whole_word=False):
     """
     شبیه‌ساز پایتونی جستجوی ردیف‌ها (دقیقاً مطابق منطق JS در search_rows_part.html)
     """
@@ -327,7 +358,10 @@ def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, m
     if not raw_tokens:
         return {"total": 0, "by_group": {}, "results": []}
 
-    if no_space:
+    eff_no_space = bool(no_space)
+    eff_whole_word = (not eff_no_space) and bool(whole_word)
+
+    if eff_no_space:
         tokens = [t.replace(" ", "") for t in raw_tokens if t.replace(" ", "")]
     else:
         tokens = raw_tokens
@@ -344,29 +378,21 @@ def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, m
         if allowed_groups is not None and grp not in allowed_groups:
             continue
 
-        hay = n_txt.replace(" ", "") if no_space else n_txt
+        hay = n_txt.replace(" ", "") if eff_no_space else n_txt
         ok = True
         total_occ = 0
         for tok in tokens:
-            if tok not in hay:
+            c = count_occurrences_py(hay, tok, whole_word=eff_whole_word)
+            if c == 0:
                 ok = False
                 break
-            pos = 0
-            c = 0
-            tlen = len(tok)
-            while True:
-                found = hay.find(tok, pos)
-                if found == -1:
-                    break
-                c += 1
-                pos = found + tlen
             total_occ += c
 
         if not ok:
             continue
 
         norm_code = normalize(code)
-        if no_space:
+        if eff_no_space:
             norm_code = norm_code.replace(" ", "")
         exact_code = 1 if norm_code in tokens else 0
 
