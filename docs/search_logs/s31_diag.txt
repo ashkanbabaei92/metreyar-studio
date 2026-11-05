@@ -1,0 +1,54 @@
+=== S3.1 Diagnostic Report (s31_diag.txt) ===
+
+--- بخش A: نگاشت صفحه پس از رفع باگ نام گروه ---
+Group 'ابنیه': total=1565, pdf_pages_loaded=258, not_found(0 pages)=0, one_page(1)=982, multi_pages(>=2)=583, stripped_prefix_matches=0
+  Abnieh vs DB(source_page_pdf): db_found=1565, db_not_found=0, agree=1565, disagree=0, text_missing_for_db_code=None
+  Abnieh disagree samples (code, db_pages, text_pages): []
+Group 'مکانیک': total=1188, pdf_pages_loaded=152, not_found(0 pages)=0, one_page(1)=1145, multi_pages(>=2)=43, stripped_prefix_matches=1188
+Group 'برق': total=1585, pdf_pages_loaded=207, not_found(0 pages)=0, one_page(1)=1530, multi_pages(>=2)=55, stripped_prefix_matches=1585
+
+--- بخش B: ناهمخوانی R2 (ابزار پیدا کرده ولی str.__contains__ خام روی شرح پیدا نکرده) ---
+Query 'کابل': tool_hits=456 (search_rows_py.total=456), raw_desc_contains=445, diff_samples_shown=5
+  [برق] code=13210601 | desc_repr='کـــــــابل تلـــــــفن زمــینـی ژلــــــــه\u200c فـیلــد از نــــــوع\xa0A-2YF (L) 2Yb 2Y\xa0به قطر 0/6 میلی\u200cمتر، ده زوجی، برای نصـب درون ترانشه.'
+    non_standard_codepoints=["U+0028 ('(')", "U+0029 (')')", "U+002D ('-')", "U+002E ('.')", "U+002F ('/')", "U+00A0 ('\\xa0')", "U+060C ('،')", "U+0640 ('ـ')", "U+200C ('\\u200c')"]
+  [برق] code=13210602 | desc_repr='کـــــــابل تلـــــــفن زمــینـی ژلــــــــه\u200c فـیلــد از نــــــوع A-2YF (L) 2Yb 2Y\xa0به قطر 0/6 میلی\u200cمتر، بیسـت زوجی، برای نصـب درون ترانشه.'
+    non_standard_codepoints=["U+0028 ('(')", "U+0029 (')')", "U+002D ('-')", "U+002E ('.')", "U+002F ('/')", "U+00A0 ('\\xa0')", "U+060C ('،')", "U+0640 ('ـ')", "U+200C ('\\u200c')"]
+  [برق] code=13210603 | desc_repr='کـــــــابل تلـــــــفن زمــینـی ژلــــــــه\u200c فـیلــد از نــــــوع A-2YF (L) 2Yb 2Y\xa0به قطر 0/6 میلی\u200cمتر، سی زوجی، برای نصـب درون ترانشه.'
+    non_standard_codepoints=["U+0028 ('(')", "U+0029 (')')", "U+002D ('-')", "U+002E ('.')", "U+002F ('/')", "U+00A0 ('\\xa0')", "U+060C ('،')", "U+0640 ('ـ')", "U+200C ('\\u200c')"]
+  [برق] code=13210604 | desc_repr='کـــــــابل تلـــــــفن زمــینـی ژلــــــــه\u200c فـیلــد از نــــــوع A-2YF (L) 2Yb 2Y\xa0به قطر 0/6 میلی\u200cمتر، چهل زوجی، برای نصـب درون ترانشه.'
+    non_standard_codepoints=["U+0028 ('(')", "U+0029 (')')", "U+002D ('-')", "U+002E ('.')", "U+002F ('/')", "U+00A0 ('\\xa0')", "U+060C ('،')", "U+0640 ('ـ')", "U+200C ('\\u200c')"]
+  [برق] code=13210605 | desc_repr='کـــــــابل تلـــــــفن زمــینـی ژلــــــــه\u200c فـیلــد از نــــــوع A-2YF (L) 2Yb 2Y\xa0به قطر 0/6 میلی\u200cمتر، پنجاه زوجی، برای نصـب درون ترانشه.'
+    non_standard_codepoints=["U+0028 ('(')", "U+0029 (')')", "U+002D ('-')", "U+002E ('.')", "U+002F ('/')", "U+00A0 ('\\xa0')", "U+060C ('،')", "U+0640 ('ـ')", "U+200C ('\\u200c')"]
+Query 'کلید': tool_hits=218 (search_rows_py.total=218), raw_desc_contains=216, diff_samples_shown=2
+  [برق] code=13113805 | desc_repr='حسگر ﺣﺮﮐﺖ، از ﻧﻮع دﯾﻮاری ﺗﻮﮐﺎر، ﺑﺎ وﻟﺘﺎژ ﮐﺎری 230 وﻟﺖ ﺑﺪون ارﺗﺒﺎط ﺑﯽ ﺳﯿﻢ؛ ﻗﺎﺑﻠﯿﺖ ﻧﺼﺐ در قوطی ﮐﻠﯿﺪ و ﭘﺮﯾﺰ ﺑﻪ ﻣﻨﻈﻮر ﮐﻨﺘﺮل روﺷﻨﺎﯾﯽ'
+    non_standard_codepoints=["U+060C ('،')", "U+061B ('؛')", "U+FB58 ('ﭘ')", "U+FB90 ('ﮐ')", "U+FBFD ('ﯽ')", "U+FBFE ('ﯾ')", "U+FBFF ('ﯿ')", "U+FE8E ('ﺎ')", "U+FE90 ('ﺐ')", "U+FE91 ('ﺑ')", "U+FE92 ('ﺒ')", "U+FE96 ('ﺖ')", "U+FE97 ('ﺗ')", "U+FE98 ('ﺘ')", "U+FEA3 ('ﺣ')", "U+FEAA ('ﺪ')", "U+FEAE ('ﺮ')", "U+FEB0 ('ﺰ')", "U+FEB3 ('ﺳ')", "U+FEB7 ('ﺷ')", "U+FEBC ('ﺼ')", "U+FEC8 ('ﻈ')", "U+FED7 ('ﻗ')", "U+FEDF ('ﻟ')", "U+FEE0 ('ﻠ')", "U+FEE2 ('ﻢ')", "U+FEE3 ('ﻣ')", "U+FEE7 ('ﻧ')", "U+FEE8 ('ﻨ')", "U+FEEA ('ﻪ')", "U+FEEE ('ﻮ')"]
+  [برق] code=13146701 | desc_repr='مکـانیسـم موتوری کــلیـد اتومـاتیــک هــوایـی با ولتــاژ تغذیــه 230-24 ولت DC یا AC .'
+    non_standard_codepoints=["U+002D ('-')", "U+002E ('.')", "U+0640 ('ـ')"]
+Query 'قالب بندی': tool_hits=52 (search_rows_py.total=52), raw_desc_contains=0, diff_samples_shown=5
+  [ابنیه] code=050101 | desc_repr='تهیه وسایل و قالب\u200cبندی با استفاده از تخته نراد خارجی، در پی\u200cها و شناژهای مربوط به آن.'
+    non_standard_codepoints=["U+002E ('.')", "U+060C ('،')", "U+200C ('\\u200c')"]
+  [ابنیه] code=050102 | desc_repr='تهیه وسایل و قالب\u200f\u200cبندی با استفاده از تخته نراد خارجی، برای بتن\u200cریزی پشت جدول، کف\u200c\u200fسازی و بتن مِگر به هر ارتفاع.'
+    non_standard_codepoints=["U+002E ('.')", "U+060C ('،')", "U+0650 ('ِ')", "U+200C ('\\u200c')", "U+200F ('\\u200f')"]
+  [ابنیه] code=050201 | desc_repr='تهیه وسایل و قالب\u200cبندی با استفاده تخته نراد خارجی، در دیوارهای بتنی به هر ارتفاع.'
+    non_standard_codepoints=["U+002E ('.')", "U+060C ('،')", "U+200C ('\\u200c')"]
+  [ابنیه] code=050301 | desc_repr='تهیه وسایل و قالب\u200cبندی با استفاده از تخته نراد خارجی، در ستون\u200cها و شناژهای قائم با مقطع چهار ضلعی به هر ارتفاع.'
+    non_standard_codepoints=["U+002E ('.')", "U+060C ('،')", "U+200C ('\\u200c')"]
+  [ابنیه] code=050401 | desc_repr='تهیه وسایل و قالب\u200cبندی با استفاده از تخته نراد خارجی، در دال\u200cها (تاوه\u200cها) به هر ارتفاع.'
+    non_standard_codepoints=["U+0028 ('(')", "U+0029 (')')", "U+002E ('.')", "U+060C ('،')", "U+200C ('\\u200c')"]
+
+--- بخش C: شمارش خام 'فوالد' و 'فولاد' در شرح ردیف‌های xlsx ---
+Raw 'فوالد' count in rows descriptions: total=0 | by_group={'ابنیه': 0, 'مکانیک': 0, 'برق': 0}
+Raw 'فولاد' count in rows descriptions: total=381 | by_group={'ابنیه': 148, 'مکانیک': 164, 'برق': 69}
+
+--- بخش D: ثابت‌های سازگاری (Consistency Invariants) ---
+1) Checkbox value attributes in HTML (via regex): ['ابنیه', 'مکانیک', 'برق', 'پیمان', 'تعدیل']
+   Unique groups in DATA.rows: ['ابنیه', 'برق', 'مکانیک']
+   Unique groups in DATA.docs: ['ابنیه', 'برق', 'تعدیل', 'مکانیک', 'پیمان']
+   Groups in DATA.rows but NOT in checkboxes: []
+   Groups in DATA.docs but NOT in checkboxes: []
+   Checkboxes that have PDF docs only and no xlsx rows: ['تعدیل', 'پیمان']
+2) Row count per group in DATA.rows: {'ابنیه': 1565, 'مکانیک': 1188, 'برق': 1585} (total=4338)
+3) Assert every row in DATA.rows has 7 fields: OK (checked 4338 rows)
+
+--- بخش E: بازسازی docs/search_logs/s3_expected_rows.json ---
+ERROR in Section E: tuple indices must be integers or slices, not str

@@ -680,9 +680,9 @@ def main():
         )
         db_code_to_pages, db_all_codes, db_info = load_abnieh_db_codes("data_processed/reference.db")
         xlsx_specs = [
-            ("abn1404.xlsx", "فهرست‌بها — ابنیه"),
-            ("mec1404.xlsx", "فهرست‌بها — مکانیک"),
-            ("elec1404.xlsx", "فهرست‌بها — برق"),
+            ("abn1404.xlsx", "ابنیه"),
+            ("mec1404.xlsx", "مکانیک"),
+            ("elec1404.xlsx", "برق"),
         ]
         # یافتن فایل‌های xlsx با os.walk و تطبیق نام نرمال‌شده
         found_xlsx = {}
@@ -701,7 +701,7 @@ def main():
                     log(f"XLSX for {grp_name} ({target_fn}) -> نیازمند بررسی (یافت نشد)")
                     continue
                 x_path, actual_xfn = found_xlsx[grp_name]
-                use_db_codes = db_all_codes if grp_name == "فهرست‌بها — ابنیه" else None
+                use_db_codes = db_all_codes if grp_name == "ابنیه" else None
                 entries, rep = read_catalog(x_path, grp_name, db_codes=use_db_codes)
                 catalog_by_group[grp_name] = entries
                 catalog_reports[grp_name] = rep
@@ -723,7 +723,7 @@ def main():
         pdf_records_by_group = {}
         for _did, dinfo in doc_raw_fix_pages.items():
             gname = dinfo["group"]
-            if gname in ("فهرست‌بها — ابنیه", "فهرست‌بها — مکانیک", "فهرست‌بها — برق"):
+            if gname in ("ابنیه", "مکانیک", "برق"):
                 pdf_records_by_group[gname] = dinfo["records"]
 
         try:

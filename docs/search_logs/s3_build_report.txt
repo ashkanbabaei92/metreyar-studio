@@ -2,7 +2,7 @@
 DB Info (mode=ro): total_rows=1565, unique_codes=1565
 DB Columns: [('id', 'INTEGER'), ('discipline', 'TEXT'), ('year', 'INTEGER'), ('code_official', 'TEXT'), ('code_internal', 'TEXT'), ('chapter_code', 'TEXT'), ('group_code', 'TEXT'), ('item_seq', 'TEXT'), ('description', 'TEXT'), ('unit_raw', 'TEXT'), ('unit', 'TEXT'), ('unit_status', 'TEXT'), ('unit_price_rial', 'REAL'), ('item_category', 'TEXT'), ('is_star_price_zero', 'INTEGER'), ('is_percent_unit', 'INTEGER'), ('source_excel_file', 'TEXT'), ('source_excel_row', 'INTEGER'), ('source_pdf_file', 'TEXT'), ('source_page_bulletin', 'INTEGER'), ('source_page_pdf', 'INTEGER')]
 
-=== گروه: فهرست‌بها — ابنیه | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx ===
+=== گروه: ابنیه | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/abn1404.xlsx ===
 Sheets: ['فهرست بها ابنیه 1404'] | max_col_seen: 6
 Header (cols 1..3): ("'ردیف فهرست'", "'شرح'", "'واحد'")
 First 3 rows (cols 1..3 repr):
@@ -20,7 +20,7 @@ Extra columns (col 5 onwards, E=5, F=6, G=7) [NOT stored in JSON/HTML]:
   Col 5 (E): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
   Col 6 (F): non_empty_rows(2..N)=1 | 5 samples (excel_row, repr)=[(95, "'https://t.me/fehres_analysis'")]
 
-=== گروه: فهرست‌بها — مکانیک | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/mec1404.xlsx ===
+=== گروه: مکانیک | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/mec1404.xlsx ===
 Sheets: ['mec1404'] | max_col_seen: 7
 Header (cols 1..3): ("'شماره ردیف'", "'شرح'", "'واحد'")
 First 3 rows (cols 1..3 repr):
@@ -39,7 +39,7 @@ Extra columns (col 5 onwards, E=5, F=6, G=7) [NOT stored in JSON/HTML]:
   Col 6 (F): non_empty_rows(2..N)=0 | 5 samples (excel_row, repr)=[]
   Col 7 (G): non_empty_rows(2..N)=1 | 5 samples (excel_row, repr)=[(6, "'https://t.me/fehres_analysis'")]
 
-=== گروه: فهرست‌بها — برق | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/elec1404.xlsx ===
+=== گروه: برق | فایل: data/فهرست‌بها (پایه محاسبات متره و برآورد)/elec1404.xlsx ===
 Sheets: ['elec1404'] | max_col_seen: 7
 Header (cols 1..3): ("'شماره ردیف'", "'شرح'", "'واحد'")
 First 3 rows (cols 1..3 repr):
@@ -59,21 +59,27 @@ Extra columns (col 5 onwards, E=5, F=6, G=7) [NOT stored in JSON/HTML]:
   Col 7 (G): non_empty_rows(2..N)=1 | 5 samples (excel_row, repr)=[(6, "'https://t.me/fehres_analysis'")]
 
 === بخش (ج): نگاشت صفحه (Page Mapping) ===
---- فهرست‌بها — ابنیه (total=1565) ---
-  Text search on fix pages: not_found(0 pages)=1565, one_page(1)=0, multi_pages(>=2)=0
-  Text not_found samples (code, excel_row): [('010101', 2), ('010102', 3), ('010121', 4), ('010122', 5), ('010123', 6), ('010124', 7), ('010125', 8), ('010126', 9), ('010127', 10), ('010201', 11)]
-  Text multi_page samples (code, excel_row, pages): []
-  Abnieh DB vs Text comparison: db_found=1565, db_not_found=0, agree(DB page in text pages)=0, disagree(text found but differs from DB)=0, text_not_found=1565
+--- ابنیه (total=1565, pdf_pages_loaded=258) ---
+  Sample >=5-digit tokens in PDF fix text: ['00239', '010101', '010102', '010121', '010122', '010123', '010124', '010125', '010126', '010127', '010201', '010202', '010203', '010204', '010205']
+  Stripped 2-digit prefix matches (8->6 digits): 0
+  Text search on fix pages: not_found(0 pages)=0, one_page(1)=982, multi_pages(>=2)=583
+  Text not_found samples (code, excel_row): []
+  Text multi_page samples (code, excel_row, pages): [('010101', 2, [11, 14]), ('010102', 3, [11, 14]), ('010127', 10, [11, 14]), ('010201', 11, [11, 14]), ('010203', 13, [11, 14]), ('010204', 14, [11, 14]), ('010206', 16, [11, 15]), ('010207', 17, [11, 15]), ('010209', 19, [11, 15]), ('010210', 20, [11, 15])]
+  Abnieh DB vs Text comparison: db_found=1565, db_not_found=0, agree(DB page in text pages)=1565, disagree(text found but differs from DB)=0, text_not_found=0
   Abnieh DB missing samples: []
   Abnieh disagree samples (code, excel_row, db_pages, text_pages):
 
---- فهرست‌بها — مکانیک (total=1188) ---
-  Text search on fix pages: not_found(0 pages)=1188, one_page(1)=0, multi_pages(>=2)=0
-  Text not_found samples (code, excel_row): [('12010101', 2), ('12010102', 3), ('12010103', 4), ('12010104', 5), ('12010105', 6), ('12010106', 7), ('12010107', 8), ('12010108', 9), ('12010109', 10), ('12010110', 11)]
-  Text multi_page samples (code, excel_row, pages): []
+--- مکانیک (total=1188, pdf_pages_loaded=152) ---
+  Sample >=5-digit tokens in PDF fix text: ['010101', '010102', '010103', '010104', '010105', '010106', '010107', '010108', '010109', '010110', '010111', '010112', '010113', '010114', '010115']
+  Stripped 2-digit prefix matches (8->6 digits): 1188
+  Text search on fix pages: not_found(0 pages)=0, one_page(1)=1145, multi_pages(>=2)=43
+  Text not_found samples (code, excel_row): []
+  Text multi_page samples (code, excel_row, pages): [('12010101', 2, [9, 10]), ('12010111', 12, [9, 10]), ('12010112', 13, [9, 10]), ('12010116', 17, [9, 10]), ('12010501', 47, [9, 12]), ('12120201', 289, [37, 38]), ('12120205', 293, [37, 38]), ('12140205', 318, [41, 42]), ('12140208', 321, [41, 42]), ('12150412', 354, [43, 47, 48])]
 
---- فهرست‌بها — برق (total=1585) ---
-  Text search on fix pages: not_found(0 pages)=1585, one_page(1)=0, multi_pages(>=2)=0
-  Text not_found samples (code, excel_row): [('13016302', 2), ('13017102', 3), ('13017103', 4), ('13017301', 5), ('13017302', 6), ('13017303', 7), ('13017304', 8), ('13017401', 9), ('13017402', 10), ('13017403', 11)]
-  Text multi_page samples (code, excel_row, pages): []
+--- برق (total=1585, pdf_pages_loaded=207) ---
+  Sample >=5-digit tokens in PDF fix text: ['016302', '017102', '017103', '017301', '017302', '017303', '017304', '017401', '017402', '017403', '017404', '017405', '017406', '017601', '017602']
+  Stripped 2-digit prefix matches (8->6 digits): 1585
+  Text search on fix pages: not_found(0 pages)=0, one_page(1)=1530, multi_pages(>=2)=55
+  Text not_found samples (code, excel_row): []
+  Text multi_page samples (code, excel_row, pages): [('13142501', 527, [75, 78]), ('13147801', 706, [91, 92]), ('13148901', 727, [75, 94]), ('13149001', 728, [75, 94]), ('13149201', 739, [95, 96]), ('13230801', 1042, [123, 124]), ('13280101', 1217, [149, 151]), ('13280102', 1218, [149, 151]), ('13282001', 1266, [153, 158]), ('13282006', 1271, [154, 158])]
 

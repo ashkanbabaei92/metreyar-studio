@@ -233,5 +233,11 @@ Saved expected counts JSON to docs/search_logs/s21_expected_counts.json (queries
   in='PDF_Test 1404' -> out='pdf_test 1404' | ok=True
 Python selftest overall: OK
 
+--- (و-۰) S3: پردازش ردیف‌های فهرست‌بها از سه فایل xlsx (بدون قیمت) ---
+Loaded XLSX abn1404.xlsx (ابنیه): valid_rows=1565, non_code_rows=0
+Loaded XLSX mec1404.xlsx (مکانیک): valid_rows=1188, non_code_rows=0
+Loaded XLSX elec1404.xlsx (برق): valid_rows=1585, non_code_rows=0
+Saved S3 build report to docs/search_logs/s3_build_report.txt (total rows=4338)
+
 --- (و) تولید فایل HTML تک‌فایلی ---
-Generated output/search/metreyar_search.html | size=6932160 bytes (6.61 MB) | indexed_pages_units=1199
+Generated output/search/metreyar_search.html | size=8681136 bytes (8.28 MB) | indexed_pages_units=1199 | rows=4338

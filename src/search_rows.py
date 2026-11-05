@@ -208,7 +208,7 @@ def map_pages_and_build_rows(catalog_by_group, pdf_records_by_group, db_code_to_
     all_rows_json = []
     mapping_report = {}
 
-    for group_id in ["فهرست‌بها — ابنیه", "فهرست‌بها — مکانیک", "فهرست‌بها — برق"]:
+    for group_id in ["ابنیه", "مکانیک", "برق"]:
         entries = catalog_by_group.get(group_id, [])
         pdf_recs = pdf_records_by_group.get(group_id, [])
         fix_index = build_fix_token_index(pdf_recs)
@@ -258,7 +258,7 @@ def map_pages_and_build_rows(catalog_by_group, pdf_records_by_group, db_code_to_
                 if len(text_samples_multi) < 10:
                     text_samples_multi.append((code, excel_row, text_pages_all[:6]))
 
-            if group_id == "فهرست‌بها — ابنیه":
+            if group_id == "ابنیه":
                 db_pages = db_code_to_pages.get(code, [])
                 if not db_pages and norm_code != code:
                     db_pages = db_code_to_pages.get(norm_code, [])
@@ -397,7 +397,7 @@ def format_s3_build_report(catalog_reports, mapping_report, db_info):
     lines.append(f"DB Columns: {db_info['columns']}")
     lines.append("")
 
-    for grp in ["فهرست‌بها — ابنیه", "فهرست‌بها — مکانیک", "فهرست‌بها — برق"]:
+    for grp in ["ابنیه", "مکانیک", "برق"]:
         rep = catalog_reports.get(grp)
         if not rep:
             lines.append(f"--- گروه {grp}: نیازمند بررسی (گزارش موجود نیست) ---")
@@ -426,7 +426,7 @@ def format_s3_build_report(catalog_reports, mapping_report, db_info):
         lines.append("")
 
     lines.append("=== بخش (ج): نگاشت صفحه (Page Mapping) ===")
-    for grp in ["فهرست‌بها — ابنیه", "فهرست‌بها — مکانیک", "فهرست‌بها — برق"]:
+    for grp in ["ابنیه", "مکانیک", "برق"]:
         mp = mapping_report.get(grp, {})
         lines.append(f"--- {grp} (total={mp.get('total', 0)}, pdf_pages_loaded={mp.get('pdf_pages_loaded', 0)}) ---")
         lines.append(f"  Sample >=5-digit tokens in PDF fix text: {mp.get('digit_tokens_sample')}")
@@ -437,7 +437,7 @@ def format_s3_build_report(catalog_reports, mapping_report, db_info):
         )
         lines.append(f"  Text not_found samples (code, excel_row): {mp.get('text_samples_not_found')}")
         lines.append(f"  Text multi_page samples (code, excel_row, pages): {mp.get('text_samples_multi')}")
-        if grp == "فهرست‌بها — ابنیه":
+        if grp == "ابنیه":
             lines.append(
                 f"  Abnieh DB vs Text comparison: db_found={mp.get('abn_db_found')}, "
                 f"db_not_found={mp.get('abn_db_not_found')}, "
