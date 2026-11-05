@@ -326,7 +326,7 @@ def is_word_char(ch: str) -> bool:
     return bool(ch) and (WORD_CHAR_RE.match(ch) is not None)
 
 
-def count_occurrences_py(haystack: str, needle: str, whole_word: bool = False) -> int:
+def count_occurrences_py(haystack: str, needle: str, whole_word: bool = False, word_start: bool = False) -> int:
     if not needle:
         return 0
     count = 0
@@ -343,12 +343,17 @@ def count_occurrences_py(haystack: str, needle: str, whole_word: bool = False) -
             if is_word_char(before_ch) or is_word_char(after_ch):
                 pos = found + 1
                 continue
+        elif word_start:
+            before_ch = haystack[found - 1] if found > 0 else ""
+            if is_word_char(before_ch):
+                pos = found + 1
+                continue
         count += 1
         pos = found + tlen
     return count
 
 
-def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, max_results=100, whole_word=False):
+def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, max_results=100, whole_word=False, word_start=False):
     """
     شبیه‌ساز پایتونی جستجوی ردیف‌ها (دقیقاً مطابق منطق JS در search_rows_part.html)
     """
@@ -360,6 +365,7 @@ def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, m
 
     eff_no_space = bool(no_space)
     eff_whole_word = (not eff_no_space) and bool(whole_word)
+    eff_word_start = (not eff_no_space) and (not eff_whole_word) and bool(word_start)
 
     if eff_no_space:
         tokens = [t.replace(" ", "") for t in raw_tokens if t.replace(" ", "")]
@@ -382,7 +388,7 @@ def search_rows_py(rows_data, query_str, no_space=False, selected_groups=None, m
         ok = True
         total_occ = 0
         for tok in tokens:
-            c = count_occurrences_py(hay, tok, whole_word=eff_whole_word)
+            c = count_occurrences_py(hay, tok, whole_word=eff_whole_word, word_start=eff_word_start)
             if c == 0:
                 ok = False
                 break

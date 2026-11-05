@@ -125,9 +125,9 @@
       .replace(/"/g, '&quot;');
   }
 
-  function countOccurrencesRows(haystack, needle, wholeWord) {
+  function countOccurrencesRows(haystack, needle, wholeWord, wordStart) {
     if (typeof window.__countOccurrences === 'function') {
-      return window.__countOccurrences(haystack, needle, wholeWord);
+      return window.__countOccurrences(haystack, needle, wholeWord, wordStart);
     }
     if (!needle) return 0;
     let count = 0;
@@ -158,10 +158,11 @@
     return val;
   }
 
-  function executeRowsSearch(queryStr, ignoreSpaces, groupsArray, wholeWord) {
+  function executeRowsSearch(queryStr, ignoreSpaces, groupsArray, wholeWord, wordStart) {
     const rowsData = (typeof DATA !== 'undefined' && Array.isArray(DATA.rows)) ? DATA.rows : [];
     const effIgnoreSpaces = !!ignoreSpaces;
     const effWholeWord = !effIgnoreSpaces && !!wholeWord;
+    const effWordStart = !effIgnoreSpaces && !effWholeWord && !!wordStart;
     const tokens = parseQueryTokensRows(queryStr, effIgnoreSpaces);
     if (tokens.length === 0) {
       return { total: 0, by_group: {}, items: [], all_items: [], tokens: [] };
@@ -184,7 +185,7 @@
       let totalOcc = 0;
       for (let t = 0; t < tokens.length; t++) {
         const tok = tokens[t];
-        const occ = countOccurrencesRows(hay, tok, effWholeWord);
+        const occ = countOccurrencesRows(hay, tok, effWholeWord, effWordStart);
         if (occ === 0) {
           ok = false;
           break;
@@ -228,8 +229,8 @@
   }
 
   // تابع سراسری برای آزمون node
-  window.__rowsSearch = function(query, ignoreSpaces, groupsArray, wholeWord) {
-    const res = executeRowsSearch(query, ignoreSpaces, groupsArray, wholeWord);
+  window.__rowsSearch = function(query, ignoreSpaces, groupsArray, wholeWord, wordStart) {
+    const res = executeRowsSearch(query, ignoreSpaces, groupsArray, wholeWord, wordStart);
     return {
       total: res.total,
       by_group: res.by_group,
@@ -264,6 +265,7 @@
     const qInput = document.getElementById('qInput');
     const noSpaceCb = document.getElementById('noSpaceCb');
     const wholeWordCb = document.getElementById('wholeWordCb');
+    const wordStartCb = document.getElementById('wordStartCb');
     const statsEl = document.getElementById('rowsStatsBar');
     const listEl = document.getElementById('rowsResultsList');
     const showMoreWrapEl = document.getElementById('rowsShowMoreWrap');
@@ -274,7 +276,11 @@
     if (wholeWordCb) {
       wholeWordCb.disabled = noSpace;
     }
+    if (wordStartCb) {
+      wordStartCb.disabled = noSpace;
+    }
     const wholeWord = !noSpace && !!(wholeWordCb && wholeWordCb.checked);
+    const wordStart = !noSpace && !wholeWord && !!(wordStartCb && wordStartCb.checked);
     const grpCbs = document.querySelectorAll('.grp-cb');
     const selectedGroups = [];
     for (let i = 0; i < grpCbs.length; i++) {
@@ -282,7 +288,7 @@
     }
 
     currentRowsShownLimit = ROWS_INITIAL_LIMIT;
-    const res = executeRowsSearch(qVal, noSpace, selectedGroups, wholeWord);
+    const res = executeRowsSearch(qVal, noSpace, selectedGroups, wholeWord, wordStart);
     lastRowsRes = res;
     if (res.tokens.length === 0) {
       statsEl.innerHTML = 'عبارت مورد نظر را در کادر بالا وارد کنید تا ردیف‌های فهرست‌بها نیز جستجو شوند.';
@@ -441,8 +447,22 @@
       noSpaceCb.addEventListener('change', renderRowsUI);
     }
     const wholeWordCb = document.getElementById('wholeWordCb');
+    const wordStartCb = document.getElementById('wordStartCb');
     if (wholeWordCb) {
-      wholeWordCb.addEventListener('change', renderRowsUI);
+      wholeWordCb.addEventListener('change', function() {
+        if (wholeWordCb.checked && wordStartCb) {
+          wordStartCb.checked = false;
+        }
+        renderRowsUI();
+      });
+    }
+    if (wordStartCb) {
+      wordStartCb.addEventListener('change', function() {
+        if (wordStartCb.checked && wholeWordCb) {
+          wholeWordCb.checked = false;
+        }
+        renderRowsUI();
+      });
     }
     for (let i = 0; i < grpCbs.length; i++) {
       grpCbs[i].addEventListener('change', renderRowsUI);

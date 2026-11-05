@@ -1,0 +1,145 @@
+=== A0: s32_expected.json structure (up to depth 4) ===
+<root>: dict(len=3, keys=['checkbox_groups', 'queries', 'cases'])
+checkbox_groups: list(len=5)
+checkbox_groups[0]: str = 'ابنیه'
+queries: list(len=11)
+queries[0]: str = 'بتن'
+cases: dict(len=11, keys=['بتن', 'فولاد', 'آرماتور', 'کابل', 'کلید', 'تخریب'])
+cases.بتن: dict(len=6, keys=['ALL', 'ابنیه', 'مکانیک', 'برق', 'پیمان', 'تعدیل'])
+cases.بتن.ALL: dict(len=2, keys=['normal', 'whole_word'])
+cases.بتن.ALL.normal: dict
+cases.بتن.ALL.whole_word: dict
+cases.بتن.ابنیه: dict(len=2, keys=['normal', 'whole_word'])
+cases.بتن.ابنیه.normal: dict
+cases.بتن.ابنیه.whole_word: dict
+cases.بتن.مکانیک: dict(len=2, keys=['normal', 'whole_word'])
+cases.بتن.مکانیک.normal: dict
+cases.بتن.مکانیک.whole_word: dict
+cases.فولاد: dict(len=6, keys=['ALL', 'ابنیه', 'مکانیک', 'برق', 'پیمان', 'تعدیل'])
+cases.فولاد.ALL: dict(len=2, keys=['normal', 'whole_word'])
+cases.فولاد.ALL.normal: dict
+cases.فولاد.ALL.whole_word: dict
+cases.فولاد.ابنیه: dict(len=2, keys=['normal', 'whole_word'])
+cases.فولاد.ابنیه.normal: dict
+cases.فولاد.ابنیه.whole_word: dict
+cases.فولاد.مکانیک: dict(len=2, keys=['normal', 'whole_word'])
+cases.فولاد.مکانیک.normal: dict
+cases.فولاد.مکانیک.whole_word: dict
+cases.آرماتور: dict(len=6, keys=['ALL', 'ابنیه', 'مکانیک', 'برق', 'پیمان', 'تعدیل'])
+cases.آرماتور.ALL: dict(len=2, keys=['normal', 'whole_word'])
+
+=== A1: آرماتور counts (search_rows_py, s32_diag.txt, s32_expected.json) ===
+ALL normal: total=2 len(results)==total: True by_group={'ابنیه': 2}
+ALL whole_word: total=2 len(results)==total: True by_group={'ابنیه': 2}
+Group [ابنیه]: normal_total=2 (len_ok=True), ww_total=2 (len_ok=True)
+Group [مکانیک]: normal_total=0 (len_ok=True), ww_total=0 (len_ok=True)
+Group [برق]: normal_total=0 (len_ok=True), ww_total=0 (len_ok=True)
+Group [راه و باند]: normal_total=0 (len_ok=True), ww_total=0 (len_ok=True)
+Group [راهداری]: normal_total=0 (len_ok=True), ww_total=0 (len_ok=True)
+--- Lines in s32_diag.txt starting with 'آرماتور': ---
+آرماتور      | ALL      | عادی        | 9          | 2         
+آرماتور      | ALL      | کلمهٔ کامل  | 2          | 2         
+آرماتور      | ابنیه    | عادی        | 5          | 2         
+آرماتور      | ابنیه    | کلمهٔ کامل  | 2          | 2         
+آرماتور      | مکانیک   | عادی        | 2          | 0         
+آرماتور      | مکانیک   | کلمهٔ کامل  | 0          | 0         
+آرماتور      | برق      | عادی        | 2          | 0         
+آرماتور      | برق      | کلمهٔ کامل  | 0          | 0         
+آرماتور      | پیمان    | عادی        | 0          | 0         
+آرماتور      | پیمان    | کلمهٔ کامل  | 0          | 0         
+آرماتور      | تعدیل    | عادی        | 0          | 0         
+آرماتور      | تعدیل    | کلمهٔ کامل  | 0          | 0         
+--- Recursive search in s32_expected.json for 'آرماتور': ---
+path=cases.آرماتور -> {"ALL": {"normal": {"rows": {"total": 2, "by_group": {"ابنیه": 2}, "top_codes": ["050905", "060915"]}, "pages": {"total": 9, "by_doc": {"0": 5, "1": 2, "2": 2}, "by_group": {"ابنیه": 5, "مکانیک": 2, "برق": 2}, "top_keys": ["0:48", "0:58", "0:59", "0:247", "0:249", "1:141", "1:143", "2:196", "2:198"]}}, "whole_word": {"rows": {"total": 2, "by_group": {"ابنیه": 2}, "top_codes": ["050905", "060915"]}, "pages": {"total": 2, "by_doc": {"0": 2}, "by_group": {"ابنیه": 2}, "top_keys": ["0:48", "0:58"]}}}, "ابنیه": {"normal": {"rows": {"total": 2, "by_group": {"ابنیه": 2}, "top_codes": ["050905", "060915"]}, "pages": {"total": 5, "by_doc": {"0": 5}, "by_group": {"ابنیه": 5}, "top_keys": ["0:48", "0:58", "0:59", "0:247", "0:249"]}}, "whole_word": {"rows": {"total": 2, "by_group": {"ابنیه": 2}, "top_codes": ["050905", "060915"]}, "pages": {"total": 2, "by_doc": {"0": 2}, "by_group": {"ابنیه": 2}, "top_keys": ["0:48", "0:58"]}}}, "مکانیک": {"normal": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 2, "by_doc": {"1": 2}, "by_group": {"مکانیک": 2}, "top_keys": ["1:141", "1:143"]}}, "whole_word": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 0, "by_doc": {}, "by_group": {}, "top_keys": []}}}, "برق": {"normal": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 2, "by_doc": {"2": 2}, "by_group": {"برق": 2}, "top_keys": ["2:196", "2:198"]}}, "whole_word": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 0, "by_doc": {}, "by_group": {}, "top_keys": []}}}, "پیمان": {"normal": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 0, "by_doc": {}, "by_group": {}, "top_keys": []}}, "whole_word": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 0, "by_doc": {}, "by_group": {}, "top_keys": []}}}, "تعدیل": {"normal": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 0, "by_doc": {}, "by_group": {}, "top_keys": []}}, "whole_word": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 0, "by_doc": {}, "by_group": {}, "top_keys": []}}}}
+Independent regex ww ALL for آرماتور: total=2 by_group={'ابنیه': 2}
+
+=== A2: راه with whole_word=True in ALL and ابنیه ===
+search_rows_py راه ww ALL: total=77 by_group={'ابنیه': 11, 'مکانیک': 9, 'برق': 57}
+search_rows_py راه ww ابنیه: total=11 by_group={'ابنیه': 11}
+--- Lines in s32_diag.txt with 'راه' and (FAIL or top_codes or table rows): ---
+راه          | ALL      | عادی        | 235        | 345       
+راه          | ALL      | کلمهٔ کامل  | 95         | 77        
+راه          | ابنیه    | عادی        | 67         | 100       
+راه          | ابنیه    | کلمهٔ کامل  | 16         | 11        
+راه          | مکانیک   | عادی        | 25         | 41        
+راه          | مکانیک   | کلمهٔ کامل  | 13         | 9         
+راه          | برق      | عادی        | 71         | 204       
+راه          | برق      | کلمهٔ کامل  | 32         | 57        
+راه          | پیمان    | عادی        | 54         | 0         
+راه          | پیمان    | کلمهٔ کامل  | 19         | 0         
+راه          | تعدیل    | عادی        | 18         | 0         
+راه          | تعدیل    | کلمهٔ کامل  | 15         | 0         
+راه آهن      | ALL      | عادی        | 39         | 14        
+راه آهن      | ALL      | کلمهٔ کامل  | 24         | 0         
+راه آهن      | ابنیه    | عادی        | 17         | 14        
+راه آهن      | ابنیه    | کلمهٔ کامل  | 5          | 0         
+راه آهن      | مکانیک   | عادی        | 3          | 0         
+راه آهن      | مکانیک   | کلمهٔ کامل  | 1          | 0         
+راه آهن      | برق      | عادی        | 5          | 0         
+راه آهن      | برق      | کلمهٔ کامل  | 4          | 0         
+ALL top10 sim_codes: ['080309', '030703', '030704', '030705', '031003', '031102', '031103', '990701', '990702', '990703']
+ALL top10 ind_codes: ['080309', '030703', '030704', '030705', '031003', '031102', '031103', '990701', '990702', '990703']
+ابنیه top10 sim_codes: ['080309', '030703', '030704', '030705', '031003', '031102', '031103', '990701', '990702', '990703']
+ابنیه top10 ind_codes: ['080309', '030703', '030704', '030705', '031003', '031102', '031103', '990701', '990702', '990703']
+--- Detailed tuple keys for first 5 in ALL (sim): ---
+  sim item: exact_code=0, total_occ=2, idx=334, code=080309, len_n=92
+  sim item: exact_code=0, total_occ=1, idx=155, code=030703, len_n=220
+  sim item: exact_code=0, total_occ=1, idx=156, code=030704, len_n=223
+  sim item: exact_code=0, total_occ=1, idx=157, code=030705, len_n=209
+  sim item: exact_code=0, total_occ=1, idx=170, code=031003, len_n=94
+--- grep sort|sorted|key= in s32_diag.py (<=10 lines): ---
+95:     matched.sort(key=lambda x: (x[0], x[1], x[2]))
+143:     matched.sort(key=lambda x: (x[0], x[1], x[2]))
+s32_expected راه path=cases.راه -> {"ALL": {"normal": {"rows": {"total": 345, "by_group": {"ابنیه": 100, "مکانیک": 41, "برق": 204}, "top_codes": ["080309", "160201", "010502", "010504", "010507", "010508", "010509", "010604", "010608", "010610"]}, "pages": {"total": 235, "by_doc": {"0": 67, "1": 25, "2": 71, "3": 37, "5": 15, "6": 2, "7": 1, "10": 17}, "by_group": {"ابنیه": 67, "مکانیک": 25, "برق": 71, "پیمان": 54, "تعدیل": 18}, "top_keys": ["1:50", "0:247", "1:141", "2:107", "2:108", "2:109", "2:196", "5:18", "5:20", "0:249"]}}, "whole_word": {"rows": {"total": 77, "by_group": {"ابنیه": 11, "مکانیک": 9, "برق": 57}, "top_codes": ["080309", "030703", "030704", "030705", "031003", "031102", "031103", "990701", "990702", "990703"]}, "pages": {"total": 95, "by_doc": {"0": 16, "1": 13, "2": 32, "3": 14, "5": 13, "6": 2, "10": 5}, "by_group": {"ابنیه": 16, "مکانیک": 13, "برق": 32, "پیمان": 19, "تعدیل": 15}, "top_keys": ["0:249", "1:143", "2:198", "2:94", "2:186", "0:247", "1:141", "2:172", "2:196", "5:18"]}}}, "ابنیه": {"normal": {"rows": {"total": 100, "by_group": {"ابنیه": 100}, "top_codes": ["080309", "160201", "010502", "010504", "010507", "010508", "010509", "010604", "010608", "010610"]}, "pages": {"total": 67, "by_doc": {"0": 67}, "by_group": {"ابنیه": 67}, "top_keys": ["0:247", "0:249", "0:76", "0:6", "0:77", "0:128", "0:63", "0:16", "0:19", "0:133"]}}, "whole_word": {"rows": {"total": 11, "by_group": {"ابنیه": 11}, "top_codes": ["080309", "030703", "030704", "030705", "031003", "031102", "031103", "990701", "990702", "990703"]}, "pages": {"total": 16, "by_doc": {"0": 16}, "by_group": {"ابنیه": 16}, "top_keys": ["0:249", "0:247", "0:6", "0:253", "0:31", "0:35", "0:37", "0:68", "0:248", "0:7"]}}}, "مکانیک": {"normal": {"rows": {"total": 41, "by_group": {"مکانیک": 41}, "top_codes": ["12150603", "12150606", "12151201", "12151202", "12151203", "12151204", "12151205", "12151206", "12151207", "12151208"]}, "pages": {"total": 25, "by_doc": {"1": 25}, "by_group": {"مکانیک": 25}, "top_keys": ["1:50", "1:141", "1:143", "1:6", "1:44", "1:147", "1:51", "1:105", "1:7", "1:106"]}}, "whole_word": {"rows": {"total": 9, "by_group": {"مکانیک": 9}, "top_codes": ["12150603", "12150606", "12291207", "12291224", "12291605", "12990701", "12990702", "12990703", "12990902"]}, "pages": {"total": 13, "by_doc": {"1": 13}, "by_group": {"مکانیک": 13}, "top_keys": ["1:143", "1:141", "1:147", "1:7", "1:6", "1:48", "1:105", "1:142", "1:64", "1:71"]}}}, "برق": {"normal": {"rows": {"total": 204, "by_group": {"برق": 204}, "top_codes": ["13052301", "13052304", "13052305", "13052307", "13110101", "13110102", "13110105", "13110201", "13110202", "13110303"]}, "pages": {"total": 71, "by_doc": {"2": 71}, "by_group": {"برق": 71}, "top_keys": ["2:107", "2:108", "2:109", "2:196", "2:155", "2:158", "2:198", "2:59", "2:68", "2:94"]}}, "whole_word": {"rows": {"total": 57, "by_group": {"برق": 57}, "top_codes": ["13052301", "13110101", "13110102", "13110105", "13110201", "13110202", "13110303", "13110304", "13113301", "13113303"]}, "pages": {"total": 32, "by_doc": {"2": 32}, "by_group": {"برق": 32}, "top_keys": ["2:198", "2:94", "2:186", "2:172", "2:196", "2:59", "2:102", "2:176", "2:183", "2:202"]}}}, "پیمان": {"normal": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 54, "by_doc": {"3": 37, "10": 17}, "by_group": {"پیمان": 54}, "top_keys": ["3:13", "3:125", "10:22", "10:21", "10:39", "3:105", "3:106", "3:108", "3:298", "3:384"]}}, "whole_word": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 19, "by_doc": {"3": 14, "10": 5}, "by_group": {"پیمان": 19}, "top_keys": ["3:13", "3:106", "3:108", "3:384", "3:85", "3:98", "3:107", "3:122", "3:125", "3:201"]}}}, "تعدیل": {"normal": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 18, "by_doc": {"5": 15, "6": 2, "7": 1}, "by_group": {"تعدیل": 18}, "top_keys": ["5:18", "5:20", "5:2", "5:19", "5:22", "5:5", "5:15", "5:24", "5:25", "6:2"]}}, "whole_word": {"rows": {"total": 0, "by_group": {}, "top_codes": []}, "pages": {"total": 15, "by_doc": {"5": 13, "6": 2}, "by_group": {"تعدیل": 15}, "top_keys": ["5:18", "5:20", "5:2", "5:22", "5:19", "5:5", "5:25", "5:15", "5:21", "6:2"]}}}}
+
+=== A3: Rows where normalize(r[2]) != r[6] ===
+Total rows=4338, count(normalize(r[2]) != r[6]) = 4338
+Sample #1 (row idx=0, group=ابنیه, code=010101, unit=مترمربع):
+  len(normalize(r[2]))=67, len(r[6])=74, first_diff_at=0
+  repr(normalize(r[2])): 'کندن و خارج کردن بوته و ریشه های مربوط در زمین های پوشیده از آن ها.'
+  repr(r[6]):            '010101 کندن و خارج کردن بوته و ریشه های مربوط در زمین های پوشیده از آن ها.'
+  tail of r[6] from first_diff: '010101 کندن و خارج کردن بوته و ریشه های مربوط در زمین های پوشیده از آن ها.'
+Sample #2 (row idx=1, group=ابنیه, code=010102, unit=اصله):
+  len(normalize(r[2]))=202, len(r[6])=209, first_diff_at=0
+  repr(normalize(r[2])): 'کندن و یا بریدن و در صورت لزوم ریشه کن کردن هرنوع نهال، در صورتی که محیط بن آن کمتر از 15 سانتی متر باشد، به ازای هر 5 سانتی متر محیط بن (کسر 5 سانتی متر به تناسب محاسبه می شود) و حمل آن به خارج کارگاه.'
+  repr(r[6]):            '010102 کندن و یا بریدن و در صورت لزوم ریشه کن کردن هرنوع نهال، در صورتی که محیط بن آن کمتر از 15 سانتی متر باشد، به ازای هر 5 سانتی متر محیط بن (کسر 5 سانتی متر به تناسب محاسبه می شود) و حمل آن به خارج کارگاه.'
+  tail of r[6] from first_diff: '010102 کندن و یا بریدن و در صورت لزوم ریشه کن کردن هرنوع نهال، در صورتی که محیط بن آن کمتر از 15 سانتی متر باشد، به ازای هر 5 سانتی متر محیط بن (کسر 5 سانتی متر به تناسب محاسبه می شود) و حمل آن به خارج کارگاه.'
+Sample #3 (row idx=2, group=ابنیه, code=010121, unit=اصله):
+  len(normalize(r[2]))=64, len(r[6])=71, first_diff_at=0
+  repr(normalize(r[2])): 'جابجایی درخت یا نهال در صورتی که محیط بن آن تا 40 سانتی متر باشد'
+  repr(r[6]):            '010121 جابجایی درخت یا نهال در صورتی که محیط بن آن تا 40 سانتی متر باشد'
+  tail of r[6] from first_diff: '010121 جابجایی درخت یا نهال در صورتی که محیط بن آن تا 40 سانتی متر باشد'
+
+=== A4: Cause of FAIL 2 in s32b_showmore.txt ===
+--- Lines in s32b_js_showmore.js containing 'wrapDisplay' (<=20 lines): ---
+176:       `shown=${finalRState.shown}, total=${finalRState.total}, wrapDisplay='${elementsById['rowsShowMoreWrap'].style.display}'`
+319:         `shown=${finalPState.shown}, total=${finalPState.total}, wrapDisplay='${elementsById['pagesShowMoreWrap'].style.display}'`
+--- Lines in templates/search_rows_part.html & search_template.html matching ShowMoreWrap (<=20 lines): ---
+templates/search_rows_part.html:90:     <div id="rowsResultsList"></div>
+templates/search_rows_part.html:91:     <div id="rowsShowMoreWrap" style="margin: 12px 0; text-align: center;"></div>
+templates/search_rows_part.html:92:   </div>
+templates/search_rows_part.html:93: </div>
+templates/search_rows_part.html:94: 
+templates/search_rows_part.html:268:     const listEl = document.getElementById('rowsResultsList');
+templates/search_rows_part.html:269:     const showMoreWrapEl = document.getElementById('rowsShowMoreWrap');
+templates/search_rows_part.html:270:     if (!qInput || !statsEl || !listEl) return;
+templates/search_rows_part.html:271: 
+templates/search_rows_part.html:272:     const qVal = qInput.value || '';
+templates/search_rows_part.html:289:       listEl.innerHTML = '';
+templates/search_rows_part.html:290:       if (showMoreWrapEl) showMoreWrapEl.innerHTML = '';
+templates/search_rows_part.html:291:       return;
+templates/search_rows_part.html:292:     }
+templates/search_rows_part.html:293: 
+templates/search_rows_part.html:299:     const listEl = document.getElementById('rowsResultsList');
+templates/search_rows_part.html:300:     const showMoreWrapEl = document.getElementById('rowsShowMoreWrap');
+templates/search_rows_part.html:301:     if (!statsEl || !listEl || !lastRowsRes) return;
+templates/search_rows_part.html:302: 
+templates/search_rows_part.html:303:     const res = lastRowsRes;
+
+=== A5: Check __pycache__ directories ===
+os.path.isdir('src/__pycache__') = False
+os.path.isdir('tests/__pycache__') = False
+os.path.isdir('docs/search_logs/__pycache__') = False
+
+=== GATE Verification ===
+GATE: OK

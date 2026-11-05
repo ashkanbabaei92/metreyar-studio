@@ -182,6 +182,7 @@
       <label><input type="checkbox" class="grp-cb" value="تعدیل" checked> تعدیل</label>
       <span style="margin-right:auto;"></span>
       <label><input type="checkbox" id="wholeWordCb"> کلمهٔ کامل</label>
+      <label title="بتن ← بتنی؛ ولی «باند» ← «ترموباند» نه"><input type="checkbox" id="wordStartCb"> شروع کلمه</label>
       <label><input type="checkbox" id="noSpaceCb"> نادیده‌گرفتن فاصله‌ها (برای متن خراب)</label>
     </div>
     <div class="folder-row">
@@ -275,7 +276,7 @@ function isWordChar(ch) {
 window.__isWordChar = isWordChar;
 window.__WORD_CHAR_RE = WORD_CHAR_RE;
 
-function countOccurrences(haystack, needle, wholeWord) {
+function countOccurrences(haystack, needle, wholeWord, wordStart) {
   if (!needle) return 0;
   let count = 0;
   let pos = 0;
@@ -287,6 +288,12 @@ function countOccurrences(haystack, needle, wholeWord) {
       const beforeCh = idx > 0 ? haystack.charAt(idx - 1) : '';
       const afterCh = (idx + nLen < haystack.length) ? haystack.charAt(idx + nLen) : '';
       if (isWordChar(beforeCh) || isWordChar(afterCh)) {
+        pos = idx + 1;
+        continue;
+      }
+    } else if (wordStart) {
+      const beforeCh = idx > 0 ? haystack.charAt(idx - 1) : '';
+      if (isWordChar(beforeCh)) {
         pos = idx + 1;
         continue;
       }
@@ -327,6 +334,7 @@ function getNoSpaceN(idx) {
 const qInput = document.getElementById('qInput');
 const noSpaceCb = document.getElementById('noSpaceCb');
 const wholeWordCb = document.getElementById('wholeWordCb');
+const wordStartCb = document.getElementById('wordStartCb');
 const basePathInput = document.getElementById('basePath');
 const statsBar = document.getElementById('statsBar');
 const resultsList = document.getElementById('resultsList');
@@ -362,7 +370,11 @@ function runSearch() {
   if (wholeWordCb) {
     wholeWordCb.disabled = noSpace;
   }
+  if (wordStartCb) {
+    wordStartCb.disabled = noSpace;
+  }
   const wholeWord = !noSpace && !!(wholeWordCb && wholeWordCb.checked);
+  const wordStart = !noSpace && !wholeWord && !!(wordStartCb && wordStartCb.checked);
   const tokens = parseQueryTokens(qRaw, noSpace);
 
   const activeGroups = {};
@@ -397,7 +409,7 @@ function runSearch() {
     let score = 0;
 
     for (let t = 0; t < tokens.length; t++) {
-      const occ = countOccurrences(targetN, tokens[t], wholeWord);
+      const occ = countOccurrences(targetN, tokens[t], wholeWord, wordStart);
       if (occ === 0) {
         allFound = false;
         break;
@@ -564,10 +576,11 @@ window.__getPagesState = function() {
     total: lastPagesMatched.length
   };
 };
-window.__pagesSearch = function(queryStr, ignoreSpaces, groupsArray, wholeWord) {
+window.__pagesSearch = function(queryStr, ignoreSpaces, groupsArray, wholeWord, wordStart) {
   if (!DATA || !Array.isArray(DATA.pages)) return { total: 0, by_doc: {}, by_group: {}, top_keys: [] };
   const effNoSpace = !!ignoreSpaces;
   const effWholeWord = !effNoSpace && !!wholeWord;
+  const effWordStart = !effNoSpace && !effWholeWord && !!wordStart;
   const tokens = parseQueryTokens(queryStr || '', effNoSpace);
   if (tokens.length === 0) return { total: 0, by_doc: {}, by_group: {}, top_keys: [] };
   const allowedSet = Array.isArray(groupsArray) ? new Set(groupsArray) : null;
@@ -585,7 +598,7 @@ window.__pagesSearch = function(queryStr, ignoreSpaces, groupsArray, wholeWord) 
     let allFound = true;
     let score = 0;
     for (let t = 0; t < tokens.length; t++) {
-      const occ = countOccurrences(targetN, tokens[t], effWholeWord);
+      const occ = countOccurrences(targetN, tokens[t], effWholeWord, effWordStart);
       if (occ === 0) {
         allFound = false;
         break;
@@ -624,7 +637,20 @@ qInput.addEventListener('keydown', function(e) {
 });
 noSpaceCb.addEventListener('change', runSearch);
 if (wholeWordCb) {
-  wholeWordCb.addEventListener('change', runSearch);
+  wholeWordCb.addEventListener('change', function() {
+    if (wholeWordCb.checked && wordStartCb) {
+      wordStartCb.checked = false;
+    }
+    runSearch();
+  });
+}
+if (wordStartCb) {
+  wordStartCb.addEventListener('change', function() {
+    if (wordStartCb.checked && wholeWordCb) {
+      wholeWordCb.checked = false;
+    }
+    runSearch();
+  });
 }
 for (let i = 0; i < grpCbs.length; i++) {
   grpCbs[i].addEventListener('change', runSearch);

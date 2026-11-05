@@ -1,0 +1,15 @@
+=== 1. HTML Checkbox Groups & Selftests ===
+Extracted groups: ["ابنیه","مکانیک","برق","پیمان","تعدیل"]
+selftest: خودآزمایی: OK | selftest_rows: خودآزمایی ردیف‌ها: OK
+=== 2. Selftest countOccurrences (normal / wordStart / wholeWord) ===
+Selftest finished, fails so far=0
+=== 3. Mutual Exclusion & noSpace Disabled Tests ===
+UI state tests finished, fails so far=0
+=== 4. Parity across 11 queries x 6 groups x 3 modes ===
+Parity check across all cases finished, fails so far=0
+=== 5. Show-More in word_start mode ===
+Rows word_start show-more (بتن): k=0: 100/215 -> k=1: 200/215 -> k=2: 215/215 | final wrap innerHTML==="" : true
+Candidate page query 'راه' in word_start ALL: total=128
+Candidate page query 'پیمان' in word_start ALL: total=578
+Pages word_start show-more (پیمان): k=0: 200/578 -> k=1: 300/578 -> k=2: 400/578 -> k=3: 500/578 -> k=4: 578/578 | final wrap innerHTML==="" : true
+PARITY: OK
